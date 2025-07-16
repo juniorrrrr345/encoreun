@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import useProductStore from '../store/useProductStore';
 import Loader from '../components/Loader';
@@ -76,9 +77,12 @@ const AllProductsPage = () => {
                     <span className="text-white font-bold">
                       {product.price}€
                     </span>
-                    <button className="px-3 py-1 bg-white text-black text-sm rounded-full hover:bg-gray-200 transition-colors">
+                    <Link
+                      to={`/product/${product._id}`}
+                      className="px-3 py-1 bg-white text-black text-sm rounded-full hover:bg-gray-200 transition-colors"
+                    >
                       Voir
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </motion.div>
