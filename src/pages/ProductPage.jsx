@@ -35,6 +35,9 @@ const ProductPage = () => {
     );
   }
 
+  // Lien externe configurable (sera géré depuis le panel admin)
+  const externalOrderLink = selectedProduct.orderLink || '#';
+
   return (
     <div className="min-h-screen px-6 py-8 bg-black">
       <motion.div 
@@ -44,22 +47,25 @@ const ProductPage = () => {
         className="max-w-4xl mx-auto"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Image du produit */}
+          {/* Vidéo du produit */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
             className="aspect-square bg-gradient-to-br from-gray-600/20 to-gray-700/20 rounded-2xl overflow-hidden"
           >
-            {selectedProduct.image ? (
-              <img 
-                src={selectedProduct.image} 
-                alt={selectedProduct.name}
+            {selectedProduct.video ? (
+              <video 
+                src={selectedProduct.video}
+                controls
                 className="w-full h-full object-cover"
-              />
+                poster={selectedProduct.image}
+              >
+                Votre navigateur ne supporte pas la lecture de vidéos.
+              </video>
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <div className="text-gray-400 text-6xl">📦</div>
+                <div className="text-gray-400 text-6xl">📹</div>
               </div>
             )}
           </motion.div>
@@ -95,14 +101,15 @@ const ProductPage = () => {
               </div>
             </div>
             
-            <div className="mt-8 space-y-4">
-              <button className="w-full py-3 px-6 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all duration-200">
-                Ajouter au panier
-              </button>
-              
-              <button className="w-full py-3 px-6 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-black transition-all duration-200">
-                Voir les détails
-              </button>
+            <div className="mt-8">
+              <a
+                href={externalOrderLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full py-3 px-6 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all duration-200 text-center"
+              >
+                Commander
+              </a>
             </div>
           </motion.div>
         </div>

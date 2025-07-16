@@ -9,7 +9,9 @@ const demoProducts = [
     description: 'T-shirt en coton bio de haute qualité, confortable et durable',
     price: 29.99,
     category: 'vetements',
-    image: '/images/products/tshirt.jpg'
+    image: '/images/products/tshirt.jpg',
+    video: '/videos/products/tshirt.mp4',
+    orderLink: 'https://example.com/order/tshirt'
   },
   {
     _id: '2',
@@ -17,7 +19,9 @@ const demoProducts = [
     description: 'Crème hydratante naturelle pour une peau douce et éclatante',
     price: 24.99,
     category: 'beaute',
-    image: '/images/products/cream.jpg'
+    image: '/images/products/cream.jpg',
+    video: '/videos/products/cream.mp4',
+    orderLink: 'https://example.com/order/cream'
   },
   {
     _id: '3',
@@ -25,7 +29,9 @@ const demoProducts = [
     description: 'Vase élégant en céramique pour sublimer votre intérieur',
     price: 45.00,
     category: 'maison',
-    image: '/images/products/vase.jpg'
+    image: '/images/products/vase.jpg',
+    video: '/videos/products/vase.mp4',
+    orderLink: 'https://example.com/order/vase'
   },
   {
     _id: '4',
@@ -33,7 +39,9 @@ const demoProducts = [
     description: 'Bracelet en argent sterling avec fermoir sécurisé',
     price: 89.99,
     category: 'bijoux',
-    image: '/images/products/bracelet.jpg'
+    image: '/images/products/bracelet.jpg',
+    video: '/videos/products/bracelet.mp4',
+    orderLink: 'https://example.com/order/bracelet'
   },
   {
     _id: '5',
@@ -41,7 +49,9 @@ const demoProducts = [
     description: 'Écouteurs bluetooth avec qualité audio exceptionnelle',
     price: 129.99,
     category: 'tech',
-    image: '/images/products/headphones.jpg'
+    image: '/images/products/headphones.jpg',
+    video: '/videos/products/headphones.mp4',
+    orderLink: 'https://example.com/order/headphones'
   },
   {
     _id: '6',
@@ -49,7 +59,9 @@ const demoProducts = [
     description: 'Ballon professionnel pour tous types de terrains',
     price: 34.99,
     category: 'sport',
-    image: '/images/products/football.jpg'
+    image: '/images/products/football.jpg',
+    video: '/videos/products/football.mp4',
+    orderLink: 'https://example.com/order/football'
   }
 ];
 
