@@ -52,7 +52,9 @@ const useProductStore = create((set, get) => ({
       const response = await api.get('/categories');
       set({ categories: response.data });
     } catch (error) {
-      toast.error('Erreur lors du chargement des catégories');
+      console.log('Utilisation des catégories par défaut');
+      // En cas d'erreur, on utilise les catégories par défaut
+      set({ categories: [] });
     }
   },
 

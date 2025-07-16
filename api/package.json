@@ -8,6 +8,7 @@
     "dev": "nodemon src/server.js",
     "test": "jest",
     "seed": "node seed.js",
+    "init-db": "node init-database.js",
     "test-db": "node setup-mongodb.js",
     "setup": "node setup-mongodb-interactive.js",
     "test-atlas": "node test-mongodb-connection.js",

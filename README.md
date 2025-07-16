@@ -1,165 +1,214 @@
-# Avec Amour - Boutique E-commerce
+# 🛍️ Boutique E-commerce avec Panel Admin
 
-Une boutique e-commerce moderne et élégante développée avec React, Tailwind CSS et des animations fluides.
+Un système e-commerce complet avec une boutique moderne et un panel d'administration, connecté à MongoDB Atlas.
 
-## 🌟 Fonctionnalités
+## 🚀 Démarrage rapide
 
-- **Interface moderne** avec animations Framer Motion
-- **Authentification complète** (inscription, connexion, déconnexion)
-- **Gestion des produits** et catégories
-- **Panier d'achat** avec localStorage
-- **Interface d'administration** pour les admins
-- **Design responsive** adapté à tous les appareils
-- **Thème sombre** avec dégradés roses et violets
-- **Notifications toast** pour une meilleure UX
-
-## 🛠 Technologies utilisées
-
-- **React 18** - Bibliothèque JavaScript pour l'interface utilisateur
-- **React Router** - Navigation côté client
-- **Tailwind CSS** - Framework CSS utilitaire
-- **Framer Motion** - Bibliothèque d'animations
-- **Zustand** - Gestion d'état simple et efficace
-- **Axios** - Client HTTP pour les requêtes API
-- **React Hot Toast** - Notifications élégantes
-- **React Icons** - Icônes modernes
-- **Vite** - Build tool rapide
-
-## 🚀 Installation et démarrage
-
-1. **Cloner le projet**
-   ```bash
-   git clone <url-du-repo>
-   cd avecamour-boutique
-   ```
-
-2. **Installer les dépendances**
-   ```bash
-   npm install
-   ```
-
-3. **Démarrer l'application en développement**
-   ```bash
-   npm run dev
-   ```
-
-4. **Ouvrir dans le navigateur**
-   L'application sera disponible sur `http://localhost:3000`
-
-## 📱 Pages disponibles
-
-### Pages publiques
-- **/** - Page d'accueil avec présentation de la boutique
-- **/category** - Affichage des catégories de produits
-- **/product** - Liste de tous les produits
-- **/product/:id** - Détail d'un produit spécifique
-- **/category/:category** - Produits d'une catégorie
-- **/cart** - Panier d'achat
-- **/contact** - Formulaire de contact
-- **/login** - Connexion utilisateur
-- **/signup** - Inscription utilisateur
-
-### Pages privées
-- **/secret-dashboard** - Interface d'administration (admin uniquement)
-
-## 🎨 Design et UX
-
-### Thème visuel
-- **Couleurs principales** : Roses et violets avec dégradés
-- **Arrière-plan** : Image de fond avec overlay sombre
-- **Police personnalisée** : Great Vibes pour les titres
-- **Animations** : Transitions fluides avec Framer Motion
-
-### Responsive Design
-- **Mobile First** : Optimisé pour tous les appareils
-- **Navigation** : Menu de navigation fixe en bas
-- **Safe Areas** : Support des écrans avec encoches
-
-## 🔧 API Configuration
-
-L'application est configurée pour se connecter à l'API :
-```
-https://avecamour.wikiplug.com/api
+### Option 1: Démarrage automatique (recommandé)
+```bash
+npm run start-all
 ```
 
-### Endpoints utilisés
-- `POST /auth/signup` - Inscription
-- `POST /auth/login` - Connexion  
-- `POST /auth/logout` - Déconnexion
-- `GET /auth/profile` - Profil utilisateur
-- `POST /auth/refresh-token` - Renouvellement token
-- `GET /products` - Liste des produits
-- `GET /products/:id` - Détail produit
-- `GET /categories` - Liste des catégories
+### Option 2: Démarrage manuel
+```bash
+# 1. Démarrer l'API
+npm run api
 
-## 🛒 Fonctionnalités du panier
+# 2. Dans un autre terminal, démarrer la boutique
+npm run dev
 
-- **Stockage local** : Le panier est sauvegardé dans localStorage
-- **Gestion des quantités** : Ajout/suppression/modification
-- **Calcul automatique** : Total et nombre d'articles
-- **Notifications** : Feedback utilisateur pour chaque action
-
-## 👑 Interface d'administration
-
-Accessible uniquement aux utilisateurs avec le rôle `admin` :
-- **Dashboard** : Vue d'ensemble des statistiques
-- **Gestion produits** : CRUD des produits (à développer)
-- **Gestion utilisateurs** : Administration des comptes (à développer)
-- **Commandes** : Suivi des ventes (à développer)
-
-## 🔐 Authentification
-
-### Système de tokens
-- **Access tokens** : Gestion automatique
-- **Refresh tokens** : Renouvellement automatique
-- **Intercepteurs Axios** : Gestion transparente de l'expiration
-
-### Rôles utilisateurs
-- **Utilisateur standard** : Accès aux fonctionnalités de base
-- **Administrateur** : Accès complet + interface d'admin
-
-## 📦 Structure du projet
-
-```
-src/
-├── components/          # Composants réutilisables
-│   ├── Loader.jsx      # Composant de chargement
-│   └── Navigation.jsx  # Navigation principale
-├── hooks/              # Hooks personnalisés
-│   └── useCart.js      # Gestion du panier
-├── lib/                # Utilitaires et configurations
-│   └── axios.js        # Configuration API
-├── pages/              # Pages de l'application
-├── store/              # Gestion d'état Zustand
-│   ├── useAuthStore.js # État d'authentification
-│   └── useProductStore.js # État des produits
-├── App.jsx             # Composant principal
-├── main.jsx            # Point d'entrée
-└── index.css           # Styles globaux
+# 3. Dans un autre terminal, démarrer le panel admin
+npm run admin
 ```
 
-## 🎯 Prochaines fonctionnalités
+## 📁 Structure du projet
 
-- [ ] Système de paiement intégré
-- [ ] Gestion complète des commandes
-- [ ] Système de reviews et notes
-- [ ] Recherche avancée avec filtres
-- [ ] Wishlist/favoris
-- [ ] Système de promotions
-- [ ] Notifications push
-- [ ] Mode hors ligne (PWA)
+```
+├── src/                    # Boutique principale (React + Vite)
+├── admin-panel/           # Panel d'administration (React + Vite)
+├── api/                   # API backend (Node.js + Express + MongoDB)
+├── start-all.sh          # Script de démarrage automatique
+└── README.md             # Ce fichier
+```
+
+## 🔧 Configuration
+
+### Variables d'environnement
+
+#### API (.env dans /api)
+```env
+MONGODB_URI=mongodb+srv://Junior:db_UARypMbzrcr3Qlpf@cluster0.tj6hxtb.mongodb.net/boutique-admin
+PORT=5000
+NODE_ENV=development
+CORS_ORIGIN=http://localhost:3000,http://localhost:3001,http://localhost:5173,http://localhost:5174
+JWT_SECRET=votre_secret_jwt_tres_securise_ici
+JWT_EXPIRE=7d
+```
+
+#### Boutique (.env à la racine)
+```env
+VITE_API_URL=http://localhost:5000/api
+VITE_APP_NAME=Boutique E-commerce
+VITE_APP_VERSION=1.0.0
+```
+
+#### Panel Admin (.env dans /admin-panel)
+```env
+VITE_API_URL=http://localhost:5000/api
+VITE_APP_NAME=Panel Admin
+VITE_APP_VERSION=1.0.0
+```
+
+## 🗄️ Base de données
+
+### Initialisation
+```bash
+npm run init-db
+```
+
+### Données de test créées
+- **6 catégories** : Vêtements, Beauté, Maison, Bijoux, Tech, Sport
+- **6 produits** : T-shirt Premium, Crème hydratante, Vase décoratif, Bracelet en argent, Écouteurs sans fil, Leggings de sport
+- **1 utilisateur admin** : admin@example.com / admin123
+
+## 🌐 URLs
+
+- **Boutique** : http://localhost:5173
+- **Panel Admin** : http://localhost:5174
+- **API** : http://localhost:5000
+- **Documentation API** : http://localhost:5000/api-docs
+
+## 🔑 Identifiants Admin
+
+- **Email** : admin@example.com
+- **Mot de passe** : admin123
+
+## 📱 Fonctionnalités
+
+### Boutique
+- ✅ Navigation par catégories
+- ✅ Affichage des produits
+- ✅ Détails des produits
+- ✅ Interface responsive
+- ✅ Animations fluides
+
+### Panel Admin
+- ✅ Dashboard avec statistiques
+- ✅ Gestion des produits (CRUD)
+- ✅ Gestion des commandes
+- ✅ Gestion des catégories
+- ✅ Interface moderne et intuitive
+
+### API
+- ✅ RESTful API complète
+- ✅ Connexion MongoDB Atlas
+- ✅ Authentification JWT
+- ✅ Validation des données
+- ✅ Gestion des erreurs
+- ✅ Rate limiting
+- ✅ CORS configuré
+
+## 🛠️ Technologies utilisées
+
+### Frontend
+- **React 18** avec hooks
+- **Vite** pour le build
+- **Tailwind CSS** pour le styling
+- **Framer Motion** pour les animations
+- **React Router** pour la navigation
+- **Zustand** pour la gestion d'état
+- **Axios** pour les requêtes HTTP
+
+### Backend
+- **Node.js** avec Express
+- **MongoDB** avec Mongoose
+- **JWT** pour l'authentification
+- **bcryptjs** pour le hashage des mots de passe
+- **Multer** pour l'upload de fichiers
+- **Helmet** pour la sécurité
+- **CORS** configuré
+
+## 📊 Structure de la base de données
+
+### Collections MongoDB
+- **users** : Utilisateurs et administrateurs
+- **products** : Produits de la boutique
+- **categories** : Catégories de produits
+- **orders** : Commandes des clients
+
+## 🔧 Scripts disponibles
+
+```bash
+# Démarrage
+npm run start-all          # Démarre tous les services
+npm run dev               # Démarre la boutique
+npm run api               # Démarre l'API
+npm run admin             # Démarre le panel admin
+
+# Base de données
+npm run init-db           # Initialise la base de données
+
+# Build
+npm run build             # Build de la boutique
+```
+
+## 🚨 Résolution de problèmes
+
+### Ports déjà utilisés
+Si vous obtenez une erreur de port déjà utilisé :
+```bash
+# Vérifier les processus
+lsof -i :5000
+lsof -i :5173
+lsof -i :5174
+
+# Tuer les processus si nécessaire
+kill -9 <PID>
+```
+
+### Erreur de connexion MongoDB
+Vérifiez que l'URL MongoDB dans `api/.env` est correcte et que votre réseau autorise les connexions MongoDB Atlas.
+
+### Erreur CORS
+Vérifiez que les URLs dans `CORS_ORIGIN` correspondent à vos ports de développement.
+
+## 📝 Développement
+
+### Ajouter une nouvelle fonctionnalité
+1. Créer le modèle dans `api/src/models/`
+2. Créer les routes dans `api/src/routes/`
+3. Ajouter les contrôleurs dans `api/src/controllers/`
+4. Mettre à jour le frontend si nécessaire
+
+### Structure des commits
+```
+feat: nouvelle fonctionnalité
+fix: correction de bug
+docs: documentation
+style: formatage
+refactor: refactorisation
+test: tests
+```
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
-- Ouvrir des issues pour signaler des bugs
-- Proposer de nouvelles fonctionnalités
-- Soumettre des pull requests
+1. Fork le projet
+2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
+3. Commit les changements (`git commit -m 'Add some AmazingFeature'`)
+4. Push vers la branche (`git push origin feature/AmazingFeature`)
+5. Ouvrir une Pull Request
 
 ## 📄 Licence
 
-Ce projet est sous licence MIT.
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+
+## 🆘 Support
+
+Pour toute question ou problème :
+1. Vérifiez la documentation
+2. Consultez les issues existantes
+3. Créez une nouvelle issue avec les détails du problème
 
 ---
 
-Développé avec ❤️ pour une expérience d'achat unique et moderne.
+**Développé avec ❤️ pour une expérience e-commerce moderne et performante**
