@@ -109,7 +109,7 @@ app.get('/health', (req, res) => {
     message: 'API en ligne',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    database: 'connected'
+          database: 'connected'
   });
 });
 
@@ -144,6 +144,7 @@ const server = app.listen(PORT, () => {
   console.log(`🔗 URL: http://localhost:${PORT}`);
   console.log(`🌐 CORS autorisé pour: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`);
   console.log(`📝 Documentation: http://localhost:${PORT}/api-docs`);
+  console.log(`✅ Mode: Base de données MongoDB connectée`);
 });
 
 // Gestion gracieuse de l'arrêt

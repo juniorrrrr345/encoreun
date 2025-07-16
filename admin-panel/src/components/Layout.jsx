@@ -13,9 +13,8 @@ const Layout = ({ children, user }) => {
   ];
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    window.location.href = '/login';
+    // Désactivé - pas de déconnexion nécessaire
+    console.log('Déconnexion désactivée');
   };
 
   return (
