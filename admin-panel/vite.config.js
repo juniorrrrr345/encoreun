@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 3001,
+    host: '0.0.0.0', // Permet l'accès depuis l'extérieur
     proxy: {
       '/api': {
         target: 'http://localhost:5000',
