@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiGrid, FiArrowRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiGrid, FiArrowRight, FiChevronLeft, FiChevronRight, FiShoppingCart, FiHeart, FiStar } from 'react-icons/fi';
 import useProductStore from '../store/useProductStore';
 import Loader from '../components/Loader';
 
@@ -14,49 +14,49 @@ const HomePage = () => {
     fetchCategories();
   }, [fetchCategories]);
 
-  // Catégories par défaut si l'API ne répond pas
+  // Produits CBD par défaut si l'API ne répond pas
   const defaultCategories = [
     { 
-      name: 'Vêtements',
-      slug: 'vetements',
-      description: 'Mode et accessoires tendance',
-      image: '/images/categories/clothing.jpg',
-      color: 'pink'
+      name: 'Huiles CBD',
+      slug: 'huiles-cbd',
+      description: 'Huiles CBD de qualité premium',
+      image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop',
+      color: 'green'
     },
     { 
-      name: 'Beauté',
-      slug: 'beaute',
-      description: 'Produits de beauté et cosmétiques',
-      image: '/images/categories/beauty.jpg',
-      color: 'purple'
-    },
-    { 
-      name: 'Maison',
-      slug: 'maison',
-      description: 'Décoration et accessoires maison',
-      image: '/images/categories/home.jpg',
+      name: 'Fleurs CBD',
+      slug: 'fleurs-cbd',
+      description: 'Fleurs CBD naturelles et bio',
+      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop',
       color: 'emerald'
     },
     { 
-      name: 'Bijoux',
-      slug: 'bijoux',
-      description: 'Bijoux et accessoires précieux',
-      image: '/images/categories/jewelry.jpg',
+      name: 'Cosmétiques CBD',
+      slug: 'cosmetiques-cbd',
+      description: 'Soins et cosmétiques au CBD',
+      image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop',
+      color: 'purple'
+    },
+    { 
+      name: 'Comestibles CBD',
+      slug: 'comestibles-cbd',
+      description: 'Gummies et bonbons au CBD',
+      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop',
       color: 'amber'
     },
     { 
-      name: 'Tech',
-      slug: 'tech',
-      description: 'Gadgets et accessoires tech',
-      image: '/images/categories/tech.jpg',
+      name: 'Accessoires',
+      slug: 'accessoires',
+      description: 'Accessoires et vaporisateurs',
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
       color: 'blue'
     },
     { 
-      name: 'Sport',
-      slug: 'sport',
-      description: 'Équipements et vêtements de sport',
-      image: '/images/categories/sport.jpg',
-      color: 'green'
+      name: 'Bien-être',
+      slug: 'bien-etre',
+      description: 'Produits de bien-être au CBD',
+      image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop',
+      color: 'pink'
     }
   ];
 
@@ -67,6 +67,52 @@ const HomePage = () => {
   const startIndex = (currentPage - 1) * categoriesPerPage;
   const endIndex = startIndex + categoriesPerPage;
   const currentCategories = categoriesToShow.slice(startIndex, endIndex);
+
+  // Produits CBD populaires pour la page d'accueil
+  const popularProducts = [
+    {
+      _id: 'pop1',
+      name: 'Huile CBD 10%',
+      description: 'Huile CBD naturelle et bio',
+      price: 49.99,
+      image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop'
+    },
+    {
+      _id: 'pop2',
+      name: 'Fleurs CBD Amnesia',
+      description: 'Fleurs CBD premium 15%',
+      price: 34.99,
+      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop'
+    },
+    {
+      _id: 'pop3',
+      name: 'Crème CBD Visage',
+      description: 'Crème hydratante au CBD',
+      price: 29.99,
+      image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop'
+    },
+    {
+      _id: 'pop4',
+      name: 'Gummies CBD',
+      description: 'Bonbons gélifiés au CBD',
+      price: 24.99,
+      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
+    },
+    {
+      _id: 'pop5',
+      name: 'Vaporisateur CBD',
+      description: 'Vaporisateur portable CBD',
+      price: 89.99,
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
+    },
+    {
+      _id: 'pop6',
+      name: 'Baume CBD',
+      description: 'Baume apaisant au CBD',
+      price: 19.99,
+      image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop'
+    }
+  ];
 
   const getColorClasses = (color) => {
     const colorMap = {
@@ -95,19 +141,19 @@ const HomePage = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        className="text-center mb-8"
       >
-        <h1 className="font-custom text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-pink-300 to-purple-400 bg-clip-text text-transparent mb-4">
-          Catégories
+        <h1 className="font-custom text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 via-pink-300 to-purple-400 bg-clip-text text-transparent mb-3">
+          Nos Produits
         </h1>
-        <p className="text-xl text-gray-200 max-w-2xl mx-auto">
-          Explorez notre collection organisée par catégories pour trouver exactement ce que vous cherchez
+        <p className="text-lg text-gray-200 max-w-2xl mx-auto">
+          Explorez notre collection de produits CBD pour trouver exactement ce que vous cherchez
         </p>
       </motion.div>
 
       {/* Categories Grid */}
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {currentCategories.map((category, index) => (
             <motion.div
               key={category.slug || category.name}
@@ -119,9 +165,9 @@ const HomePage = () => {
                 to={`/category/${category.slug || category.name.toLowerCase()}`}
                 className="group block"
               >
-                <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl">
+                <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl">
                   {/* Image */}
-                  <div className="aspect-[4/3] relative overflow-hidden">
+                  <div className="aspect-[3/2] relative overflow-hidden">
                     <div 
                       className={`
                         absolute inset-0 bg-gradient-to-br opacity-90
@@ -141,28 +187,28 @@ const HomePage = () => {
                     <div className="absolute inset-0 bg-black/20" />
                     
                     {/* Category Icon */}
-                    <div className="absolute top-4 right-4">
-                      <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                        <FiGrid className="text-white text-xl" />
+                    <div className="absolute top-3 right-3">
+                      <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                        <FiGrid className="text-white text-sm" />
                       </div>
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
+                  <div className="p-4">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-xl font-semibold text-white group-hover:text-pink-300 transition-colors">
+                      <h3 className="text-lg font-semibold text-white group-hover:text-pink-300 transition-colors">
                         {category.name}
                       </h3>
                       <FiArrowRight className="text-gray-400 group-hover:text-pink-400 group-hover:translate-x-1 transition-all duration-200" />
                     </div>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                    <p className="text-gray-300 text-xs leading-relaxed">
                       {category.description}
                     </p>
                     
                     {/* Product count if available */}
                     {category.productCount && (
-                      <div className="mt-3 text-xs text-gray-400">
+                      <div className="mt-2 text-xs text-gray-400">
                         {category.productCount} produit{category.productCount > 1 ? 's' : ''}
                       </div>
                     )}
@@ -213,7 +259,89 @@ const HomePage = () => {
         )}
       </div>
 
+      {/* Section Produits Populaires */}
+      <div className="max-w-6xl mx-auto mt-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-8"
+        >
+          <h2 className="font-custom text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-3">
+            Produits Populaires
+          </h2>
+          <p className="text-lg text-gray-200">
+            Découvrez nos produits les plus appréciés
+          </p>
+        </motion.div>
 
+        <div className="products-grid grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
+          {popularProducts.map((product, index) => (
+            <motion.div
+              key={product._id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105 group"
+            >
+              {/* Product Image */}
+              <div className="aspect-square relative overflow-hidden">
+                {product.image ? (
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center">
+                    <div className="text-gray-400 text-4xl">📦</div>
+                  </div>
+                )}
+                
+                {/* Overlay with actions */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <div className="flex gap-2">
+                    <Link
+                      to={`/product/${product._id}`}
+                      className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
+                    >
+                      <FiShoppingCart size={18} />
+                    </Link>
+                    <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+                      <FiHeart size={18} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Info */}
+              <div className="p-4">
+                <h3 className="text-white font-semibold mb-2 truncate">
+                  {product.name}
+                </h3>
+                <p className="text-gray-300 text-sm mb-3 line-clamp-2">
+                  {product.description}
+                </p>
+                
+
+                
+                {/* Price and Action */}
+                <div className="flex justify-between items-center">
+                  <span className="text-pink-400 font-bold text-lg">
+                    {product.price}€
+                  </span>
+                  <Link
+                    to={`/product/${product._id}`}
+                    className="px-4 py-2 bg-pink-500 text-white text-sm rounded-full hover:bg-pink-600 transition-colors"
+                  >
+                    Voir détails
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

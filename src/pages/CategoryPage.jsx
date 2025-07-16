@@ -10,7 +10,7 @@ const CategoryPage = () => {
   const { products, loading, fetchProducts } = useProductStore();
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 2;
+  const productsPerPage = 12; // Augmenté pour afficher plus de produits
 
   useEffect(() => {
     fetchProducts();
@@ -21,67 +21,224 @@ const CategoryPage = () => {
     if (products.length > 0) {
       const filtered = products.filter(product => 
         product.category?.toLowerCase() === category?.toLowerCase() ||
-        product.name?.toLowerCase().includes(category?.toLowerCase())
+        product.name?.toLowerCase().includes(category?.toLowerCase()) ||
+        product.description?.toLowerCase().includes(category?.toLowerCase())
       );
       setCategoryProducts(filtered);
     } else {
-      // Produits par défaut pour la démo
-      setCategoryProducts([
+      // Produits CBD par défaut pour la démo
+      const demoProducts = [
+        // Catégorie Huiles CBD
         {
-          _id: '1',
-          name: 'Produit Premium',
-          description: 'Un produit exceptionnel de haute qualité',
+          _id: 'cbd1',
+          name: 'Huile CBD 5%',
+          category: 'huiles-cbd',
+          description: 'Huile CBD naturelle et bio',
+          price: 29.99,
+          image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd2',
+          name: 'Huile CBD 10%',
+          category: 'huiles-cbd',
+          description: 'Huile CBD premium 10%',
+          price: 49.99,
+          image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd3',
+          name: 'Huile CBD 15%',
+          category: 'huiles-cbd',
+          description: 'Huile CBD forte 15%',
+          price: 69.99,
+          image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd4',
+          name: 'Huile CBD 20%',
+          category: 'huiles-cbd',
+          description: 'Huile CBD extra forte 20%',
           price: 89.99,
-          image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop',
-          rating: 4.8,
-          reviews: 124
+          image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop'
+        },
+        // Catégorie Fleurs CBD
+        {
+          _id: 'cbd5',
+          name: 'Fleurs CBD Amnesia',
+          category: 'fleurs-cbd',
+          description: 'Fleurs CBD premium 15%',
+          price: 34.99,
+          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop'
         },
         {
-          _id: '2',
-          name: 'Collection Exclusive',
-          description: 'Édition limitée avec des matériaux nobles',
-          price: 149.99,
-          image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
-          rating: 4.9,
-          reviews: 89
+          _id: 'cbd6',
+          name: 'Fleurs CBD OG Kush',
+          category: 'fleurs-cbd',
+          description: 'Fleurs CBD classique 12%',
+          price: 29.99,
+          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop'
         },
         {
-          _id: '3',
-          name: 'Design Moderne',
-          description: 'Style contemporain et élégant',
-          price: 199.99,
-          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-          rating: 4.7,
-          reviews: 156
+          _id: 'cbd7',
+          name: 'Fleurs CBD Lemon Haze',
+          category: 'fleurs-cbd',
+          description: 'Fleurs CBD citronnées 14%',
+          price: 32.99,
+          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop'
         },
         {
-          _id: '4',
-          name: 'Édition Spéciale',
-          description: 'Produit unique avec finitions soignées',
-          price: 299.99,
-          image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop',
-          rating: 5.0,
-          reviews: 67
+          _id: 'cbd8',
+          name: 'Fleurs CBD Purple Haze',
+          category: 'fleurs-cbd',
+          description: 'Fleurs CBD violettes 13%',
+          price: 31.99,
+          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop'
+        },
+        // Catégorie Cosmétiques CBD
+        {
+          _id: 'cbd9',
+          name: 'Crème CBD Visage',
+          category: 'cosmetiques-cbd',
+          description: 'Crème hydratante au CBD',
+          price: 29.99,
+          image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop'
         },
         {
-          _id: '5',
-          name: 'Collection Classic',
-          description: 'Intemporel et raffiné',
-          price: 179.99,
-          image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
-          rating: 4.6,
-          reviews: 203
+          _id: 'cbd10',
+          name: 'Sérum CBD Anti-âge',
+          category: 'cosmetiques-cbd',
+          description: 'Sérum régénérant au CBD',
+          price: 39.99,
+          image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop'
         },
         {
-          _id: '6',
-          name: 'Designer Series',
-          description: 'Création exclusive de nos designers',
-          price: 399.99,
-          image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop',
-          rating: 4.9,
-          reviews: 45
+          _id: 'cbd11',
+          name: 'Masque CBD',
+          category: 'cosmetiques-cbd',
+          description: 'Masque purifiant au CBD',
+          price: 19.99,
+          image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd12',
+          name: 'Baume CBD Corps',
+          category: 'cosmetiques-cbd',
+          description: 'Baume apaisant au CBD',
+          price: 24.99,
+          image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop'
+        },
+        // Catégorie Comestibles CBD
+        {
+          _id: 'cbd13',
+          name: 'Gummies CBD',
+          category: 'comestibles-cbd',
+          description: 'Bonbons gélifiés au CBD',
+          price: 24.99,
+          image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd14',
+          name: 'Chocolat CBD',
+          category: 'comestibles-cbd',
+          description: 'Chocolat noir au CBD',
+          price: 19.99,
+          image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd15',
+          name: 'Miel CBD',
+          category: 'comestibles-cbd',
+          description: 'Miel naturel au CBD',
+          price: 34.99,
+          image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd16',
+          name: 'Thé CBD',
+          category: 'comestibles-cbd',
+          description: 'Thé vert au CBD',
+          price: 14.99,
+          image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
+        },
+        // Catégorie Accessoires
+        {
+          _id: 'cbd17',
+          name: 'Vaporisateur CBD',
+          category: 'accessoires',
+          description: 'Vaporisateur portable CBD',
+          price: 89.99,
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd18',
+          name: 'Grinder CBD',
+          category: 'accessoires',
+          description: 'Grinder en aluminium',
+          price: 19.99,
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd19',
+          name: 'Briquet CBD',
+          category: 'accessoires',
+          description: 'Briquet jetable',
+          price: 2.99,
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd20',
+          name: 'Filtres CBD',
+          category: 'accessoires',
+          description: 'Filtres à cigarette',
+          price: 4.99,
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
+        },
+        // Catégorie Bien-être
+        {
+          _id: 'cbd21',
+          name: 'Huile de Massage CBD',
+          category: 'bien-etre',
+          description: 'Huile de massage relaxante',
+          price: 39.99,
+          image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd22',
+          name: 'Bougie CBD',
+          category: 'bien-etre',
+          description: 'Bougie parfumée au CBD',
+          price: 24.99,
+          image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd23',
+          name: 'Diffuseur CBD',
+          category: 'bien-etre',
+          description: 'Diffuseur d\'huiles essentielles',
+          price: 59.99,
+          image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd24',
+          name: 'Coussin CBD',
+          category: 'bien-etre',
+          description: 'Coussin chauffant au CBD',
+          price: 44.99,
+          image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop'
         }
-      ]);
+      ];
+      
+      // Filtrer par catégorie si spécifiée
+      if (category) {
+        const filtered = demoProducts.filter(product => 
+          product.category?.toLowerCase() === category?.toLowerCase() ||
+          product.name?.toLowerCase().includes(category?.toLowerCase()) ||
+          product.description?.toLowerCase().includes(category?.toLowerCase())
+        );
+        setCategoryProducts(filtered);
+      } else {
+        setCategoryProducts(demoProducts);
+      }
     }
   }, [products, category]);
 
@@ -121,14 +278,20 @@ const CategoryPage = () => {
         {currentProducts.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-gray-300 text-lg mb-6">
-              Aucun produit disponible dans cette catégorie pour le moment.
+              Aucun produit trouvé pour la catégorie "{category}".
             </p>
-            <p className="text-gray-400">
-              Revenez bientôt pour découvrir nos nouveautés !
+            <p className="text-gray-400 mb-8">
+              Essayez une autre catégorie ou revenez bientôt pour découvrir nos nouveautés !
             </p>
+            <Link
+              to="/"
+              className="px-6 py-3 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors"
+            >
+              Retour à l'accueil
+            </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="products-grid grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
             {currentProducts.map((product, index) => (
               <motion.div
                 key={product._id}
@@ -176,23 +339,7 @@ const CategoryPage = () => {
                     {product.description}
                   </p>
                   
-                  {/* Rating */}
-                  {product.rating && (
-                    <div className="flex items-center gap-1 mb-3">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <FiStar 
-                            key={i}
-                            size={14}
-                            className={i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-400'}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-xs text-gray-400">
-                        ({product.reviews})
-                      </span>
-                    </div>
-                  )}
+
                   
                   {/* Price and Action */}
                   <div className="flex justify-between items-center">
@@ -209,46 +356,46 @@ const CategoryPage = () => {
                 </div>
               </motion.div>
             ))}
-          </div>
-          
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-4 mt-8">
-              <button
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                <FiChevronLeft size={20} />
-                Précédent
-              </button>
-              
-              <div className="flex gap-2">
-                {[...Array(totalPages)].map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentPage(index + 1)}
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                      currentPage === index + 1
-                        ? 'bg-pink-500 text-white'
-                        : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
+            
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-4 mt-8">
+                <button
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <FiChevronLeft size={20} />
+                  Précédent
+                </button>
+                
+                <div className="flex gap-2">
+                  {[...Array(totalPages)].map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentPage(index + 1)}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                        currentPage === index + 1
+                          ? 'bg-pink-500 text-white'
+                          : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
+                      }`}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                </div>
+                
+                <button
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Suivant
+                  <FiChevronRight size={20} />
+                </button>
               </div>
-              
-              <button
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Suivant
-                <FiChevronRight size={20} />
-              </button>
-            </div>
-          )}
+            )}
+          </div>
         )}
       </motion.div>
     </div>

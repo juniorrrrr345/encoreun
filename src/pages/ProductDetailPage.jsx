@@ -8,37 +8,22 @@ const ProductDetailPage = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  // Données de démonstration pour le produit
+  // Données de démonstration pour le produit CBD
   const product = {
     _id: id,
-    name: 'Produit Premium Ultra',
-    description: 'Un produit exceptionnel de haute qualité avec des finitions soignées et des matériaux nobles. Ce produit unique combine design moderne et fonctionnalité pour offrir une expérience utilisateur incomparable.',
-    price: 299.99,
-    originalPrice: 399.99,
-    rating: 4.8,
-    reviews: 124,
+    name: 'Huile CBD Premium 10%',
+    description: 'Huile CBD naturelle et bio de haute qualité. Produite à partir de chanvre cultivé sans pesticides, cette huile offre une concentration optimale de CBD pour un effet relaxant et apaisant. Idéale pour le bien-être quotidien.',
+    price: 49.99,
+    originalPrice: 59.99,
+    discount: 17,
     inStock: true,
     images: [
-      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop'
+      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=600&fit=crop'
     ],
-    video: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
-    features: [
-      'Matériaux de haute qualité',
-      'Design moderne et élégant',
-      'Finition soignée',
-      'Garantie 2 ans',
-      'Livraison gratuite'
-    ],
-    specifications: {
-      'Matériau': 'Acier inoxydable premium',
-      'Dimensions': '15 x 10 x 5 cm',
-      'Poids': '250g',
-      'Couleur': 'Argenté mat',
-      'Garantie': '2 ans'
-    }
+    video: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4'
   };
 
   const handleVideoToggle = () => {
@@ -61,11 +46,11 @@ const ProductDetailPage = () => {
         {/* Header avec bouton retour */}
         <div className="mb-8">
           <Link 
-            to="/category"
+                            to="/category"
             className="inline-flex items-center text-pink-400 hover:text-pink-300 transition-colors"
           >
             <FiArrowLeft className="mr-2" />
-            Retour aux catégories
+            Retour aux produits
           </Link>
         </div>
 
@@ -147,32 +132,10 @@ const ProductDetailPage = () => {
                 {product.name}
               </h1>
               
-              {/* Rating */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <FiStar 
-                      key={i}
-                      size={16}
-                      className={i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-400'}
-                    />
-                  ))}
-                </div>
-                <span className="text-gray-300 text-sm">
-                  {product.rating} ({product.reviews} avis)
-                </span>
-              </div>
-
               {/* Prix */}
-              <div className="flex items-center gap-3 mb-6">
+              <div className="mb-6">
                 <span className="text-3xl font-bold text-pink-400">
                   {product.price}€
-                </span>
-                <span className="text-xl text-gray-400 line-through">
-                  {product.originalPrice}€
-                </span>
-                <span className="bg-pink-500 text-white text-sm px-2 py-1 rounded-full">
-                  -25%
                 </span>
               </div>
             </div>
@@ -183,32 +146,6 @@ const ProductDetailPage = () => {
               <p className="text-gray-300 leading-relaxed">
                 {product.description}
               </p>
-            </div>
-
-            {/* Caractéristiques */}
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Caractéristiques</h3>
-              <ul className="space-y-2">
-                {product.features.map((feature, index) => (
-                  <li key={index} className="flex items-center text-gray-300">
-                    <div className="w-2 h-2 bg-pink-400 rounded-full mr-3"></div>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Spécifications */}
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Spécifications</h3>
-              <div className="grid grid-cols-1 gap-2">
-                {Object.entries(product.specifications).map(([key, value]) => (
-                  <div key={key} className="flex justify-between py-2 border-b border-gray-700/50">
-                    <span className="text-gray-400">{key}</span>
-                    <span className="text-white">{value}</span>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Bouton d'action */}
