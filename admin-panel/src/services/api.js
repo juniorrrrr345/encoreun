@@ -6,48 +6,16 @@ const api = axios.create({
   timeout: 10000,
 });
 
-// Intercepteur pour ajouter le token d'authentification
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Intercepteur pour gérer les erreurs de réponse
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
-
-// Service d'authentification
+// Service d'authentification (simplifié)
 export const authService = {
-  login: async (credentials) => {
-    const response = await api.post('/auth/login', credentials);
-    return response.data;
-  },
-  
-  logout: async () => {
-    const response = await api.post('/auth/logout');
-    return response.data;
-  },
-  
   getProfile: async () => {
-    const response = await api.get('/auth/profile');
-    return response.data;
+    // Retourner un utilisateur par défaut
+    return {
+      id: 1,
+      name: 'Administrateur',
+      email: 'admin@example.com',
+      role: 'admin'
+    };
   },
   
   updateProfile: async (data) => {
