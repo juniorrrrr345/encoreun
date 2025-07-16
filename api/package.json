@@ -8,7 +8,8 @@
     "dev": "nodemon src/server.js",
     "test": "jest",
     "seed": "node seed.js",
-    "test-db": "node setup-mongodb.js"
+    "test-db": "node setup-mongodb.js",
+    "setup": "node setup-mongodb-interactive.js"
   },
   "keywords": ["api", "admin", "ecommerce", "boutique"],
   "author": "Votre Nom",
