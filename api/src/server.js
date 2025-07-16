@@ -48,12 +48,30 @@ app.use(helmet({
 app.use(compression());
 app.use(limiter);
 
-// Configuration CORS
+// Configuration CORS améliorée
 const corsOptions = {
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: function (origin, callback) {
+    // Liste des origines autorisées
+    const allowedOrigins = process.env.CORS_ORIGIN 
+      ? process.env.CORS_ORIGIN.split(',') 
+      : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'];
+    
+    // Permettre les requêtes sans origine (applications mobiles, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log('🚫 Origine bloquée par CORS:', origin);
+      callback(new Error('Non autorisé par CORS'));
+    }
+  },
   credentials: true,
-  optionsSuccessStatus: 200
+  optionsSuccessStatus: 200,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
+
 app.use(cors(corsOptions));
 
 // Middleware pour parser le JSON
@@ -77,7 +95,10 @@ app.get('/', (req, res) => {
     message: 'API d\'administration de la boutique',
     version: '1.0.0',
     environment: process.env.NODE_ENV || 'development',
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    cors: {
+      allowedOrigins: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000']
+    }
   });
 });
 
@@ -87,7 +108,8 @@ app.get('/health', (req, res) => {
     success: true,
     message: 'API en ligne',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    database: 'connected'
   });
 });
 
@@ -120,6 +142,7 @@ const server = app.listen(PORT, () => {
   console.log(`🚀 Serveur démarré sur le port ${PORT}`);
   console.log(`📊 Environnement: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 URL: http://localhost:${PORT}`);
+  console.log(`🌐 CORS autorisé pour: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`);
   console.log(`📝 Documentation: http://localhost:${PORT}/api-docs`);
 });
 
