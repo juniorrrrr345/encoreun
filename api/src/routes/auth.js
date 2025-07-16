@@ -1,135 +1,75 @@
 const express = require('express');
+const { body } = require('express-validator');
+const authController = require('../controllers/authController');
+const { authenticateToken, requireAdmin } = require('../middleware/auth');
 const { handleValidationErrors } = require('../middleware/validation');
 
 const router = express.Router();
 
-// Utilisateur par défaut pour les tests
-const defaultUser = {
-  id: 1,
-  name: 'Administrateur',
-  email: 'admin@example.com',
-  role: 'admin'
-};
+// Validation pour la connexion
+const loginValidation = [
+  body('email')
+    .isEmail()
+    .withMessage('Email invalide')
+    .normalizeEmail(),
+  body('password')
+    .isLength({ min: 6 })
+    .withMessage('Le mot de passe doit contenir au moins 6 caractères')
+];
 
-// Contrôleurs simplifiés
-const authController = {
-  // Connexion (simulée)
-  login: async (req, res) => {
-    try {
-      const { email, password } = req.body;
-      
-      // Simulation d'une vérification d'identifiants
-      if (email === 'admin@example.com' && password === 'admin123') {
-        const token = 'fake-jwt-token-' + Date.now();
-        
-        res.json({
-          success: true,
-          message: 'Connexion réussie',
-          token,
-          user: defaultUser
-        });
-      } else {
-        res.status(401).json({
-          success: false,
-          message: 'Identifiants invalides'
-        });
-      }
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Erreur lors de la connexion',
-        error: error.message
-      });
-    }
-  },
+// Validation pour l'inscription
+const registerValidation = [
+  body('name')
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Le nom doit contenir entre 2 et 50 caractères'),
+  body('email')
+    .isEmail()
+    .withMessage('Email invalide')
+    .normalizeEmail(),
+  body('password')
+    .isLength({ min: 6 })
+    .withMessage('Le mot de passe doit contenir au moins 6 caractères'),
+  body('role')
+    .optional()
+    .isIn(['admin', 'manager'])
+    .withMessage('Rôle invalide')
+];
 
-  // Déconnexion
-  logout: async (req, res) => {
-    try {
-      res.json({
-        success: true,
-        message: 'Déconnexion réussie'
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Erreur lors de la déconnexion',
-        error: error.message
-      });
-    }
-  },
+// Validation pour la mise à jour du profil
+const updateProfileValidation = [
+  body('name')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Le nom doit contenir entre 2 et 50 caractères'),
+  body('email')
+    .optional()
+    .isEmail()
+    .withMessage('Email invalide')
+    .normalizeEmail()
+];
 
-  // Récupérer le profil utilisateur
-  getProfile: async (req, res) => {
-    try {
-      res.json({
-        success: true,
-        data: defaultUser
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Erreur lors de la récupération du profil',
-        error: error.message
-      });
-    }
-  },
+// Validation pour le changement de mot de passe
+const changePasswordValidation = [
+  body('currentPassword')
+    .isLength({ min: 6 })
+    .withMessage('Le mot de passe actuel doit contenir au moins 6 caractères'),
+  body('newPassword')
+    .isLength({ min: 6 })
+    .withMessage('Le nouveau mot de passe doit contenir au moins 6 caractères')
+];
 
-  // Mettre à jour le profil
-  updateProfile: async (req, res) => {
-    try {
-      const updatedUser = {
-        ...defaultUser,
-        ...req.body,
-        id: defaultUser.id // Garder l'ID original
-      };
-      
-      res.json({
-        success: true,
-        message: 'Profil mis à jour avec succès',
-        data: updatedUser
-      });
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Erreur lors de la mise à jour du profil',
-        error: error.message
-      });
-    }
-  },
-
-  // Changer le mot de passe
-  changePassword: async (req, res) => {
-    try {
-      const { currentPassword, newPassword } = req.body;
-      
-      // Simulation de vérification
-      if (currentPassword === 'admin123') {
-        res.json({
-          success: true,
-          message: 'Mot de passe changé avec succès'
-        });
-      } else {
-        res.status(400).json({
-          success: false,
-          message: 'Mot de passe actuel incorrect'
-        });
-      }
-    } catch (error) {
-      res.status(500).json({
-        success: false,
-        message: 'Erreur lors du changement de mot de passe',
-        error: error.message
-      });
-    }
-  }
-};
-
-// Routes sans authentification (pour les tests)
-router.post('/login', authController.login);
+// Routes publiques - sans authentification pour les tests
+router.post('/login', loginValidation, handleValidationErrors, authController.login);
 router.post('/logout', authController.logout);
+
+// Routes protégées - sans authentification pour les tests
 router.get('/profile', authController.getProfile);
-router.put('/profile', authController.updateProfile);
-router.put('/change-password', authController.changePassword);
+router.put('/profile', updateProfileValidation, handleValidationErrors, authController.updateProfile);
+router.put('/change-password', changePasswordValidation, handleValidationErrors, authController.changePassword);
+
+// Routes admin uniquement - sans authentification pour les tests
+router.post('/register', registerValidation, handleValidationErrors, authController.register);
 
 module.exports = router;
