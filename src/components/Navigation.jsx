@@ -17,7 +17,6 @@ const Navigation = ({ safeAreaBottom, cartItemCount }) => {
   const navigationItems = [
     { path: '/', icon: FiHome, label: 'Accueil' },
     { path: '/category', icon: FiGrid, label: 'Catégories' },
-    { path: '/product', icon: FiShoppingBag, label: 'Produits' },
     { path: '/cart', icon: FiShoppingCart, label: 'Panier', badge: cartItemCount },
     { path: '/contact', icon: FiPhone, label: 'Contact' },
   ];

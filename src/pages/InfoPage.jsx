@@ -64,7 +64,7 @@ const InfoPage = () => {
             className="flex flex-col sm:flex-row gap-4 justify-center items-center"
           >
             <Link
-              to="/product"
+              to="/category"
               className="px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               Découvrir la Boutique
@@ -147,7 +147,7 @@ const InfoPage = () => {
               notre sélection unique de produits
             </p>
             <Link
-              to="/product"
+              to="/category"
               className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               <FiShoppingBag className="mr-2" />

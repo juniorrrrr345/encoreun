@@ -10,8 +10,6 @@ import useCart from './hooks/useCart';
 
 // Import des pages avec lazy loading
 const HomePage = React.lazy(() => import('./pages/HomePage'));
-const AllProductsPage = React.lazy(() => import('./pages/AllProductsPage'));
-const ProductPage = React.lazy(() => import('./pages/ProductPage'));
 const CategoryPage = React.lazy(() => import('./pages/CategoryPage'));
 const CartPage = React.lazy(() => import('./pages/CartPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
@@ -139,10 +137,8 @@ function App() {
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
-                <Route path="/product" element={<AllProductsPage />} />
                 <Route path="/" element={<InfoPage />} />
                 <Route path="/category" element={<HomePage />} />
-                <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/cart" element={<CartPage />} />
 
