@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: boutique-admin-api
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CORS_ORIGIN
+        value: https://votre-admin-frontend.onrender.com
+      - key: MONGODB_URI
+        fromDatabase:
+          name: boutique-mongodb
+          property: connectionString
