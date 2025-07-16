@@ -95,19 +95,19 @@ const HomePage = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        className="text-center mb-8"
       >
-        <h1 className="font-custom text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-pink-300 to-purple-400 bg-clip-text text-transparent mb-4">
+        <h1 className="font-custom text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 via-pink-300 to-purple-400 bg-clip-text text-transparent mb-3">
           Catégories
         </h1>
-        <p className="text-xl text-gray-200 max-w-2xl mx-auto">
+        <p className="text-lg text-gray-200 max-w-2xl mx-auto">
           Explorez notre collection organisée par catégories pour trouver exactement ce que vous cherchez
         </p>
       </motion.div>
 
       {/* Categories Grid */}
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {currentCategories.map((category, index) => (
             <motion.div
               key={category.slug || category.name}
@@ -119,9 +119,9 @@ const HomePage = () => {
                 to={`/category/${category.slug || category.name.toLowerCase()}`}
                 className="group block"
               >
-                <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl">
+                <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl">
                   {/* Image */}
-                  <div className="aspect-[4/3] relative overflow-hidden">
+                  <div className="aspect-[3/2] relative overflow-hidden">
                     <div 
                       className={`
                         absolute inset-0 bg-gradient-to-br opacity-90
@@ -141,28 +141,28 @@ const HomePage = () => {
                     <div className="absolute inset-0 bg-black/20" />
                     
                     {/* Category Icon */}
-                    <div className="absolute top-4 right-4">
-                      <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
-                        <FiGrid className="text-white text-xl" />
+                    <div className="absolute top-3 right-3">
+                      <div className="w-8 h-8 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center">
+                        <FiGrid className="text-white text-sm" />
                       </div>
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
+                  <div className="p-4">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-xl font-semibold text-white group-hover:text-pink-300 transition-colors">
+                      <h3 className="text-lg font-semibold text-white group-hover:text-pink-300 transition-colors">
                         {category.name}
                       </h3>
                       <FiArrowRight className="text-gray-400 group-hover:text-pink-400 group-hover:translate-x-1 transition-all duration-200" />
                     </div>
-                    <p className="text-gray-300 text-sm leading-relaxed">
+                    <p className="text-gray-300 text-xs leading-relaxed">
                       {category.description}
                     </p>
                     
                     {/* Product count if available */}
                     {category.productCount && (
-                      <div className="mt-3 text-xs text-gray-400">
+                      <div className="mt-2 text-xs text-gray-400">
                         {category.productCount} produit{category.productCount > 1 ? 's' : ''}
                       </div>
                     )}
