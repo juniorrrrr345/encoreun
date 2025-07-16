@@ -211,19 +211,14 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
-            {/* Boutons d'action */}
-            <div className="space-y-4 pt-6">
+            {/* Bouton d'action */}
+            <div className="pt-6">
               <button
                 onClick={handleCommander}
                 className="w-full py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
                 <FiShoppingCart className="inline mr-2" />
                 Commander maintenant
-              </button>
-              
-              <button className="w-full py-4 border-2 border-pink-500 text-pink-300 font-semibold rounded-full hover:bg-pink-500 hover:text-white transition-all duration-300">
-                <FiHeart className="inline mr-2" />
-                Ajouter aux favoris
               </button>
             </div>
 

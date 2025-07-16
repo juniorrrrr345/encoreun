@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiShoppingCart, FiHeart, FiStar } from 'react-icons/fi';
+import { FiShoppingCart, FiHeart, FiStar, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import useProductStore from '../store/useProductStore';
 import Loader from '../components/Loader';
 
@@ -9,6 +9,8 @@ const CategoryPage = () => {
   const { category } = useParams();
   const { products, loading, fetchProducts } = useProductStore();
   const [categoryProducts, setCategoryProducts] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 2;
 
   useEffect(() => {
     fetchProducts();
