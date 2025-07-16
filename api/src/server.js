@@ -8,7 +8,7 @@ const morgan = require('morgan');
 const path = require('path');
 
 // Import des configurations
-const connectDB = require('./config/database');
+// const connectDB = require('./config/database'); // Commenté pour le test
 const { errorHandler, notFound } = require('./middleware/validation');
 
 // Import des routes
@@ -18,8 +18,8 @@ const orderRoutes = require('./routes/orders');
 
 const app = express();
 
-// Connexion à la base de données
-connectDB();
+// Connexion à la base de données (commenté pour le test)
+// connectDB();
 
 // Configuration du rate limiting
 const limiter = rateLimit({
@@ -109,7 +109,7 @@ app.get('/health', (req, res) => {
     message: 'API en ligne',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-    database: 'connected'
+    database: 'memory-only'
   });
 });
 
@@ -144,6 +144,7 @@ const server = app.listen(PORT, () => {
   console.log(`🔗 URL: http://localhost:${PORT}`);
   console.log(`🌐 CORS autorisé pour: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`);
   console.log(`📝 Documentation: http://localhost:${PORT}/api-docs`);
+  console.log(`⚠️  Mode: Base de données en mémoire (pour les tests)`);
 });
 
 // Gestion gracieuse de l'arrêt
