@@ -46,11 +46,11 @@ const ProductDetailPage = () => {
         {/* Header avec bouton retour */}
         <div className="mb-8">
           <Link 
-            to="/category"
+            to="/produits"
             className="inline-flex items-center text-pink-400 hover:text-pink-300 transition-colors"
           >
             <FiArrowLeft className="mr-2" />
-            Retour aux catégories
+            Retour aux produits
           </Link>
         </div>
 
