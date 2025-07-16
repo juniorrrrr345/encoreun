@@ -2,12 +2,12 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { authService } from './services/api';
-import Layout from './components/Layout';
-import LoginPage from './pages/LoginPage';
-import DashboardPage from './pages/DashboardPage';
-import ProductsPage from './pages/ProductsPage';
-import OrdersPage from './pages/OrdersPage';
-import ProfilePage from './pages/ProfilePage';
+import Layout from './components/Layout.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
+import ProductsPage from './pages/ProductsPage.jsx';
+import OrdersPage from './pages/OrdersPage.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
 
 // Composant pour vérifier l'authentification
 const ProtectedRoute = ({ children }) => {
