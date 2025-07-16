@@ -26,253 +26,205 @@ const CategoryPage = () => {
       );
       setCategoryProducts(filtered);
     } else {
-      // Produits par défaut pour la démo avec catégories
+      // Produits CBD par défaut pour la démo
       const demoProducts = [
-        // Catégorie Vêtements
+        // Catégorie Huiles CBD
         {
-          _id: 'vet1',
-          name: 'T-shirt Premium',
-          category: 'vetements',
-          description: 'T-shirt en coton bio de haute qualité',
+          _id: 'cbd1',
+          name: 'Huile CBD 5%',
+          category: 'huiles-cbd',
+          description: 'Huile CBD naturelle et bio',
           price: 29.99,
-          image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
-          rating: 4.8,
-          reviews: 124
+          image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop'
         },
         {
-          _id: 'vet2',
-          name: 'Jean Classic',
-          category: 'vetements',
-          description: 'Jean confortable et élégant',
-          price: 79.99,
-          image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=400&fit=crop',
-          rating: 4.6,
-          reviews: 89
-        },
-        {
-          _id: 'vet3',
-          name: 'Pull Hiver',
-          category: 'vetements',
-          description: 'Pull chaud et doux pour l\'hiver',
-          price: 59.99,
-          image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=400&fit=crop',
-          rating: 4.7,
-          reviews: 156
-        },
-        {
-          _id: 'vet4',
-          name: 'Robe Élégante',
-          category: 'vetements',
-          description: 'Robe parfaite pour toutes occasions',
-          price: 89.99,
-          image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop',
-          rating: 4.9,
-          reviews: 203
-        },
-        // Catégorie Beauté
-        {
-          _id: 'bea1',
-          name: 'Crème Hydratante',
-          category: 'beaute',
-          description: 'Crème hydratante 24h',
-          price: 24.99,
-          image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop',
-          rating: 4.8,
-          reviews: 234
-        },
-        {
-          _id: 'bea2',
-          name: 'Sérum Anti-âge',
-          category: 'beaute',
-          description: 'Sérum révolutionnaire',
+          _id: 'cbd2',
+          name: 'Huile CBD 10%',
+          category: 'huiles-cbd',
+          description: 'Huile CBD premium 10%',
           price: 49.99,
-          image: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&h=400&fit=crop',
-          rating: 4.9,
-          reviews: 167
+          image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop'
         },
         {
-          _id: 'bea3',
-          name: 'Masque Visage',
-          category: 'beaute',
-          description: 'Masque purifiant',
-          price: 19.99,
-          image: 'https://images.unsplash.com/photo-1556228578-92a0c9a8c4e5?w=400&h=400&fit=crop',
-          rating: 4.6,
-          reviews: 98
-        },
-        {
-          _id: 'bea4',
-          name: 'Parfum Exclusif',
-          category: 'beaute',
-          description: 'Fragrance unique et durable',
-          price: 89.99,
-          image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&h=400&fit=crop',
-          rating: 4.7,
-          reviews: 145
-        },
-        // Catégorie Maison
-        {
-          _id: 'mai1',
-          name: 'Lampe Design',
-          category: 'maison',
-          description: 'Lampe moderne pour votre intérieur',
-          price: 129.99,
-          image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=400&fit=crop',
-          rating: 4.8,
-          reviews: 78
-        },
-        {
-          _id: 'mai2',
-          name: 'Coussin Décoratif',
-          category: 'maison',
-          description: 'Coussin confortable et élégant',
-          price: 39.99,
-          image: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=400&h=400&fit=crop',
-          rating: 4.5,
-          reviews: 112
-        },
-        {
-          _id: 'mai3',
-          name: 'Vase Artisanal',
-          category: 'maison',
-          description: 'Vase unique fait main',
+          _id: 'cbd3',
+          name: 'Huile CBD 15%',
+          category: 'huiles-cbd',
+          description: 'Huile CBD forte 15%',
           price: 69.99,
-          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop',
-          rating: 4.7,
-          reviews: 89
+          image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop'
         },
         {
-          _id: 'mai4',
-          name: 'Tapis Moderne',
-          category: 'maison',
-          description: 'Tapis contemporain pour votre salon',
-          price: 199.99,
-          image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop',
-          rating: 4.6,
-          reviews: 156
-        },
-        // Catégorie Bijoux
-        {
-          _id: 'bij1',
-          name: 'Bague Diamant',
-          category: 'bijoux',
-          description: 'Bague en or blanc avec diamant',
-          price: 299.99,
-          image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop',
-          rating: 4.9,
-          reviews: 67
-        },
-        {
-          _id: 'bij2',
-          name: 'Collier Or',
-          category: 'bijoux',
-          description: 'Collier élégant en or 18k',
-          price: 189.99,
-          image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop',
-          rating: 4.8,
-          reviews: 134
-        },
-        {
-          _id: 'bij3',
-          name: 'Bracelet Argent',
-          category: 'bijoux',
-          description: 'Bracelet en argent sterling',
-          price: 79.99,
-          image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=400&fit=crop',
-          rating: 4.6,
-          reviews: 98
-        },
-        {
-          _id: 'bij4',
-          name: 'Montre Luxe',
-          category: 'bijoux',
-          description: 'Montre automatique de luxe',
-          price: 599.99,
-          image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&h=400&fit=crop',
-          rating: 4.9,
-          reviews: 45
-        },
-        // Catégorie Tech
-        {
-          _id: 'tec1',
-          name: 'Smartphone Pro',
-          category: 'tech',
-          description: 'Smartphone dernière génération',
-          price: 899.99,
-          image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
-          rating: 4.8,
-          reviews: 234
-        },
-        {
-          _id: 'tec2',
-          name: 'Casque Audio',
-          category: 'tech',
-          description: 'Casque sans fil haute qualité',
-          price: 149.99,
-          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-          rating: 4.7,
-          reviews: 167
-        },
-        {
-          _id: 'tec3',
-          name: 'Ordinateur Portable',
-          category: 'tech',
-          description: 'Laptop performant pour tous usages',
-          price: 1299.99,
-          image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop',
-          rating: 4.9,
-          reviews: 89
-        },
-        {
-          _id: 'tec4',
-          name: 'Tablette Ultra',
-          category: 'tech',
-          description: 'Tablette ultra-fine et rapide',
-          price: 499.99,
-          image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop',
-          rating: 4.6,
-          reviews: 145
-        },
-        // Catégorie Sport
-        {
-          _id: 'spo1',
-          name: 'Sneakers Running',
-          category: 'sport',
-          description: 'Chaussures de course professionnelles',
-          price: 129.99,
-          image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
-          rating: 4.8,
-          reviews: 178
-        },
-        {
-          _id: 'spo2',
-          name: 'Ballon Football',
-          category: 'sport',
-          description: 'Ballon officiel de compétition',
-          price: 49.99,
-          image: 'https://images.unsplash.com/photo-1552318965-6e6be7484ada?w=400&h=400&fit=crop',
-          rating: 4.6,
-          reviews: 112
-        },
-        {
-          _id: 'spo3',
-          name: 'Raquette Tennis',
-          category: 'sport',
-          description: 'Raquette professionnelle',
+          _id: 'cbd4',
+          name: 'Huile CBD 20%',
+          category: 'huiles-cbd',
+          description: 'Huile CBD extra forte 20%',
           price: 89.99,
-          image: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=400&fit=crop',
-          rating: 4.7,
-          reviews: 98
+          image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop'
+        },
+        // Catégorie Fleurs CBD
+        {
+          _id: 'cbd5',
+          name: 'Fleurs CBD Amnesia',
+          category: 'fleurs-cbd',
+          description: 'Fleurs CBD premium 15%',
+          price: 34.99,
+          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop'
         },
         {
-          _id: 'spo4',
-          name: 'Vélo Fitness',
-          category: 'sport',
-          description: 'Vélo d\'appartement connecté',
-          price: 299.99,
-          image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop',
-          rating: 4.5,
-          reviews: 67
+          _id: 'cbd6',
+          name: 'Fleurs CBD OG Kush',
+          category: 'fleurs-cbd',
+          description: 'Fleurs CBD classique 12%',
+          price: 29.99,
+          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd7',
+          name: 'Fleurs CBD Lemon Haze',
+          category: 'fleurs-cbd',
+          description: 'Fleurs CBD citronnées 14%',
+          price: 32.99,
+          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd8',
+          name: 'Fleurs CBD Purple Haze',
+          category: 'fleurs-cbd',
+          description: 'Fleurs CBD violettes 13%',
+          price: 31.99,
+          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop'
+        },
+        // Catégorie Cosmétiques CBD
+        {
+          _id: 'cbd9',
+          name: 'Crème CBD Visage',
+          category: 'cosmetiques-cbd',
+          description: 'Crème hydratante au CBD',
+          price: 29.99,
+          image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd10',
+          name: 'Sérum CBD Anti-âge',
+          category: 'cosmetiques-cbd',
+          description: 'Sérum régénérant au CBD',
+          price: 39.99,
+          image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd11',
+          name: 'Masque CBD',
+          category: 'cosmetiques-cbd',
+          description: 'Masque purifiant au CBD',
+          price: 19.99,
+          image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd12',
+          name: 'Baume CBD Corps',
+          category: 'cosmetiques-cbd',
+          description: 'Baume apaisant au CBD',
+          price: 24.99,
+          image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop'
+        },
+        // Catégorie Comestibles CBD
+        {
+          _id: 'cbd13',
+          name: 'Gummies CBD',
+          category: 'comestibles-cbd',
+          description: 'Bonbons gélifiés au CBD',
+          price: 24.99,
+          image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd14',
+          name: 'Chocolat CBD',
+          category: 'comestibles-cbd',
+          description: 'Chocolat noir au CBD',
+          price: 19.99,
+          image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd15',
+          name: 'Miel CBD',
+          category: 'comestibles-cbd',
+          description: 'Miel naturel au CBD',
+          price: 34.99,
+          image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd16',
+          name: 'Thé CBD',
+          category: 'comestibles-cbd',
+          description: 'Thé vert au CBD',
+          price: 14.99,
+          image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
+        },
+        // Catégorie Accessoires
+        {
+          _id: 'cbd17',
+          name: 'Vaporisateur CBD',
+          category: 'accessoires',
+          description: 'Vaporisateur portable CBD',
+          price: 89.99,
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd18',
+          name: 'Grinder CBD',
+          category: 'accessoires',
+          description: 'Grinder en aluminium',
+          price: 19.99,
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd19',
+          name: 'Briquet CBD',
+          category: 'accessoires',
+          description: 'Briquet jetable',
+          price: 2.99,
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd20',
+          name: 'Filtres CBD',
+          category: 'accessoires',
+          description: 'Filtres à cigarette',
+          price: 4.99,
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
+        },
+        // Catégorie Bien-être
+        {
+          _id: 'cbd21',
+          name: 'Huile de Massage CBD',
+          category: 'bien-etre',
+          description: 'Huile de massage relaxante',
+          price: 39.99,
+          image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd22',
+          name: 'Bougie CBD',
+          category: 'bien-etre',
+          description: 'Bougie parfumée au CBD',
+          price: 24.99,
+          image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd23',
+          name: 'Diffuseur CBD',
+          category: 'bien-etre',
+          description: 'Diffuseur d\'huiles essentielles',
+          price: 59.99,
+          image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop'
+        },
+        {
+          _id: 'cbd24',
+          name: 'Coussin CBD',
+          category: 'bien-etre',
+          description: 'Coussin chauffant au CBD',
+          price: 44.99,
+          image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop'
         }
       ];
       
@@ -387,23 +339,7 @@ const CategoryPage = () => {
                     {product.description}
                   </p>
                   
-                  {/* Rating */}
-                  {product.rating && (
-                    <div className="flex items-center gap-1 mb-3">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <FiStar 
-                            key={i}
-                            size={14}
-                            className={i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-400'}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-xs text-gray-400">
-                        ({product.reviews})
-                      </span>
-                    </div>
-                  )}
+
                   
                   {/* Price and Action */}
                   <div className="flex justify-between items-center">

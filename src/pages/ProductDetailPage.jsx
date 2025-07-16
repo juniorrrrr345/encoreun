@@ -8,24 +8,20 @@ const ProductDetailPage = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [selectedImage, setSelectedImage] = useState(0);
 
-  // Données de démonstration pour le produit
+  // Données de démonstration pour le produit CBD
   const product = {
     _id: id,
-    name: 'Produit Premium Ultra',
-    description: 'Un produit exceptionnel de haute qualité avec des finitions soignées et des matériaux nobles. Ce produit unique combine design moderne et fonctionnalité pour offrir une expérience utilisateur incomparable.',
-    prices: [
-      { name: 'Prix standard', price: 299.99, originalPrice: 399.99, discount: 25 },
-      { name: 'Prix premium', price: 349.99, originalPrice: 449.99, discount: 22 },
-      { name: 'Prix VIP', price: 399.99, originalPrice: 499.99, discount: 20 }
-    ],
-    rating: 4.8,
-    reviews: 124,
+    name: 'Huile CBD Premium 10%',
+    description: 'Huile CBD naturelle et bio de haute qualité. Produite à partir de chanvre cultivé sans pesticides, cette huile offre une concentration optimale de CBD pour un effet relaxant et apaisant. Idéale pour le bien-être quotidien.',
+    price: 49.99,
+    originalPrice: 59.99,
+    discount: 17,
     inStock: true,
     images: [
-      'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop',
-      'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop'
+      'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=600&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=600&h=600&fit=crop',
+      'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&h=600&fit=crop'
     ],
     video: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4'
   };
@@ -136,45 +132,17 @@ const ProductDetailPage = () => {
                 {product.name}
               </h1>
               
-              {/* Rating */}
-              <div className="flex items-center gap-2 mb-4">
-                <div className="flex items-center">
-                  {[...Array(5)].map((_, i) => (
-                    <FiStar 
-                      key={i}
-                      size={16}
-                      className={i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-400'}
-                    />
-                  ))}
-                </div>
-                <span className="text-gray-300 text-sm">
-                  {product.rating} ({product.reviews} avis)
+              {/* Prix */}
+              <div className="flex items-center gap-3 mb-6">
+                <span className="text-3xl font-bold text-pink-400">
+                  {product.price}€
                 </span>
-              </div>
-
-              {/* Prix multiples */}
-              <div className="space-y-4 mb-6">
-                <h3 className="text-lg font-semibold text-white">Options de prix</h3>
-                <div className="space-y-3">
-                  {product.prices.map((priceOption, index) => (
-                    <div key={index} className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 hover:bg-gray-800/70 transition-all duration-300">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-white font-medium">{priceOption.name}</span>
-                        <span className="bg-pink-500 text-white text-xs px-2 py-1 rounded-full">
-                          -{priceOption.discount}%
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <span className="text-2xl font-bold text-pink-400">
-                          {priceOption.price}€
-                        </span>
-                        <span className="text-lg text-gray-400 line-through">
-                          {priceOption.originalPrice}€
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <span className="text-xl text-gray-400 line-through">
+                  {product.originalPrice}€
+                </span>
+                <span className="bg-pink-500 text-white text-sm px-2 py-1 rounded-full">
+                  -{product.discount}%
+                </span>
               </div>
             </div>
 

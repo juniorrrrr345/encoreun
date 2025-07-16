@@ -14,49 +14,49 @@ const HomePage = () => {
     fetchCategories();
   }, [fetchCategories]);
 
-  // Catégories par défaut si l'API ne répond pas
+  // Produits CBD par défaut si l'API ne répond pas
   const defaultCategories = [
     { 
-      name: 'Vêtements',
-      slug: 'vetements',
-      description: 'Mode et accessoires tendance',
-      image: '/images/categories/clothing.jpg',
-      color: 'pink'
+      name: 'Huiles CBD',
+      slug: 'huiles-cbd',
+      description: 'Huiles CBD de qualité premium',
+      image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop',
+      color: 'green'
     },
     { 
-      name: 'Beauté',
-      slug: 'beaute',
-      description: 'Produits de beauté et cosmétiques',
-      image: '/images/categories/beauty.jpg',
-      color: 'purple'
-    },
-    { 
-      name: 'Maison',
-      slug: 'maison',
-      description: 'Décoration et accessoires maison',
-      image: '/images/categories/home.jpg',
+      name: 'Fleurs CBD',
+      slug: 'fleurs-cbd',
+      description: 'Fleurs CBD naturelles et bio',
+      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop',
       color: 'emerald'
     },
     { 
-      name: 'Bijoux',
-      slug: 'bijoux',
-      description: 'Bijoux et accessoires précieux',
-      image: '/images/categories/jewelry.jpg',
+      name: 'Cosmétiques CBD',
+      slug: 'cosmetiques-cbd',
+      description: 'Soins et cosmétiques au CBD',
+      image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop',
+      color: 'purple'
+    },
+    { 
+      name: 'Comestibles CBD',
+      slug: 'comestibles-cbd',
+      description: 'Gummies et bonbons au CBD',
+      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop',
       color: 'amber'
     },
     { 
-      name: 'Tech',
-      slug: 'tech',
-      description: 'Gadgets et accessoires tech',
-      image: '/images/categories/tech.jpg',
+      name: 'Accessoires',
+      slug: 'accessoires',
+      description: 'Accessoires et vaporisateurs',
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
       color: 'blue'
     },
     { 
-      name: 'Sport',
-      slug: 'sport',
-      description: 'Équipements et vêtements de sport',
-      image: '/images/categories/sport.jpg',
-      color: 'green'
+      name: 'Bien-être',
+      slug: 'bien-etre',
+      description: 'Produits de bien-être au CBD',
+      image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop',
+      color: 'pink'
     }
   ];
 
@@ -68,61 +68,49 @@ const HomePage = () => {
   const endIndex = startIndex + categoriesPerPage;
   const currentCategories = categoriesToShow.slice(startIndex, endIndex);
 
-  // Produits populaires pour la page d'accueil
+  // Produits CBD populaires pour la page d'accueil
   const popularProducts = [
     {
       _id: 'pop1',
-      name: 'T-shirt Premium',
-      description: 'T-shirt en coton bio de haute qualité',
-      price: 29.99,
-      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
-      rating: 4.8,
-      reviews: 124
+      name: 'Huile CBD 10%',
+      description: 'Huile CBD naturelle et bio',
+      price: 49.99,
+      image: 'https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=400&h=400&fit=crop'
     },
     {
       _id: 'pop2',
-      name: 'Crème Hydratante',
-      description: 'Crème hydratante 24h',
-      price: 24.99,
-      image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop',
-      rating: 4.8,
-      reviews: 234
+      name: 'Fleurs CBD Amnesia',
+      description: 'Fleurs CBD premium 15%',
+      price: 34.99,
+      image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop'
     },
     {
       _id: 'pop3',
-      name: 'Lampe Design',
-      description: 'Lampe moderne pour votre intérieur',
-      price: 129.99,
-      image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=400&fit=crop',
-      rating: 4.8,
-      reviews: 78
+      name: 'Crème CBD Visage',
+      description: 'Crème hydratante au CBD',
+      price: 29.99,
+      image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop'
     },
     {
       _id: 'pop4',
-      name: 'Bague Diamant',
-      description: 'Bague en or blanc avec diamant',
-      price: 299.99,
-      image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop',
-      rating: 4.9,
-      reviews: 67
+      name: 'Gummies CBD',
+      description: 'Bonbons gélifiés au CBD',
+      price: 24.99,
+      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop'
     },
     {
       _id: 'pop5',
-      name: 'Smartphone Pro',
-      description: 'Smartphone dernière génération',
-      price: 899.99,
-      image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
-      rating: 4.8,
-      reviews: 234
+      name: 'Vaporisateur CBD',
+      description: 'Vaporisateur portable CBD',
+      price: 89.99,
+      image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
     },
     {
       _id: 'pop6',
-      name: 'Sneakers Running',
-      description: 'Chaussures de course professionnelles',
-      price: 129.99,
-      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
-      rating: 4.8,
-      reviews: 178
+      name: 'Baume CBD',
+      description: 'Baume apaisant au CBD',
+      price: 19.99,
+      image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop'
     }
   ];
 
@@ -156,10 +144,10 @@ const HomePage = () => {
         className="text-center mb-8"
       >
         <h1 className="font-custom text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 via-pink-300 to-purple-400 bg-clip-text text-transparent mb-3">
-          Catégories
+          Nos Produits
         </h1>
         <p className="text-lg text-gray-200 max-w-2xl mx-auto">
-          Explorez notre collection organisée par catégories pour trouver exactement ce que vous cherchez
+          Explorez notre collection de produits CBD pour trouver exactement ce que vous cherchez
         </p>
       </motion.div>
 
@@ -335,23 +323,7 @@ const HomePage = () => {
                   {product.description}
                 </p>
                 
-                {/* Rating */}
-                {product.rating && (
-                  <div className="flex items-center gap-1 mb-3">
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <FiStar 
-                          key={i}
-                          size={14}
-                          className={i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-400'}
-                        />
-                      ))}
-                    </div>
-                    <span className="text-xs text-gray-400">
-                      ({product.reviews})
-                    </span>
-                  </div>
-                )}
+
                 
                 {/* Price and Action */}
                 <div className="flex justify-between items-center">
