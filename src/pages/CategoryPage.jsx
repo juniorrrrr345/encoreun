@@ -254,9 +254,5 @@ const CategoryPage = () => {
     </div>
   );
 };
-      </motion.div>
-    </div>
-  );
-};
 
 export default CategoryPage;
