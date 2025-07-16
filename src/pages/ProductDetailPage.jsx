@@ -13,8 +13,11 @@ const ProductDetailPage = () => {
     _id: id,
     name: 'Produit Premium Ultra',
     description: 'Un produit exceptionnel de haute qualité avec des finitions soignées et des matériaux nobles. Ce produit unique combine design moderne et fonctionnalité pour offrir une expérience utilisateur incomparable.',
-    price: 299.99,
-    originalPrice: 399.99,
+    prices: [
+      { name: 'Prix standard', price: 299.99, originalPrice: 399.99, discount: 25 },
+      { name: 'Prix premium', price: 349.99, originalPrice: 449.99, discount: 22 },
+      { name: 'Prix VIP', price: 399.99, originalPrice: 499.99, discount: 20 }
+    ],
     rating: 4.8,
     reviews: 124,
     inStock: true,
@@ -24,21 +27,7 @@ const ProductDetailPage = () => {
       'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600&h=600&fit=crop',
       'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=600&fit=crop'
     ],
-    video: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
-    features: [
-      'Matériaux de haute qualité',
-      'Design moderne et élégant',
-      'Finition soignée',
-      'Garantie 2 ans',
-      'Livraison gratuite'
-    ],
-    specifications: {
-      'Matériau': 'Acier inoxydable premium',
-      'Dimensions': '15 x 10 x 5 cm',
-      'Poids': '250g',
-      'Couleur': 'Argenté mat',
-      'Garantie': '2 ans'
-    }
+    video: 'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4'
   };
 
   const handleVideoToggle = () => {
@@ -163,17 +152,29 @@ const ProductDetailPage = () => {
                 </span>
               </div>
 
-              {/* Prix */}
-              <div className="flex items-center gap-3 mb-6">
-                <span className="text-3xl font-bold text-pink-400">
-                  {product.price}€
-                </span>
-                <span className="text-xl text-gray-400 line-through">
-                  {product.originalPrice}€
-                </span>
-                <span className="bg-pink-500 text-white text-sm px-2 py-1 rounded-full">
-                  -25%
-                </span>
+              {/* Prix multiples */}
+              <div className="space-y-4 mb-6">
+                <h3 className="text-lg font-semibold text-white">Options de prix</h3>
+                <div className="space-y-3">
+                  {product.prices.map((priceOption, index) => (
+                    <div key={index} className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-lg p-4 hover:bg-gray-800/70 transition-all duration-300">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-white font-medium">{priceOption.name}</span>
+                        <span className="bg-pink-500 text-white text-xs px-2 py-1 rounded-full">
+                          -{priceOption.discount}%
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl font-bold text-pink-400">
+                          {priceOption.price}€
+                        </span>
+                        <span className="text-lg text-gray-400 line-through">
+                          {priceOption.originalPrice}€
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -183,32 +184,6 @@ const ProductDetailPage = () => {
               <p className="text-gray-300 leading-relaxed">
                 {product.description}
               </p>
-            </div>
-
-            {/* Caractéristiques */}
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Caractéristiques</h3>
-              <ul className="space-y-2">
-                {product.features.map((feature, index) => (
-                  <li key={index} className="flex items-center text-gray-300">
-                    <div className="w-2 h-2 bg-pink-400 rounded-full mr-3"></div>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Spécifications */}
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-3">Spécifications</h3>
-              <div className="grid grid-cols-1 gap-2">
-                {Object.entries(product.specifications).map(([key, value]) => (
-                  <div key={key} className="flex justify-between py-2 border-b border-gray-700/50">
-                    <span className="text-gray-400">{key}</span>
-                    <span className="text-white">{value}</span>
-                  </div>
-                ))}
-              </div>
             </div>
 
             {/* Bouton d'action */}
