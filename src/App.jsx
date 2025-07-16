@@ -3,10 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import useAuthStore from './store/useAuthStore';
 import Loader from './components/Loader';
 import Navigation from './components/Navigation';
-import useCart from './hooks/useCart';
 
 // Import des pages avec lazy loading
 const HomePage = React.lazy(() => import('./pages/HomePage'));
@@ -16,27 +14,7 @@ const ProductDetailPage = React.lazy(() => import('./pages/ProductDetailPage'));
 
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 
-// Hook pour gérer le nombre d'articles dans le panier
-const useCartItemCount = () => {
-  const [count, setCount] = useState(0);
 
-  useEffect(() => {
-    const updateCount = (event) => {
-      if (event && event.detail !== undefined) {
-        setCount(event.detail);
-      } else {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCount(cart.length);
-      }
-    };
-
-    updateCount();
-    window.addEventListener('cartUpdated', updateCount);
-    return () => window.removeEventListener('cartUpdated', updateCount);
-  }, []);
-
-  return count;
-};
 
 // Composant pour l'arrière-plan
 const BackgroundComponent = () => (
@@ -54,8 +32,7 @@ const BackgroundComponent = () => (
 );
 
 function App() {
-  const { user, checkAuth, checkingAuth } = useAuthStore();
-  const [isInitialized, setIsInitialized] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(true);
   const [error, setError] = useState(null);
   const [safeAreaInsets, setSafeAreaInsets] = useState({
     top: 0,
@@ -64,21 +41,7 @@ function App() {
     right: 0
   });
 
-  const cartItemCount = useCartItemCount();
 
-  // Initialisation de l'application
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        await checkAuth();
-        setIsInitialized(true);
-      } catch (error) {
-        setError('Échec de l\'initialisation de l\'application. Veuillez réessayer.');
-      }
-    };
-
-    initializeApp();
-  }, [checkAuth]);
 
   // Gestion des Safe Areas (pour les appareils mobiles)
   useEffect(() => {
@@ -98,14 +61,7 @@ function App() {
     return () => window.removeEventListener('resize', updateSafeArea);
   }, []);
 
-  // Affichage du loader pendant l'initialisation
-  if (checkingAuth || !isInitialized) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader size="large" />
-      </div>
-    );
-  }
+
 
   // Affichage d'erreur
   if (error) {
@@ -147,7 +103,6 @@ function App() {
 
         <Navigation 
           safeAreaBottom={safeAreaInsets.bottom}
-          cartItemCount={cartItemCount}
         />
       </div>
 

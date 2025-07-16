@@ -213,30 +213,7 @@ const HomePage = () => {
         )}
       </div>
 
-      {/* CTA Section */}
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-        className="mt-16 text-center"
-      >
-        <div className="max-w-2xl mx-auto bg-gradient-to-r from-pink-900/20 to-purple-900/20 backdrop-blur-sm border border-pink-500/30 rounded-3xl p-8">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white">
-            Vous ne trouvez pas ce que vous cherchez ?
-          </h2>
-          <p className="text-gray-200 mb-6">
-            Découvrez tous nos produits ou contactez-nous pour des recommandations personnalisées
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/contact"
-              className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
-            >
-              Nous contacter
-            </Link>
-          </div>
-        </div>
-      </motion.div>
+
     </div>
   );
 };

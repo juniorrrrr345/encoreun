@@ -2,17 +2,12 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { 
   FiHome, 
-  FiShoppingBag, 
-  FiShoppingCart, 
-  FiUser, 
   FiPhone,
   FiGrid
 } from 'react-icons/fi';
-import useAuthStore from '../store/useAuthStore';
 
-const Navigation = ({ safeAreaBottom, cartItemCount }) => {
+const Navigation = ({ safeAreaBottom }) => {
   const location = useLocation();
-  const { user } = useAuthStore();
 
   const navigationItems = [
     { path: '/', icon: FiHome, label: 'Accueil' },
@@ -47,11 +42,6 @@ const Navigation = ({ safeAreaBottom, cartItemCount }) => {
             >
               <div className="relative">
                 <Icon size={20} />
-                {item.badge > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                    {item.badge > 99 ? '99+' : item.badge}
-                  </span>
-                )}
               </div>
               <span className="text-xs mt-1 truncate max-w-full">
                 {item.label}
