@@ -6,7 +6,6 @@ import {
   FiShoppingCart, 
   FiUser, 
   FiPhone,
-  FiPackage,
   FiGrid
 } from 'react-icons/fi';
 import useAuthStore from '../store/useAuthStore';
@@ -23,14 +22,7 @@ const Navigation = ({ safeAreaBottom, cartItemCount }) => {
     { path: '/contact', icon: FiPhone, label: 'Contact' },
   ];
 
-  // Ajouter l'item admin si l'utilisateur est admin
-  if (user?.role === 'admin') {
-    navigationItems.push({
-      path: '/secret-dashboard',
-      icon: FiPackage,
-      label: 'Admin'
-    });
-  }
+
 
   return (
     <nav 

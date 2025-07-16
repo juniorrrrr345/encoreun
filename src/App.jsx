@@ -17,7 +17,7 @@ const CartPage = React.lazy(() => import('./pages/CartPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
 const LoginPage = React.lazy(() => import('./pages/LoginPage'));
 const SignUpPage = React.lazy(() => import('./pages/SignUpPage'));
-const AdminPage = React.lazy(() => import('./pages/AdminPage'));
+
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 
 // Hook pour gérer le nombre d'articles dans le panier
@@ -145,14 +145,7 @@ function App() {
                 <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/cart" element={<CartPage />} />
-                <Route 
-                  path="/secret-dashboard" 
-                  element={
-                    user?.role === 'admin' ? 
-                      <AdminPage /> : 
-                      <Navigate to="/login" replace />
-                  } 
-                />
+
                 <Route path="/category/:category" element={<CategoryPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
