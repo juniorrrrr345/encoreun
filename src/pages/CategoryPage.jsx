@@ -9,8 +9,7 @@ const CategoryPage = () => {
   const { category } = useParams();
   const { products, loading, fetchProducts } = useProductStore();
   const [categoryProducts, setCategoryProducts] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 2;
+
 
   useEffect(() => {
     fetchProducts();
@@ -85,11 +84,8 @@ const CategoryPage = () => {
     }
   }, [products, category]);
 
-  // Calcul de la pagination pour les produits
-  const totalPages = Math.ceil(categoryProducts.length / productsPerPage);
-  const startIndex = (currentPage - 1) * productsPerPage;
-  const endIndex = startIndex + productsPerPage;
-  const currentProducts = categoryProducts.slice(startIndex, endIndex);
+  // Utiliser tous les produits de la catégorie
+  const currentProducts = categoryProducts;
 
   if (loading) {
     return (
@@ -212,44 +208,7 @@ const CategoryPage = () => {
               ))}
             </div>
             
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-4 mt-8">
-                <button
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  <FiChevronLeft size={20} />
-                  Précédent
-                </button>
-                
-                <div className="flex gap-2">
-                  {[...Array(totalPages)].map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentPage(index + 1)}
-                      className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                        currentPage === index + 1
-                          ? 'bg-pink-500 text-white'
-                          : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-                
-                <button
-                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                  disabled={currentPage === totalPages}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Suivant
-                  <FiChevronRight size={20} />
-                </button>
-              </div>
-            )}
+
           </>
         )}
       </motion.div>
