@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiGrid, FiArrowRight } from 'react-icons/fi';
+import { FiGrid, FiArrowRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import useProductStore from '../store/useProductStore';
 import Loader from '../components/Loader';
 
 const HomePage = () => {
   const { categories, loading, fetchCategories } = useProductStore();
+  const [currentPage, setCurrentPage] = useState(1);
+  const categoriesPerPage = 2;
 
   useEffect(() => {
     fetchCategories();
@@ -59,6 +61,12 @@ const HomePage = () => {
   ];
 
   const categoriesToShow = categories.length > 0 ? categories : defaultCategories;
+  
+  // Calcul de la pagination
+  const totalPages = Math.ceil(categoriesToShow.length / categoriesPerPage);
+  const startIndex = (currentPage - 1) * categoriesPerPage;
+  const endIndex = startIndex + categoriesPerPage;
+  const currentCategories = categoriesToShow.slice(startIndex, endIndex);
 
   const getColorClasses = (color) => {
     const colorMap = {
@@ -99,8 +107,8 @@ const HomePage = () => {
 
       {/* Categories Grid */}
       <div className="max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categoriesToShow.map((category, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {currentCategories.map((category, index) => (
             <motion.div
               key={category.slug || category.name}
               initial={{ opacity: 0, y: 30 }}
@@ -164,38 +172,48 @@ const HomePage = () => {
             </motion.div>
           ))}
         </div>
+        
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-8">
+            <button
+              onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+              disabled={currentPage === 1}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              <FiChevronLeft size={20} />
+              Précédent
+            </button>
+            
+            <div className="flex gap-2">
+              {[...Array(totalPages)].map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index + 1)}
+                  className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                    currentPage === index + 1
+                      ? 'bg-pink-500 text-white'
+                      : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+            
+            <button
+              onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+              disabled={currentPage === totalPages}
+              className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            >
+              Suivant
+              <FiChevronRight size={20} />
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* CTA Section */}
-      <motion.div 
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.8 }}
-        className="mt-16 text-center"
-      >
-        <div className="max-w-2xl mx-auto bg-gradient-to-r from-pink-900/20 to-purple-900/20 backdrop-blur-sm border border-pink-500/30 rounded-3xl p-8">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-white">
-            Vous ne trouvez pas ce que vous cherchez ?
-          </h2>
-          <p className="text-gray-200 mb-6">
-            Découvrez tous nos produits ou contactez-nous pour des recommandations personnalisées
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/product"
-              className="px-6 py-3 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105"
-            >
-              Voir tous les produits
-            </Link>
-            <Link
-              to="/contact"
-              className="px-6 py-3 border-2 border-pink-500 text-pink-300 font-semibold rounded-full hover:bg-pink-500 hover:text-white transition-all duration-300"
-            >
-              Nous contacter
-            </Link>
-          </div>
-        </div>
-      </motion.div>
+
     </div>
   );
 };
