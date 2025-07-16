@@ -9,7 +9,9 @@
     "test": "jest",
     "seed": "node seed.js",
     "test-db": "node setup-mongodb.js",
-    "setup": "node setup-mongodb-interactive.js"
+    "setup": "node setup-mongodb-interactive.js",
+    "test-atlas": "node test-mongodb-connection.js",
+    "setup-atlas": "node setup-mongodb-atlas.js"
   },
   "keywords": [
     "api",
