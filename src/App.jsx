@@ -3,44 +3,16 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import useAuthStore from './store/useAuthStore';
 import Loader from './components/Loader';
 import Navigation from './components/Navigation';
-import useCart from './hooks/useCart';
 
 // Import des pages avec lazy loading
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const AllProductsPage = React.lazy(() => import('./pages/AllProductsPage'));
 const ProductPage = React.lazy(() => import('./pages/ProductPage'));
 const CategoryPage = React.lazy(() => import('./pages/CategoryPage'));
-const CartPage = React.lazy(() => import('./pages/CartPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
-const LoginPage = React.lazy(() => import('./pages/LoginPage'));
-const SignUpPage = React.lazy(() => import('./pages/SignUpPage'));
-
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
-
-// Hook pour gérer le nombre d'articles dans le panier
-const useCartItemCount = () => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const updateCount = (event) => {
-      if (event && event.detail !== undefined) {
-        setCount(event.detail);
-      } else {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCount(cart.length);
-      }
-    };
-
-    updateCount();
-    window.addEventListener('cartUpdated', updateCount);
-    return () => window.removeEventListener('cartUpdated', updateCount);
-  }, []);
-
-  return count;
-};
 
 // Composant pour l'arrière-plan
 const BackgroundComponent = () => (
@@ -58,31 +30,13 @@ const BackgroundComponent = () => (
 );
 
 function App() {
-  const { user, checkAuth, checkingAuth } = useAuthStore();
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [error, setError] = useState(null);
+  const [isInitialized, setIsInitialized] = useState(true);
   const [safeAreaInsets, setSafeAreaInsets] = useState({
     top: 0,
     bottom: 0,
     left: 0,
     right: 0
   });
-
-  const cartItemCount = useCartItemCount();
-
-  // Initialisation de l'application
-  useEffect(() => {
-    const initializeApp = async () => {
-      try {
-        await checkAuth();
-        setIsInitialized(true);
-      } catch (error) {
-        setError('Échec de l\'initialisation de l\'application. Veuillez réessayer.');
-      }
-    };
-
-    initializeApp();
-  }, [checkAuth]);
 
   // Gestion des Safe Areas (pour les appareils mobiles)
   useEffect(() => {
@@ -102,24 +56,6 @@ function App() {
     return () => window.removeEventListener('resize', updateSafeArea);
   }, []);
 
-  // Affichage du loader pendant l'initialisation
-  if (checkingAuth || !isInitialized) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader size="large" />
-      </div>
-    );
-  }
-
-  // Affichage d'erreur
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-white">
-        <p>{error}</p>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen w-full text-white relative overflow-hidden">
       <BackgroundComponent />
@@ -137,15 +73,11 @@ function App() {
           <main className="flex-grow pb-16">
             <AnimatePresence mode="wait">
               <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/product" element={<AllProductsPage />} />
                 <Route path="/" element={<InfoPage />} />
                 <Route path="/category" element={<HomePage />} />
                 <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/contact" element={<ContactPage />} />
-                <Route path="/cart" element={<CartPage />} />
-
                 <Route path="/category/:category" element={<CategoryPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
@@ -155,7 +87,6 @@ function App() {
 
         <Navigation 
           safeAreaBottom={safeAreaInsets.bottom}
-          cartItemCount={cartItemCount}
         />
       </div>
 
