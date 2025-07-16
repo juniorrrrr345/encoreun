@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import Loader from './components/Loader';
 import Navigation from './components/Navigation';
+import useAuthStore from './store/useAuthStore';
 
 // Import des pages avec lazy loading
 const HomePage = React.lazy(() => import('./pages/HomePage'));
@@ -13,6 +14,8 @@ const ProductPage = React.lazy(() => import('./pages/ProductPage'));
 const CategoryPage = React.lazy(() => import('./pages/CategoryPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
+const LoginPage = React.lazy(() => import('./pages/LoginPage'));
+const AdminPage = React.lazy(() => import('./pages/AdminPage'));
 
 // Composant pour l'arrière-plan
 const BackgroundComponent = () => (
@@ -28,6 +31,17 @@ const BackgroundComponent = () => (
     <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
   </div>
 );
+
+// Composant de protection pour les routes admin
+const ProtectedRoute = ({ children }) => {
+  const { isAuthenticated } = useAuthStore();
+  
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  return children;
+};
 
 function App() {
   const [isInitialized, setIsInitialized] = useState(false);
@@ -111,6 +125,15 @@ function App() {
                 <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/category/:category" element={<CategoryPage />} />
+                <Route path="/login" element={<LoginPage />} />
+                <Route 
+                  path="/admin" 
+                  element={
+                    <ProtectedRoute>
+                      <AdminPage />
+                    </ProtectedRoute>
+                  } 
+                />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </AnimatePresence>
