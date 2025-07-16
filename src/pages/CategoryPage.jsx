@@ -10,7 +10,7 @@ const CategoryPage = () => {
   const { products, loading, fetchProducts } = useProductStore();
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 8; // Augmenté pour afficher plus de produits
+  const productsPerPage = 12; // Augmenté pour afficher plus de produits
 
   useEffect(() => {
     fetchProducts();
@@ -339,7 +339,7 @@ const CategoryPage = () => {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="products-grid grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
             {currentProducts.map((product, index) => (
               <motion.div
                 key={product._id}

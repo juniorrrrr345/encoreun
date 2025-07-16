@@ -105,6 +105,24 @@ const HomePage = () => {
       image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop',
       rating: 4.9,
       reviews: 67
+    },
+    {
+      _id: 'pop5',
+      name: 'Smartphone Pro',
+      description: 'Smartphone dernière génération',
+      price: 899.99,
+      image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
+      rating: 4.8,
+      reviews: 234
+    },
+    {
+      _id: 'pop6',
+      name: 'Sneakers Running',
+      description: 'Chaussures de course professionnelles',
+      price: 129.99,
+      image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
+      rating: 4.8,
+      reviews: 178
     }
   ];
 
@@ -269,7 +287,7 @@ const HomePage = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="products-grid grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
           {popularProducts.map((product, index) => (
             <motion.div
               key={product._id}
