@@ -10,7 +10,7 @@ const CategoryPage = () => {
   const { products, loading, fetchProducts } = useProductStore();
   const [categoryProducts, setCategoryProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 2;
+  const productsPerPage = 8; // Augmenté pour afficher plus de produits
 
   useEffect(() => {
     fetchProducts();
@@ -21,15 +21,17 @@ const CategoryPage = () => {
     if (products.length > 0) {
       const filtered = products.filter(product => 
         product.category?.toLowerCase() === category?.toLowerCase() ||
-        product.name?.toLowerCase().includes(category?.toLowerCase())
+        product.name?.toLowerCase().includes(category?.toLowerCase()) ||
+        product.description?.toLowerCase().includes(category?.toLowerCase())
       );
       setCategoryProducts(filtered);
     } else {
-      // Produits par défaut pour la démo
-      setCategoryProducts([
+      // Produits par défaut pour la démo avec catégories
+      const demoProducts = [
         {
           _id: '1',
           name: 'Produit Premium',
+          category: 'premium',
           description: 'Un produit exceptionnel de haute qualité',
           price: 89.99,
           image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop',
@@ -39,6 +41,7 @@ const CategoryPage = () => {
         {
           _id: '2',
           name: 'Collection Exclusive',
+          category: 'exclusive',
           description: 'Édition limitée avec des matériaux nobles',
           price: 149.99,
           image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
@@ -48,6 +51,7 @@ const CategoryPage = () => {
         {
           _id: '3',
           name: 'Design Moderne',
+          category: 'design',
           description: 'Style contemporain et élégant',
           price: 199.99,
           image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
@@ -57,6 +61,7 @@ const CategoryPage = () => {
         {
           _id: '4',
           name: 'Édition Spéciale',
+          category: 'special',
           description: 'Produit unique avec finitions soignées',
           price: 299.99,
           image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop',
@@ -66,6 +71,7 @@ const CategoryPage = () => {
         {
           _id: '5',
           name: 'Collection Classic',
+          category: 'classic',
           description: 'Intemporel et raffiné',
           price: 179.99,
           image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
@@ -75,13 +81,46 @@ const CategoryPage = () => {
         {
           _id: '6',
           name: 'Designer Series',
+          category: 'designer',
           description: 'Création exclusive de nos designers',
           price: 399.99,
           image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop',
           rating: 4.9,
           reviews: 45
+        },
+        {
+          _id: '7',
+          name: 'Collection Vintage',
+          category: 'vintage',
+          description: 'Charme rétro et élégance intemporelle',
+          price: 129.99,
+          image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop',
+          rating: 4.5,
+          reviews: 78
+        },
+        {
+          _id: '8',
+          name: 'Édition Limitée',
+          category: 'limited',
+          description: 'Produit rare et exclusif',
+          price: 249.99,
+          image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
+          rating: 4.8,
+          reviews: 92
         }
-      ]);
+      ];
+      
+      // Filtrer par catégorie si spécifiée
+      if (category) {
+        const filtered = demoProducts.filter(product => 
+          product.category?.toLowerCase() === category?.toLowerCase() ||
+          product.name?.toLowerCase().includes(category?.toLowerCase()) ||
+          product.description?.toLowerCase().includes(category?.toLowerCase())
+        );
+        setCategoryProducts(filtered);
+      } else {
+        setCategoryProducts(demoProducts);
+      }
     }
   }, [products, category]);
 
@@ -121,14 +160,20 @@ const CategoryPage = () => {
         {currentProducts.length === 0 ? (
           <div className="text-center py-16">
             <p className="text-gray-300 text-lg mb-6">
-              Aucun produit disponible dans cette catégorie pour le moment.
+              Aucun produit trouvé pour la catégorie "{category}".
             </p>
-            <p className="text-gray-400">
-              Revenez bientôt pour découvrir nos nouveautés !
+            <p className="text-gray-400 mb-8">
+              Essayez une autre catégorie ou revenez bientôt pour découvrir nos nouveautés !
             </p>
+            <Link
+              to="/"
+              className="px-6 py-3 bg-pink-500 text-white rounded-full hover:bg-pink-600 transition-colors"
+            >
+              Retour à l'accueil
+            </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {currentProducts.map((product, index) => (
               <motion.div
                 key={product._id}
