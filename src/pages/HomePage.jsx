@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiGrid, FiArrowRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiGrid, FiArrowRight, FiChevronLeft, FiChevronRight, FiShoppingCart, FiHeart, FiStar } from 'react-icons/fi';
 import useProductStore from '../store/useProductStore';
 import Loader from '../components/Loader';
 
@@ -67,6 +67,46 @@ const HomePage = () => {
   const startIndex = (currentPage - 1) * categoriesPerPage;
   const endIndex = startIndex + categoriesPerPage;
   const currentCategories = categoriesToShow.slice(startIndex, endIndex);
+
+  // Produits populaires pour la page d'accueil
+  const popularProducts = [
+    {
+      _id: 'pop1',
+      name: 'T-shirt Premium',
+      description: 'T-shirt en coton bio de haute qualité',
+      price: 29.99,
+      image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
+      rating: 4.8,
+      reviews: 124
+    },
+    {
+      _id: 'pop2',
+      name: 'Crème Hydratante',
+      description: 'Crème hydratante 24h',
+      price: 24.99,
+      image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop',
+      rating: 4.8,
+      reviews: 234
+    },
+    {
+      _id: 'pop3',
+      name: 'Lampe Design',
+      description: 'Lampe moderne pour votre intérieur',
+      price: 129.99,
+      image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=400&fit=crop',
+      rating: 4.8,
+      reviews: 78
+    },
+    {
+      _id: 'pop4',
+      name: 'Bague Diamant',
+      description: 'Bague en or blanc avec diamant',
+      price: 299.99,
+      image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop',
+      rating: 4.9,
+      reviews: 67
+    }
+  ];
 
   const getColorClasses = (color) => {
     const colorMap = {
@@ -213,7 +253,105 @@ const HomePage = () => {
         )}
       </div>
 
+      {/* Section Produits Populaires */}
+      <div className="max-w-6xl mx-auto mt-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-8"
+        >
+          <h2 className="font-custom text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-3">
+            Produits Populaires
+          </h2>
+          <p className="text-lg text-gray-200">
+            Découvrez nos produits les plus appréciés
+          </p>
+        </motion.div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {popularProducts.map((product, index) => (
+            <motion.div
+              key={product._id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105 group"
+            >
+              {/* Product Image */}
+              <div className="aspect-square relative overflow-hidden">
+                {product.image ? (
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center">
+                    <div className="text-gray-400 text-4xl">📦</div>
+                  </div>
+                )}
+                
+                {/* Overlay with actions */}
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                  <div className="flex gap-2">
+                    <Link
+                      to={`/product/${product._id}`}
+                      className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
+                    >
+                      <FiShoppingCart size={18} />
+                    </Link>
+                    <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+                      <FiHeart size={18} />
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Product Info */}
+              <div className="p-4">
+                <h3 className="text-white font-semibold mb-2 truncate">
+                  {product.name}
+                </h3>
+                <p className="text-gray-300 text-sm mb-3 line-clamp-2">
+                  {product.description}
+                </p>
+                
+                {/* Rating */}
+                {product.rating && (
+                  <div className="flex items-center gap-1 mb-3">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <FiStar 
+                          key={i}
+                          size={14}
+                          className={i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-400'}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-xs text-gray-400">
+                      ({product.reviews})
+                    </span>
+                  </div>
+                )}
+                
+                {/* Price and Action */}
+                <div className="flex justify-between items-center">
+                  <span className="text-pink-400 font-bold text-lg">
+                    {product.price}€
+                  </span>
+                  <Link
+                    to={`/product/${product._id}`}
+                    className="px-4 py-2 bg-pink-500 text-white text-sm rounded-full hover:bg-pink-600 transition-colors"
+                  >
+                    Voir détails
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

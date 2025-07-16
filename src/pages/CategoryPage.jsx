@@ -28,85 +28,251 @@ const CategoryPage = () => {
     } else {
       // Produits par défaut pour la démo avec catégories
       const demoProducts = [
+        // Catégorie Vêtements
         {
-          _id: '1',
-          name: 'Produit Premium',
-          category: 'premium',
-          description: 'Un produit exceptionnel de haute qualité',
-          price: 89.99,
-          image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop',
+          _id: 'vet1',
+          name: 'T-shirt Premium',
+          category: 'vetements',
+          description: 'T-shirt en coton bio de haute qualité',
+          price: 29.99,
+          image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop',
           rating: 4.8,
           reviews: 124
         },
         {
-          _id: '2',
-          name: 'Collection Exclusive',
-          category: 'exclusive',
-          description: 'Édition limitée avec des matériaux nobles',
-          price: 149.99,
-          image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
-          rating: 4.9,
+          _id: 'vet2',
+          name: 'Jean Classic',
+          category: 'vetements',
+          description: 'Jean confortable et élégant',
+          price: 79.99,
+          image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?w=400&h=400&fit=crop',
+          rating: 4.6,
           reviews: 89
         },
         {
-          _id: '3',
-          name: 'Design Moderne',
-          category: 'design',
-          description: 'Style contemporain et élégant',
-          price: 199.99,
-          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
+          _id: 'vet3',
+          name: 'Pull Hiver',
+          category: 'vetements',
+          description: 'Pull chaud et doux pour l\'hiver',
+          price: 59.99,
+          image: 'https://images.unsplash.com/photo-1434389677669-e08b4cac3105?w=400&h=400&fit=crop',
           rating: 4.7,
           reviews: 156
         },
         {
-          _id: '4',
-          name: 'Édition Spéciale',
-          category: 'special',
-          description: 'Produit unique avec finitions soignées',
-          price: 299.99,
-          image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop',
-          rating: 5.0,
-          reviews: 67
-        },
-        {
-          _id: '5',
-          name: 'Collection Classic',
-          category: 'classic',
-          description: 'Intemporel et raffiné',
-          price: 179.99,
-          image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
-          rating: 4.6,
+          _id: 'vet4',
+          name: 'Robe Élégante',
+          category: 'vetements',
+          description: 'Robe parfaite pour toutes occasions',
+          price: 89.99,
+          image: 'https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=400&h=400&fit=crop',
+          rating: 4.9,
           reviews: 203
         },
+        // Catégorie Beauté
         {
-          _id: '6',
-          name: 'Designer Series',
-          category: 'designer',
-          description: 'Création exclusive de nos designers',
-          price: 399.99,
-          image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop',
-          rating: 4.9,
-          reviews: 45
+          _id: 'bea1',
+          name: 'Crème Hydratante',
+          category: 'beaute',
+          description: 'Crème hydratante 24h',
+          price: 24.99,
+          image: 'https://images.unsplash.com/photo-1556228720-195a672e8a03?w=400&h=400&fit=crop',
+          rating: 4.8,
+          reviews: 234
         },
         {
-          _id: '7',
-          name: 'Collection Vintage',
-          category: 'vintage',
-          description: 'Charme rétro et élégance intemporelle',
+          _id: 'bea2',
+          name: 'Sérum Anti-âge',
+          category: 'beaute',
+          description: 'Sérum révolutionnaire',
+          price: 49.99,
+          image: 'https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=400&h=400&fit=crop',
+          rating: 4.9,
+          reviews: 167
+        },
+        {
+          _id: 'bea3',
+          name: 'Masque Visage',
+          category: 'beaute',
+          description: 'Masque purifiant',
+          price: 19.99,
+          image: 'https://images.unsplash.com/photo-1556228578-92a0c9a8c4e5?w=400&h=400&fit=crop',
+          rating: 4.6,
+          reviews: 98
+        },
+        {
+          _id: 'bea4',
+          name: 'Parfum Exclusif',
+          category: 'beaute',
+          description: 'Fragrance unique et durable',
+          price: 89.99,
+          image: 'https://images.unsplash.com/photo-1541643600914-78b084683601?w=400&h=400&fit=crop',
+          rating: 4.7,
+          reviews: 145
+        },
+        // Catégorie Maison
+        {
+          _id: 'mai1',
+          name: 'Lampe Design',
+          category: 'maison',
+          description: 'Lampe moderne pour votre intérieur',
           price: 129.99,
-          image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop',
-          rating: 4.5,
+          image: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400&h=400&fit=crop',
+          rating: 4.8,
           reviews: 78
         },
         {
-          _id: '8',
-          name: 'Édition Limitée',
-          category: 'limited',
-          description: 'Produit rare et exclusif',
-          price: 249.99,
-          image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
+          _id: 'mai2',
+          name: 'Coussin Décoratif',
+          category: 'maison',
+          description: 'Coussin confortable et élégant',
+          price: 39.99,
+          image: 'https://images.unsplash.com/photo-1584100936595-c0654b55a2e2?w=400&h=400&fit=crop',
+          rating: 4.5,
+          reviews: 112
+        },
+        {
+          _id: 'mai3',
+          name: 'Vase Artisanal',
+          category: 'maison',
+          description: 'Vase unique fait main',
+          price: 69.99,
+          image: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=400&fit=crop',
+          rating: 4.7,
+          reviews: 89
+        },
+        {
+          _id: 'mai4',
+          name: 'Tapis Moderne',
+          category: 'maison',
+          description: 'Tapis contemporain pour votre salon',
+          price: 199.99,
+          image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=400&fit=crop',
+          rating: 4.6,
+          reviews: 156
+        },
+        // Catégorie Bijoux
+        {
+          _id: 'bij1',
+          name: 'Bague Diamant',
+          category: 'bijoux',
+          description: 'Bague en or blanc avec diamant',
+          price: 299.99,
+          image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=400&h=400&fit=crop',
+          rating: 4.9,
+          reviews: 67
+        },
+        {
+          _id: 'bij2',
+          name: 'Collier Or',
+          category: 'bijoux',
+          description: 'Collier élégant en or 18k',
+          price: 189.99,
+          image: 'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400&h=400&fit=crop',
           rating: 4.8,
-          reviews: 92
+          reviews: 134
+        },
+        {
+          _id: 'bij3',
+          name: 'Bracelet Argent',
+          category: 'bijoux',
+          description: 'Bracelet en argent sterling',
+          price: 79.99,
+          image: 'https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400&h=400&fit=crop',
+          rating: 4.6,
+          reviews: 98
+        },
+        {
+          _id: 'bij4',
+          name: 'Montre Luxe',
+          category: 'bijoux',
+          description: 'Montre automatique de luxe',
+          price: 599.99,
+          image: 'https://images.unsplash.com/photo-1524592094714-0f0654e20314?w=400&h=400&fit=crop',
+          rating: 4.9,
+          reviews: 45
+        },
+        // Catégorie Tech
+        {
+          _id: 'tec1',
+          name: 'Smartphone Pro',
+          category: 'tech',
+          description: 'Smartphone dernière génération',
+          price: 899.99,
+          image: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
+          rating: 4.8,
+          reviews: 234
+        },
+        {
+          _id: 'tec2',
+          name: 'Casque Audio',
+          category: 'tech',
+          description: 'Casque sans fil haute qualité',
+          price: 149.99,
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
+          rating: 4.7,
+          reviews: 167
+        },
+        {
+          _id: 'tec3',
+          name: 'Ordinateur Portable',
+          category: 'tech',
+          description: 'Laptop performant pour tous usages',
+          price: 1299.99,
+          image: 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop',
+          rating: 4.9,
+          reviews: 89
+        },
+        {
+          _id: 'tec4',
+          name: 'Tablette Ultra',
+          category: 'tech',
+          description: 'Tablette ultra-fine et rapide',
+          price: 499.99,
+          image: 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop',
+          rating: 4.6,
+          reviews: 145
+        },
+        // Catégorie Sport
+        {
+          _id: 'spo1',
+          name: 'Sneakers Running',
+          category: 'sport',
+          description: 'Chaussures de course professionnelles',
+          price: 129.99,
+          image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
+          rating: 4.8,
+          reviews: 178
+        },
+        {
+          _id: 'spo2',
+          name: 'Ballon Football',
+          category: 'sport',
+          description: 'Ballon officiel de compétition',
+          price: 49.99,
+          image: 'https://images.unsplash.com/photo-1552318965-6e6be7484ada?w=400&h=400&fit=crop',
+          rating: 4.6,
+          reviews: 112
+        },
+        {
+          _id: 'spo3',
+          name: 'Raquette Tennis',
+          category: 'sport',
+          description: 'Raquette professionnelle',
+          price: 89.99,
+          image: 'https://images.unsplash.com/photo-1551698618-1dfe5d97d256?w=400&h=400&fit=crop',
+          rating: 4.7,
+          reviews: 98
+        },
+        {
+          _id: 'spo4',
+          name: 'Vélo Fitness',
+          category: 'sport',
+          description: 'Vélo d\'appartement connecté',
+          price: 299.99,
+          image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop',
+          rating: 4.5,
+          reviews: 67
         }
       ];
       
