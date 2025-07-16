@@ -11,10 +11,7 @@ import useCart from './hooks/useCart';
 // Import des pages avec lazy loading
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const CategoryPage = React.lazy(() => import('./pages/CategoryPage'));
-const CartPage = React.lazy(() => import('./pages/CartPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
-const LoginPage = React.lazy(() => import('./pages/LoginPage'));
-const SignUpPage = React.lazy(() => import('./pages/SignUpPage'));
 
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 
@@ -135,12 +132,9 @@ function App() {
           <main className="flex-grow pb-16">
             <AnimatePresence mode="wait">
               <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/" element={<InfoPage />} />
                 <Route path="/category" element={<HomePage />} />
                 <Route path="/contact" element={<ContactPage />} />
-                <Route path="/cart" element={<CartPage />} />
 
                 <Route path="/category/:category" element={<CategoryPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />

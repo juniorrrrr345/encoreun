@@ -17,7 +17,6 @@ const Navigation = ({ safeAreaBottom, cartItemCount }) => {
   const navigationItems = [
     { path: '/', icon: FiHome, label: 'Accueil' },
     { path: '/category', icon: FiGrid, label: 'Catégories' },
-    { path: '/cart', icon: FiShoppingCart, label: 'Panier', badge: cartItemCount },
     { path: '/contact', icon: FiPhone, label: 'Contact' },
   ];
 
@@ -61,23 +60,7 @@ const Navigation = ({ safeAreaBottom, cartItemCount }) => {
           );
         })}
 
-        {/* Bouton utilisateur */}
-        <Link
-          to={user ? '/profile' : '/login'}
-          className={`
-            flex flex-col items-center justify-center p-2 rounded-lg
-            transition-all duration-200 min-w-0 flex-1
-            ${location.pathname === '/login' || location.pathname === '/profile'
-              ? 'text-pink-400 bg-pink-500/20' 
-              : 'text-gray-400 hover:text-pink-300 hover:bg-white/10'
-            }
-          `}
-        >
-          <FiUser size={20} />
-          <span className="text-xs mt-1 truncate max-w-full">
-            {user ? 'Profil' : 'Connexion'}
-          </span>
-        </Link>
+
       </div>
     </nav>
   );
