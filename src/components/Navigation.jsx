@@ -11,7 +11,7 @@ const Navigation = ({ safeAreaBottom }) => {
 
   const navigationItems = [
     { path: '/', icon: FiHome, label: 'Accueil' },
-    { path: '/category', icon: FiGrid, label: 'Catégories' },
+    { path: '/category', icon: FiGrid, label: 'Nos Produits' },
     { path: '/contact', icon: FiPhone, label: 'Contact' },
   ];
 

@@ -93,7 +93,6 @@ function App() {
                 <Route path="/category" element={<HomePage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/product/:id" element={<ProductDetailPage />} />
-
                 <Route path="/category/:category" element={<CategoryPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
