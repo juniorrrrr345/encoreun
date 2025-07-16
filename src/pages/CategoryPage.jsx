@@ -128,127 +128,129 @@ const CategoryPage = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-2 gap-4">
-            {currentProducts.map((product, index) => (
-              <motion.div
-                key={product._id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105 group"
-              >
-                {/* Product Image */}
-                <div className="aspect-square relative overflow-hidden">
-                  {product.image ? (
-                    <img 
-                      src={product.image} 
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center">
-                      <div className="text-gray-400 text-4xl">📦</div>
+          <>
+            <div className="grid grid-cols-2 gap-4">
+              {currentProducts.map((product, index) => (
+                <motion.div
+                  key={product._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105 group"
+                >
+                  {/* Product Image */}
+                  <div className="aspect-square relative overflow-hidden">
+                    {product.image ? (
+                      <img 
+                        src={product.image} 
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center">
+                        <div className="text-gray-400 text-4xl">📦</div>
+                      </div>
+                    )}
+                    
+                    {/* Overlay with actions */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                      <div className="flex gap-2">
+                        <Link
+                          to={`/product/${product._id}`}
+                          className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
+                        >
+                          <FiShoppingCart size={18} />
+                        </Link>
+                        <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
+                          <FiHeart size={18} />
+                        </button>
+                      </div>
                     </div>
-                  )}
-                  
-                  {/* Overlay with actions */}
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                    <div className="flex gap-2">
+                  </div>
+
+                  {/* Product Info */}
+                  <div className="p-4">
+                    <h3 className="text-white font-semibold mb-2 truncate">
+                      {product.name}
+                    </h3>
+                    <p className="text-gray-300 text-sm mb-3 line-clamp-2">
+                      {product.description}
+                    </p>
+                    
+                    {/* Rating */}
+                    {product.rating && (
+                      <div className="flex items-center gap-1 mb-3">
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <FiStar 
+                              key={i}
+                              size={14}
+                              className={i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-400'}
+                            />
+                          ))}
+                        </div>
+                        <span className="text-xs text-gray-400">
+                          ({product.reviews})
+                        </span>
+                      </div>
+                    )}
+                    
+                    {/* Price and Action */}
+                    <div className="flex justify-between items-center">
+                      <span className="text-pink-400 font-bold text-lg">
+                        {product.price}€
+                      </span>
                       <Link
                         to={`/product/${product._id}`}
-                        className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
+                        className="px-4 py-2 bg-pink-500 text-white text-sm rounded-full hover:bg-pink-600 transition-colors"
                       >
-                        <FiShoppingCart size={18} />
+                        Voir détails
                       </Link>
-                      <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
-                        <FiHeart size={18} />
-                      </button>
                     </div>
                   </div>
-                </div>
-
-                {/* Product Info */}
-                <div className="p-4">
-                  <h3 className="text-white font-semibold mb-2 truncate">
-                    {product.name}
-                  </h3>
-                  <p className="text-gray-300 text-sm mb-3 line-clamp-2">
-                    {product.description}
-                  </p>
-                  
-                  {/* Rating */}
-                  {product.rating && (
-                    <div className="flex items-center gap-1 mb-3">
-                      <div className="flex items-center">
-                        {[...Array(5)].map((_, i) => (
-                          <FiStar 
-                            key={i}
-                            size={14}
-                            className={i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-400'}
-                          />
-                        ))}
-                      </div>
-                      <span className="text-xs text-gray-400">
-                        ({product.reviews})
-                      </span>
-                    </div>
-                  )}
-                  
-                  {/* Price and Action */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-pink-400 font-bold text-lg">
-                      {product.price}€
-                    </span>
-                    <Link
-                      to={`/product/${product._id}`}
-                      className="px-4 py-2 bg-pink-500 text-white text-sm rounded-full hover:bg-pink-600 transition-colors"
-                    >
-                      Voir détails
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-          
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center gap-4 mt-8">
-              <button
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                <FiChevronLeft size={20} />
-                Précédent
-              </button>
-              
-              <div className="flex gap-2">
-                {[...Array(totalPages)].map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentPage(index + 1)}
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                      currentPage === index + 1
-                        ? 'bg-pink-500 text-white'
-                        : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
-                    }`}
-                  >
-                    {index + 1}
-                  </button>
-                ))}
-              </div>
-              
-              <button
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages}
-                className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              >
-                Suivant
-                <FiChevronRight size={20} />
-              </button>
+                </motion.div>
+              ))}
             </div>
-          )}
+            
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-4 mt-8">
+                <button
+                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                  disabled={currentPage === 1}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <FiChevronLeft size={20} />
+                  Précédent
+                </button>
+                
+                <div className="flex gap-2">
+                  {[...Array(totalPages)].map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentPage(index + 1)}
+                      className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                        currentPage === index + 1
+                          ? 'bg-pink-500 text-white'
+                          : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
+                      }`}
+                    >
+                      {index + 1}
+                    </button>
+                  ))}
+                </div>
+                
+                <button
+                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                  disabled={currentPage === totalPages}
+                  className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Suivant
+                  <FiChevronRight size={20} />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </motion.div>
     </div>
