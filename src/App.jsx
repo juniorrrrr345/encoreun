@@ -13,7 +13,6 @@ const ProductPage = React.lazy(() => import('./pages/ProductPage'));
 const CategoryPage = React.lazy(() => import('./pages/CategoryPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
-const AdminPage = React.lazy(() => import('./pages/AdminPage'));
 
 // Composant pour l'arrière-plan
 const BackgroundComponent = () => (
@@ -112,7 +111,6 @@ function App() {
                 <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route path="/category/:category" element={<CategoryPage />} />
-                <Route path="/admin" element={<AdminPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </AnimatePresence>

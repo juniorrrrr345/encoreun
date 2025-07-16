@@ -35,8 +35,8 @@ const ProductPage = () => {
     );
   }
 
-  // Lien externe configurable (sera géré depuis le panel admin)
-  const externalOrderLink = selectedProduct.orderLink || '#';
+  // Lien de commande fixe (à modifier selon vos besoins)
+  const orderLink = selectedProduct.orderLink || 'https://example.com/order';
 
   return (
     <div className="min-h-screen px-6 py-8 bg-black">
@@ -103,7 +103,7 @@ const ProductPage = () => {
             
             <div className="mt-8">
               <a
-                href={externalOrderLink}
+                href={orderLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block w-full py-3 px-6 bg-white text-black font-semibold rounded-lg hover:bg-gray-200 transition-all duration-200 text-center"
