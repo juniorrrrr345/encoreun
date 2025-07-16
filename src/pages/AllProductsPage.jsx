@@ -12,24 +12,24 @@ const AllProductsPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <Loader size="large" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen px-6 py-8">
+    <div className="min-h-screen px-6 py-8 bg-black">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="text-center mb-12"
       >
-        <h1 className="font-custom text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-pink-300 to-purple-400 bg-clip-text text-transparent mb-4">
+        <h1 className="font-custom text-5xl md:text-6xl font-bold text-white mb-4">
           Tous nos Produits
         </h1>
-        <p className="text-xl text-gray-200">
+        <p className="text-xl text-gray-300">
           Découvrez notre collection complète de produits sélectionnés avec amour
         </p>
       </motion.div>
@@ -52,9 +52,9 @@ const AllProductsPage = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
-                className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105"
+                className="bg-gray-900/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105"
               >
-                <div className="aspect-square bg-gradient-to-br from-pink-500/20 to-purple-500/20 flex items-center justify-center">
+                <div className="aspect-square bg-gradient-to-br from-gray-600/20 to-gray-700/20 flex items-center justify-center">
                   {product.image ? (
                     <img 
                       src={product.image} 
@@ -73,10 +73,10 @@ const AllProductsPage = () => {
                     {product.description}
                   </p>
                   <div className="flex justify-between items-center">
-                    <span className="text-pink-400 font-bold">
+                    <span className="text-white font-bold">
                       {product.price}€
                     </span>
-                    <button className="px-3 py-1 bg-pink-500 text-white text-sm rounded-full hover:bg-pink-600 transition-colors">
+                    <button className="px-3 py-1 bg-white text-black text-sm rounded-full hover:bg-gray-200 transition-colors">
                       Voir
                     </button>
                   </div>

@@ -13,8 +13,8 @@ const Loader = ({ size = 'medium', className = '' }) => {
         className={`
           ${sizeClasses[size]}
           border-4 
-          border-pink-200 
-          border-t-pink-500 
+          border-gray-300 
+          border-t-white 
           rounded-full 
           animate-spin
         `}

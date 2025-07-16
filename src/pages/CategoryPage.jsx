@@ -6,7 +6,7 @@ const CategoryPage = () => {
   const { category } = useParams();
 
   return (
-    <div className="min-h-screen px-6 py-8">
+    <div className="min-h-screen px-6 py-8 bg-black">
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -14,7 +14,7 @@ const CategoryPage = () => {
         className="max-w-4xl mx-auto"
       >
         <div className="text-center py-16">
-          <h1 className="font-custom text-4xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-4 capitalize">
+          <h1 className="font-custom text-4xl font-bold text-white mb-4 capitalize">
             {category}
           </h1>
           <p className="text-gray-300 mb-4">

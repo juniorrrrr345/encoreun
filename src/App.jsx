@@ -3,44 +3,16 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import useAuthStore from './store/useAuthStore';
 import Loader from './components/Loader';
 import Navigation from './components/Navigation';
-import useCart from './hooks/useCart';
 
 // Import des pages avec lazy loading
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const AllProductsPage = React.lazy(() => import('./pages/AllProductsPage'));
 const ProductPage = React.lazy(() => import('./pages/ProductPage'));
 const CategoryPage = React.lazy(() => import('./pages/CategoryPage'));
-const CartPage = React.lazy(() => import('./pages/CartPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
-const LoginPage = React.lazy(() => import('./pages/LoginPage'));
-const SignUpPage = React.lazy(() => import('./pages/SignUpPage'));
-const AdminPage = React.lazy(() => import('./pages/AdminPage'));
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
-
-// Hook pour gérer le nombre d'articles dans le panier
-const useCartItemCount = () => {
-  const [count, setCount] = useState(0);
-
-  useEffect(() => {
-    const updateCount = (event) => {
-      if (event && event.detail !== undefined) {
-        setCount(event.detail);
-      } else {
-        const cart = JSON.parse(localStorage.getItem('cart')) || [];
-        setCount(cart.length);
-      }
-    };
-
-    updateCount();
-    window.addEventListener('cartUpdated', updateCount);
-    return () => window.removeEventListener('cartUpdated', updateCount);
-  }, []);
-
-  return count;
-};
 
 // Composant pour l'arrière-plan
 const BackgroundComponent = () => (
@@ -53,12 +25,11 @@ const BackgroundComponent = () => (
         backgroundSize: 'cover'
       }}
     />
-    <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/70 to-transparent" />
+    <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent" />
   </div>
 );
 
 function App() {
-  const { user, checkAuth, checkingAuth } = useAuthStore();
   const [isInitialized, setIsInitialized] = useState(false);
   const [error, setError] = useState(null);
   const [safeAreaInsets, setSafeAreaInsets] = useState({
@@ -68,13 +39,10 @@ function App() {
     right: 0
   });
 
-  const cartItemCount = useCartItemCount();
-
   // Initialisation de l'application
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        await checkAuth();
         setIsInitialized(true);
       } catch (error) {
         setError('Échec de l\'initialisation de l\'application. Veuillez réessayer.');
@@ -82,7 +50,7 @@ function App() {
     };
 
     initializeApp();
-  }, [checkAuth]);
+  }, []);
 
   // Gestion des Safe Areas (pour les appareils mobiles)
   useEffect(() => {
@@ -103,9 +71,9 @@ function App() {
   }, []);
 
   // Affichage du loader pendant l'initialisation
-  if (checkingAuth || !isInitialized) {
+  if (!isInitialized) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <Loader size="large" />
       </div>
     );
@@ -114,14 +82,14 @@ function App() {
   // Affichage d'erreur
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-white">
+      <div className="min-h-screen flex items-center justify-center text-white bg-black">
         <p>{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-full text-white relative overflow-hidden">
+    <div className="min-h-screen w-full text-white relative overflow-hidden bg-black">
       <BackgroundComponent />
       
       <div 
@@ -137,22 +105,11 @@ function App() {
           <main className="flex-grow pb-16">
             <AnimatePresence mode="wait">
               <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/product" element={<AllProductsPage />} />
                 <Route path="/" element={<InfoPage />} />
                 <Route path="/category" element={<HomePage />} />
                 <Route path="/product/:id" element={<ProductPage />} />
                 <Route path="/contact" element={<ContactPage />} />
-                <Route path="/cart" element={<CartPage />} />
-                <Route 
-                  path="/secret-dashboard" 
-                  element={
-                    user?.role === 'admin' ? 
-                      <AdminPage /> : 
-                      <Navigate to="/login" replace />
-                  } 
-                />
                 <Route path="/category/:category" element={<CategoryPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
@@ -162,7 +119,6 @@ function App() {
 
         <Navigation 
           safeAreaBottom={safeAreaInsets.bottom}
-          cartItemCount={cartItemCount}
         />
       </div>
 
@@ -172,9 +128,9 @@ function App() {
         toastOptions={{
           duration: 3000,
           style: {
-            background: '#1f2937',
-            color: '#fff',
-            border: '1px solid #374151'
+            background: '#000000',
+            color: '#ffffff',
+            border: '1px solid #333333'
           }
         }}
       />
