@@ -1,18 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FiVideo, FiLink, FiSettings, FiSave } from 'react-icons/fi';
 import useProductStore from '../store/useProductStore';
 import useAdminStore from '../store/useAdminStore';
+import Loader from '../components/Loader';
 
 const AdminPage = () => {
-  const { products, fetchProducts } = useProductStore();
+  const { products, loading, fetchProducts } = useProductStore();
   const { externalLinks, updateExternalLinks, updateProductVideo, updateProductOrderLink } = useAdminStore();
   
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [videoUrl, setVideoUrl] = useState('');
   const [orderLink, setOrderLink] = useState('');
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
 
@@ -31,6 +32,14 @@ const AdminPage = () => {
       setSelectedProduct(null);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <Loader size="large" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen px-6 py-8 bg-black">
@@ -99,87 +108,118 @@ const AdminPage = () => {
         >
           <h2 className="text-2xl font-bold text-white mb-6">Gestion des Produits</h2>
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Liste des produits */}
-            <div>
-              <h3 className="text-lg font-semibold text-white mb-4">Produits</h3>
-              <div className="space-y-3 max-h-96 overflow-y-auto">
-                {products.map((product) => (
-                  <div
-                    key={product._id}
-                    className="bg-gray-800/50 border border-gray-700/50 rounded-lg p-4 cursor-pointer hover:bg-gray-700/50 transition-colors"
-                    onClick={() => setSelectedProduct(product)}
-                  >
-                    <h4 className="text-white font-medium">{product.name}</h4>
-                    <p className="text-gray-400 text-sm">{product.price}€</p>
-                    <div className="flex items-center mt-2 space-x-4 text-xs">
-                      <span className="text-gray-500">
-                        {product.video ? '📹 Vidéo' : '❌ Pas de vidéo'}
-                      </span>
-                      <span className="text-gray-500">
-                        {product.orderLink ? '🔗 Lien' : '❌ Pas de lien'}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+          {products.length === 0 ? (
+            <div className="text-center py-8">
+              <p className="text-gray-300">Aucun produit disponible</p>
             </div>
-
-            {/* Configuration du produit sélectionné */}
-            {selectedProduct && (
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Liste des produits */}
               <div>
-                <h3 className="text-lg font-semibold text-white mb-4">
-                  Configuration: {selectedProduct.name}
-                </h3>
-                
-                <div className="space-y-4">
-                  {/* Vidéo */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      <FiVideo className="inline mr-2" />
-                      URL de la vidéo
-                    </label>
-                    <input
-                      type="url"
-                      value={videoUrl}
-                      onChange={(e) => setVideoUrl(e.target.value)}
-                      className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
-                      placeholder="https://example.com/video.mp4"
-                    />
-                    <button
-                      onClick={() => handleVideoUpdate(selectedProduct._id)}
-                      className="mt-2 px-4 py-2 bg-white text-black text-sm rounded-lg hover:bg-gray-200 transition-colors"
+                <h3 className="text-lg font-semibold text-white mb-4">Produits ({products.length})</h3>
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {products.map((product) => (
+                    <div
+                      key={product._id}
+                      className={`bg-gray-800/50 border border-gray-700/50 rounded-lg p-4 cursor-pointer hover:bg-gray-700/50 transition-colors ${
+                        selectedProduct?._id === product._id ? 'border-white' : ''
+                      }`}
+                      onClick={() => setSelectedProduct(product)}
                     >
-                      <FiSave className="inline mr-2" />
-                      Sauvegarder la vidéo
-                    </button>
-                  </div>
-
-                  {/* Lien de commande */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      <FiLink className="inline mr-2" />
-                      Lien de commande
-                    </label>
-                    <input
-                      type="url"
-                      value={orderLink}
-                      onChange={(e) => setOrderLink(e.target.value)}
-                      className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
-                      placeholder="https://example.com/order/product"
-                    />
-                    <button
-                      onClick={() => handleOrderLinkUpdate(selectedProduct._id)}
-                      className="mt-2 px-4 py-2 bg-white text-black text-sm rounded-lg hover:bg-gray-200 transition-colors"
-                    >
-                      <FiSave className="inline mr-2" />
-                      Sauvegarder le lien
-                    </button>
-                  </div>
+                      <h4 className="text-white font-medium">{product.name}</h4>
+                      <p className="text-gray-400 text-sm">{product.price}€</p>
+                      <div className="flex items-center mt-2 space-x-4 text-xs">
+                        <span className={`${product.video ? 'text-green-400' : 'text-red-400'}`}>
+                          {product.video ? '📹 Vidéo' : '❌ Pas de vidéo'}
+                        </span>
+                        <span className={`${product.orderLink ? 'text-green-400' : 'text-red-400'}`}>
+                          {product.orderLink ? '🔗 Lien' : '❌ Pas de lien'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            )}
-          </div>
+
+              {/* Configuration du produit sélectionné */}
+              {selectedProduct ? (
+                <div>
+                  <h3 className="text-lg font-semibold text-white mb-4">
+                    Configuration: {selectedProduct.name}
+                  </h3>
+                  
+                  <div className="space-y-4">
+                    {/* Vidéo */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <FiVideo className="inline mr-2" />
+                        URL de la vidéo
+                      </label>
+                      <input
+                        type="url"
+                        value={videoUrl}
+                        onChange={(e) => setVideoUrl(e.target.value)}
+                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+                        placeholder="https://example.com/video.mp4"
+                      />
+                      <button
+                        onClick={() => handleVideoUpdate(selectedProduct._id)}
+                        className="mt-2 px-4 py-2 bg-white text-black text-sm rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        <FiSave className="inline mr-2" />
+                        Sauvegarder la vidéo
+                      </button>
+                    </div>
+
+                    {/* Lien de commande */}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-300 mb-2">
+                        <FiLink className="inline mr-2" />
+                        Lien de commande
+                      </label>
+                      <input
+                        type="url"
+                        value={orderLink}
+                        onChange={(e) => setOrderLink(e.target.value)}
+                        className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white focus:border-white"
+                        placeholder="https://example.com/order/product"
+                      />
+                      <button
+                        onClick={() => handleOrderLinkUpdate(selectedProduct._id)}
+                        className="mt-2 px-4 py-2 bg-white text-black text-sm rounded-lg hover:bg-gray-200 transition-colors"
+                      >
+                        <FiSave className="inline mr-2" />
+                        Sauvegarder le lien
+                      </button>
+                    </div>
+
+                    {/* Informations actuelles */}
+                    <div className="mt-6 p-4 bg-gray-800/30 rounded-lg">
+                      <h4 className="text-white font-medium mb-2">Informations actuelles</h4>
+                      <div className="space-y-2 text-sm">
+                        <div>
+                          <span className="text-gray-400">Vidéo actuelle:</span>
+                          <span className="text-white ml-2">
+                            {selectedProduct.video || 'Aucune vidéo'}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-gray-400">Lien de commande:</span>
+                          <span className="text-white ml-2">
+                            {selectedProduct.orderLink || 'Aucun lien'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center h-64">
+                  <p className="text-gray-400">Sélectionnez un produit pour le configurer</p>
+                </div>
+              )}
+            </div>
+          )}
         </motion.div>
       </motion.div>
     </div>
