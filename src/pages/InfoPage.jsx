@@ -125,37 +125,7 @@ const InfoPage = () => {
         </div>
       </motion.section>
 
-      {/* CTA Section */}
-      <motion.section 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.8, delay: 1.4 }}
-        className="py-16 px-6"
-      >
-        <div className="max-w-4xl mx-auto text-center">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.6 }}
-            className="bg-gradient-to-r from-pink-900/20 to-purple-900/20 backdrop-blur-sm border border-pink-500/30 rounded-3xl p-8 md:p-12"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-white">
-              Prêt à Commencer ?
-            </h2>
-            <p className="text-xl text-gray-200 mb-8">
-              Rejoignez des milliers de clients satisfaits et découvrez 
-              notre sélection unique de produits
-            </p>
-            <Link
-              to="/category"
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            >
-              <FiShoppingBag className="mr-2" />
-              Commencer mes Achats
-            </Link>
-          </motion.div>
-        </div>
-      </motion.section>
+
     </div>
   );
 };

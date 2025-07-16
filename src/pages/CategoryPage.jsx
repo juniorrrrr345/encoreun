@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FiShoppingCart, FiHeart, FiStar } from 'react-icons/fi';
 import useProductStore from '../store/useProductStore';
@@ -146,9 +146,12 @@ const CategoryPage = () => {
                   {/* Overlay with actions */}
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                     <div className="flex gap-2">
-                      <button className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors">
+                      <Link
+                        to={`/product/${product._id}`}
+                        className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
+                      >
                         <FiShoppingCart size={18} />
-                      </button>
+                      </Link>
                       <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
                         <FiHeart size={18} />
                       </button>
@@ -188,9 +191,12 @@ const CategoryPage = () => {
                     <span className="text-pink-400 font-bold text-lg">
                       {product.price}€
                     </span>
-                    <button className="px-4 py-2 bg-pink-500 text-white text-sm rounded-full hover:bg-pink-600 transition-colors">
-                      Ajouter
-                    </button>
+                    <Link
+                      to={`/product/${product._id}`}
+                      className="px-4 py-2 bg-pink-500 text-white text-sm rounded-full hover:bg-pink-600 transition-colors"
+                    >
+                      Voir détails
+                    </Link>
                   </div>
                 </div>
               </motion.div>

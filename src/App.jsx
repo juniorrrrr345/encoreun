@@ -12,6 +12,7 @@ import useCart from './hooks/useCart';
 const HomePage = React.lazy(() => import('./pages/HomePage'));
 const CategoryPage = React.lazy(() => import('./pages/CategoryPage'));
 const ContactPage = React.lazy(() => import('./pages/ContactPage'));
+const ProductDetailPage = React.lazy(() => import('./pages/ProductDetailPage'));
 
 const InfoPage = React.lazy(() => import('./pages/InfoPage'));
 
@@ -135,6 +136,7 @@ function App() {
                 <Route path="/" element={<InfoPage />} />
                 <Route path="/category" element={<HomePage />} />
                 <Route path="/contact" element={<ContactPage />} />
+                <Route path="/product/:id" element={<ProductDetailPage />} />
 
                 <Route path="/category/:category" element={<CategoryPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
