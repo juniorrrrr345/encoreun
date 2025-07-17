@@ -68,6 +68,16 @@ const createCategory = async (req, res) => {
       categoryData.image = getFileUrl(req.file.filename);
     }
 
+    // Générer le slug automatiquement si non fourni
+    if (!categoryData.slug && categoryData.name) {
+      categoryData.slug = categoryData.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim('-');
+    }
+
     const category = new Category(categoryData);
     await category.save();
 
@@ -101,6 +111,16 @@ const updateCategory = async (req, res) => {
     // Gérer l'image uploadée
     if (req.file) {
       updateData.image = getFileUrl(req.file.filename);
+    }
+
+    // Générer le slug automatiquement si le nom a changé
+    if (updateData.name && !updateData.slug) {
+      updateData.slug = updateData.name
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim('-');
     }
 
     const category = await Category.findByIdAndUpdate(

@@ -32,7 +32,7 @@ const CategoriesPage = () => {
       setError(null);
       
       const response = await categoryService.getAllCategories();
-      setCategories(response.data.categories || []);
+      setCategories(response.data || []);
     } catch (err) {
       console.error('Erreur:', err);
       
