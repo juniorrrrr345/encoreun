@@ -9,8 +9,8 @@ const path = require('path');
 
 // Import des configurations
 const connectDB = require('./config/database');
-// const MemoryDB = require('./config/database-memory');
 const { errorHandler, notFound } = require('./middleware/validation');
+const { initDefaultAdmin } = require('./controllers/authController');
 
 // Import des routes
 const authRoutes = require('./routes/auth');
@@ -20,8 +20,17 @@ const categoryRoutes = require('./routes/categories');
 
 const app = express();
 
-// Connexion à la base de données MongoDB Atlas
-connectDB();
+// Fonction d'initialisation asynchrone
+const initializeApp = async () => {
+  // Connexion à la base de données
+  await connectDB();
+  
+  // Initialiser l'admin par défaut
+  await initDefaultAdmin();
+};
+
+// Initialiser l'application
+initializeApp();
 
 // Configuration du rate limiting
 const limiter = rateLimit({
@@ -56,7 +65,12 @@ const corsOptions = {
     // Liste des origines autorisées
     const allowedOrigins = process.env.CORS_ORIGIN 
       ? process.env.CORS_ORIGIN.split(',') 
-      : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173'];
+      : [
+          'http://localhost:3000',   // Boutique Frontend
+          'http://localhost:3001',   // Panel Admin
+          'http://localhost:5173',   // Vite dev server
+          'http://localhost:4173'    // Vite preview
+        ];
     
     // Permettre les requêtes sans origine (applications mobiles, Postman, etc.)
     if (!origin) return callback(null, true);
