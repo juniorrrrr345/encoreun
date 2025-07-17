@@ -10,6 +10,7 @@ const path = require('path');
 // Import des configurations
 const { connectDB } = require('./config/database');
 const { errorHandler, notFound } = require('./middleware/validation');
+const { initDefaultAdmin } = require('./controllers/authController');
 
 // Import des routes
 const authRoutes = require('./routes/auth');
@@ -19,8 +20,17 @@ const categoryRoutes = require('./routes/categories');
 
 const app = express();
 
-// Connexion à la base de données
-connectDB();
+// Fonction d'initialisation asynchrone
+const initializeApp = async () => {
+  // Connexion à la base de données
+  await connectDB();
+  
+  // Initialiser l'admin par défaut
+  await initDefaultAdmin();
+};
+
+// Initialiser l'application
+initializeApp();
 
 // Configuration du rate limiting
 const limiter = rateLimit({
@@ -97,6 +107,7 @@ app.get('/', (req, res) => {
     version: '1.0.0',
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
+    database: 'Memory DB with JSON persistence',
     cors: {
       allowedOrigins: process.env.CORS_ORIGIN 
         ? process.env.CORS_ORIGIN.split(',') 
@@ -113,7 +124,8 @@ app.get('/health', (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     memory: process.memoryUsage(),
-    database: 'Memory DB with JSON persistence'
+    database: 'Memory DB with JSON persistence',
+    adminInitialized: true
   });
 });
 
@@ -140,6 +152,9 @@ const server = app.listen(PORT, () => {
 │  📁 Database: Memory + JSON persistence         │
 │  🔗 URL: http://localhost:${PORT}               │
 │  ❤️  Health: http://localhost:${PORT}/health    │
+├─────────────────────────────────────────────────┤
+│  👤 Admin Login: admin@cbd-shop.com            │
+│  🔑 Password: admin123                          │
 ├─────────────────────────────────────────────────┤
 │  🛒 Admin Panel: http://localhost:3001         │
 │  🏪 Shop Front: http://localhost:3000          │

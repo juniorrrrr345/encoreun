@@ -10,66 +10,78 @@ const router = express.Router();
 const loginValidation = [
   body('email')
     .isEmail()
-    .withMessage('Email invalide')
-    .normalizeEmail(),
+    .normalizeEmail()
+    .withMessage('Email valide requis'),
   body('password')
-    .isLength({ min: 6 })
-    .withMessage('Le mot de passe doit contenir au moins 6 caractères')
+    .isLength({ min: 1 })
+    .withMessage('Mot de passe requis')
 ];
 
 // Validation pour l'inscription
 const registerValidation = [
-  body('name')
-    .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Le nom doit contenir entre 2 et 50 caractères'),
   body('email')
     .isEmail()
-    .withMessage('Email invalide')
-    .normalizeEmail(),
+    .normalizeEmail()
+    .withMessage('Email valide requis'),
   body('password')
     .isLength({ min: 6 })
     .withMessage('Le mot de passe doit contenir au moins 6 caractères'),
-  body('role')
-    .optional()
-    .isIn(['admin', 'manager'])
-    .withMessage('Rôle invalide')
-];
-
-// Validation pour la mise à jour du profil
-const updateProfileValidation = [
-  body('name')
+  body('firstName')
     .optional()
     .trim()
-    .isLength({ min: 2, max: 50 })
-    .withMessage('Le nom doit contenir entre 2 et 50 caractères'),
-  body('email')
+    .isLength({ min: 1 })
+    .withMessage('Prénom requis'),
+  body('lastName')
     .optional()
-    .isEmail()
-    .withMessage('Email invalide')
-    .normalizeEmail()
+    .trim()
+    .isLength({ min: 1 })
+    .withMessage('Nom requis'),
+  body('role')
+    .optional()
+    .isIn(['user', 'admin', 'manager'])
+    .withMessage('Rôle invalide')
 ];
 
 // Validation pour le changement de mot de passe
 const changePasswordValidation = [
   body('currentPassword')
-    .isLength({ min: 6 })
-    .withMessage('Le mot de passe actuel doit contenir au moins 6 caractères'),
+    .isLength({ min: 1 })
+    .withMessage('Mot de passe actuel requis'),
   body('newPassword')
     .isLength({ min: 6 })
     .withMessage('Le nouveau mot de passe doit contenir au moins 6 caractères')
 ];
 
-// Routes publiques - sans authentification pour les tests
+// Routes publiques
 router.post('/login', loginValidation, handleValidationErrors, authController.login);
+
+// Routes protégées
+router.get('/verify', authenticateToken, authController.verifyToken);
 router.post('/logout', authController.logout);
+router.post('/change-password', authenticateToken, changePasswordValidation, handleValidationErrors, authController.changePassword);
 
-// Routes protégées - sans authentification pour les tests
-router.get('/profile', authController.getProfile);
-router.put('/profile', updateProfileValidation, handleValidationErrors, authController.updateProfile);
-router.put('/change-password', changePasswordValidation, handleValidationErrors, authController.changePassword);
+// Routes admin seulement
+router.post('/register', authenticateToken, requireAdmin, registerValidation, handleValidationErrors, authController.register);
 
-// Routes admin uniquement - sans authentification pour les tests
-router.post('/register', registerValidation, handleValidationErrors, authController.register);
+// Route de test (développement seulement)
+if (process.env.NODE_ENV === 'development') {
+  router.get('/test', (req, res) => {
+    res.json({
+      success: true,
+      message: 'API d\'authentification fonctionnelle',
+      endpoints: {
+        login: 'POST /api/auth/login',
+        verify: 'GET /api/auth/verify (auth required)',
+        logout: 'POST /api/auth/logout',
+        register: 'POST /api/auth/register (admin only)',
+        changePassword: 'POST /api/auth/change-password (auth required)'
+      },
+      defaultAdmin: {
+        email: 'admin@cbd-shop.com',
+        password: 'admin123'
+      }
+    });
+  });
+}
 
 module.exports = router;
