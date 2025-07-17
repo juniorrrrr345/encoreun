@@ -1,47 +1,56 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { productService } from '../services/api';
+import toast from 'react-hot-toast';
 
 const ProductsPage = () => {
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: 'T-shirt Premium',
-      category: 'Vêtements',
-      price: 29.99,
-      stock: 45,
-      status: 'En stock',
-      image: 'https://via.placeholder.com/50'
-    },
-    {
-      id: 2,
-      name: 'Sneakers Sport',
-      category: 'Chaussures',
-      price: 89.99,
-      stock: 12,
-      status: 'En stock',
-      image: 'https://via.placeholder.com/50'
-    },
-    {
-      id: 3,
-      name: 'Sac à dos Vintage',
-      category: 'Accessoires',
-      price: 49.99,
-      stock: 0,
-      status: 'Rupture',
-      image: 'https://via.placeholder.com/50'
-    },
-    {
-      id: 4,
-      name: 'Montre Élégante',
-      category: 'Accessoires',
-      price: 199.99,
-      stock: 8,
-      status: 'En stock',
-      image: 'https://via.placeholder.com/50'
-    }
-  ]);
-
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedStatus, setSelectedStatus] = useState('');
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
+
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      const response = await productService.getAll();
+      setProducts(response.data.products || []);
+    } catch (error) {
+      console.error('Erreur lors du chargement des produits:', error);
+      toast.error('Erreur lors du chargement des produits');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async (productId) => {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+      try {
+        await productService.delete(productId);
+        toast.success('Produit supprimé avec succès');
+        // Recharger les produits après suppression
+        fetchProducts();
+      } catch (error) {
+        console.error('Erreur lors de la suppression:', error);
+        toast.error('Erreur lors de la suppression du produit');
+      }
+    }
+  };
+
+  const handleToggleStatus = async (productId) => {
+    try {
+      await productService.toggleStatus(productId);
+      toast.success('Statut du produit mis à jour');
+      fetchProducts();
+    } catch (error) {
+      console.error('Erreur lors du changement de statut:', error);
+      toast.error('Erreur lors du changement de statut');
+    }
+  };
 
   const statusColors = {
     'En stock': 'bg-green-100 text-green-800',
@@ -49,14 +58,32 @@ const ProductsPage = () => {
     'Faible stock': 'bg-yellow-100 text-yellow-800'
   };
 
-  const filteredProducts = products.filter(product =>
-    product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    product.category.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Filtrer les produits
+  const filteredProducts = products.filter(product => {
+    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         product.category.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = !selectedCategory || product.category === selectedCategory;
+    const matchesStatus = !selectedStatus || 
+      (selectedStatus === 'en-stock' && product.stock > 10) ||
+      (selectedStatus === 'rupture' && product.stock === 0) ||
+      (selectedStatus === 'faible-stock' && product.stock > 0 && product.stock <= 10);
+    
+    return matchesSearch && matchesCategory && matchesStatus;
+  });
 
-  const handleDelete = (id) => {
-    setProducts(products.filter(product => product.id !== id));
-  };
+  // Obtenir les catégories uniques
+  const categories = [...new Set(products.map(p => p.category))];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Chargement des produits...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -86,13 +113,21 @@ const ProductsPage = () => {
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
-          <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select 
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
             <option value="">Toutes les catégories</option>
-            <option value="vetements">Vêtements</option>
-            <option value="chaussures">Chaussures</option>
-            <option value="accessoires">Accessoires</option>
+            {categories.map(category => (
+              <option key={category} value={category}>{category}</option>
+            ))}
           </select>
-          <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <select 
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
             <option value="">Tous les statuts</option>
             <option value="en-stock">En stock</option>
             <option value="rupture">Rupture</option>
@@ -129,15 +164,22 @@ const ProductsPage = () => {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredProducts.map((product) => (
-                <tr key={product.id} className="hover:bg-gray-50">
+                <tr key={product._id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
-                        <img className="h-10 w-10 rounded-md" src={product.image} alt={product.name} />
+                        <img 
+                          className="h-10 w-10 rounded-md object-cover" 
+                          src={product.mainImage || '/placeholder-product.jpg'} 
+                          alt={product.name}
+                          onError={(e) => {
+                            e.target.src = '/placeholder-product.jpg';
+                          }}
+                        />
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                        <div className="text-sm text-gray-500">ID: {product.id}</div>
+                        <div className="text-sm text-gray-500">ID: {product._id}</div>
                       </div>
                     </div>
                   </td>
@@ -145,22 +187,43 @@ const ProductsPage = () => {
                     <div className="text-sm text-gray-900">{product.category}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">€{product.price}</div>
+                    <div className="flex items-center">
+                      <span className="text-sm font-medium text-gray-900">€{product.price}</span>
+                      {product.isOnSale && product.originalPrice && (
+                        <span className="ml-2 text-xs text-gray-500 line-through">
+                          €{product.originalPrice}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">{product.stock}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${statusColors[product.status]}`}>
-                      {product.status}
+                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                      product.stock > 10 ? 'bg-green-100 text-green-800' : 
+                      product.stock > 0 ? 'bg-yellow-100 text-yellow-800' : 
+                      'bg-red-100 text-red-800'
+                    }`}>
+                      {product.stock > 10 ? 'En stock' : 
+                       product.stock > 0 ? 'Faible stock' : 'Rupture'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
-                      <button className="text-blue-600 hover:text-blue-900">Modifier</button>
                       <button 
-                        onClick={() => handleDelete(product.id)}
-                        className="text-red-600 hover:text-red-900"
+                        onClick={() => handleToggleStatus(product._id)}
+                        className={`text-xs px-2 py-1 rounded ${
+                          product.isActive 
+                            ? 'bg-red-100 text-red-700 hover:bg-red-200' 
+                            : 'bg-green-100 text-green-700 hover:bg-green-200'
+                        }`}
+                      >
+                        {product.isActive ? 'Désactiver' : 'Activer'}
+                      </button>
+                      <button 
+                        onClick={() => handleDelete(product._id)}
+                        className="text-xs px-2 py-1 rounded bg-red-100 text-red-700 hover:bg-red-200"
                       >
                         Supprimer
                       </button>
@@ -194,20 +257,7 @@ const ProductsPage = () => {
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-500">En stock</p>
               <p className="text-2xl font-bold text-gray-900">
-                {products.filter(p => p.status === 'En stock').length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="flex items-center">
-            <div className="p-2 bg-red-100 rounded-lg">
-              <span className="text-red-600 text-lg">⚠️</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Rupture</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {products.filter(p => p.status === 'Rupture').length}
+                {products.filter(p => p.stock > 10).length}
               </p>
             </div>
           </div>
@@ -215,12 +265,25 @@ const ProductsPage = () => {
         <div className="bg-white p-4 rounded-lg shadow">
           <div className="flex items-center">
             <div className="p-2 bg-yellow-100 rounded-lg">
-              <span className="text-yellow-600 text-lg">💰</span>
+              <span className="text-yellow-600 text-lg">⚠️</span>
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Valeur totale</p>
+              <p className="text-sm font-medium text-gray-500">Faible stock</p>
               <p className="text-2xl font-bold text-gray-900">
-                €{products.reduce((sum, p) => sum + (p.price * p.stock), 0).toFixed(2)}
+                {products.filter(p => p.stock > 0 && p.stock <= 10).length}
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="bg-white p-4 rounded-lg shadow">
+          <div className="flex items-center">
+            <div className="p-2 bg-red-100 rounded-lg">
+              <span className="text-red-600 text-lg">❌</span>
+            </div>
+            <div className="ml-4">
+              <p className="text-sm font-medium text-gray-500">Rupture</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {products.filter(p => p.stock === 0).length}
               </p>
             </div>
           </div>
