@@ -29,11 +29,20 @@ const CategoriesPage = () => {
   const loadCategories = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       const response = await categoryService.getAllCategories();
-      setCategories(response.data.categories);
+      setCategories(response.data.categories || []);
     } catch (err) {
-      setError('Erreur lors du chargement des catégories');
       console.error('Erreur:', err);
+      
+      if (err.code === 'ERR_NETWORK' || err.code === 'ECONNREFUSED') {
+        setError('Impossible de se connecter au serveur. Vérifiez que l\'API est démarrée.');
+      } else if (err.response?.status === 404) {
+        setError('Aucune catégorie trouvée.');
+      } else {
+        setError('Erreur lors du chargement des catégories: ' + (err.response?.data?.message || err.message));
+      }
     } finally {
       setLoading(false);
     }

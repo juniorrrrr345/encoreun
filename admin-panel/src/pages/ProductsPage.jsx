@@ -45,15 +45,25 @@ const ProductsPage = () => {
   const loadData = async () => {
     try {
       setLoading(true);
+      setError(null);
+      
       const [productsResponse, categoriesResponse] = await Promise.all([
         productService.getAllProducts(),
         categoryService.getAllCategories()
       ]);
-      setProducts(productsResponse.data.products);
-      setCategories(categoriesResponse.data.categories);
+      
+      setProducts(productsResponse.data.products || []);
+      setCategories(categoriesResponse.data.categories || []);
     } catch (err) {
-      setError('Erreur lors du chargement des données');
       console.error('Erreur:', err);
+      
+      if (err.code === 'ERR_NETWORK' || err.code === 'ECONNREFUSED') {
+        setError('Impossible de se connecter au serveur. Vérifiez que l\'API est démarrée.');
+      } else if (err.response?.status === 404) {
+        setError('Aucune donnée trouvée.');
+      } else {
+        setError('Erreur lors du chargement des données: ' + (err.response?.data?.message || err.message));
+      }
     } finally {
       setLoading(false);
     }

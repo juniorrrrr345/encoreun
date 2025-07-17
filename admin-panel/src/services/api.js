@@ -29,10 +29,18 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('API Error:', error);
+    
     if (error.response?.status === 401) {
       localStorage.removeItem('adminToken');
       window.location.href = '/login';
     }
+    
+    // Gérer les erreurs de connexion
+    if (error.code === 'ERR_NETWORK' || error.code === 'ECONNREFUSED') {
+      console.error('Erreur de connexion à l\'API:', error.message);
+    }
+    
     return Promise.reject(error);
   }
 );

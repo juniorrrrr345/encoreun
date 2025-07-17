@@ -9,6 +9,7 @@ const Layout = ({ children, user }) => {
     { name: 'Tableau de bord', href: '/', icon: '📊' },
     { name: 'Produits', href: '/products', icon: '📦' },
     { name: 'Catégories', href: '/categories', icon: '🏷️' },
+    { name: 'Informations', href: '/info', icon: 'ℹ️' },
     { name: 'Commandes', href: '/orders', icon: '🛒' },
     { name: 'Profil', href: '/profile', icon: '👤' },
   ];
