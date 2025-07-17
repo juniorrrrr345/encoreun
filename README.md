@@ -1,165 +1,148 @@
-# Avec Amour - Boutique E-commerce
+# 🛍️ CBD Shop - Boutique E-commerce Complète
 
-Une boutique e-commerce moderne et élégante développée avec React, Tailwind CSS et des animations fluides.
+Boutique e-commerce moderne pour produits CBD avec panel d'administration et API backend.
 
-## 🌟 Fonctionnalités
-
-- **Interface moderne** avec animations Framer Motion
-- **Authentification complète** (inscription, connexion, déconnexion)
-- **Gestion des produits** et catégories
-- **Panier d'achat** avec localStorage
-- **Interface d'administration** pour les admins
-- **Design responsive** adapté à tous les appareils
-- **Thème sombre** avec dégradés roses et violets
-- **Notifications toast** pour une meilleure UX
-
-## 🛠 Technologies utilisées
-
-- **React 18** - Bibliothèque JavaScript pour l'interface utilisateur
-- **React Router** - Navigation côté client
-- **Tailwind CSS** - Framework CSS utilitaire
-- **Framer Motion** - Bibliothèque d'animations
-- **Zustand** - Gestion d'état simple et efficace
-- **Axios** - Client HTTP pour les requêtes API
-- **React Hot Toast** - Notifications élégantes
-- **React Icons** - Icônes modernes
-- **Vite** - Build tool rapide
-
-## 🚀 Installation et démarrage
-
-1. **Cloner le projet**
-   ```bash
-   git clone <url-du-repo>
-   cd avecamour-boutique
-   ```
-
-2. **Installer les dépendances**
-   ```bash
-   npm install
-   ```
-
-3. **Démarrer l'application en développement**
-   ```bash
-   npm run dev
-   ```
-
-4. **Ouvrir dans le navigateur**
-   L'application sera disponible sur `http://localhost:3000`
-
-## 📱 Pages disponibles
-
-### Pages publiques
-- **/** - Page d'accueil avec présentation de la boutique
-- **/category** - Affichage des catégories de produits
-- **/product** - Liste de tous les produits
-- **/product/:id** - Détail d'un produit spécifique
-- **/category/:category** - Produits d'une catégorie
-- **/cart** - Panier d'achat
-- **/contact** - Formulaire de contact
-- **/login** - Connexion utilisateur
-- **/signup** - Inscription utilisateur
-
-### Pages privées
-- **/secret-dashboard** - Interface d'administration (admin uniquement)
-
-## 🎨 Design et UX
-
-### Thème visuel
-- **Couleurs principales** : Roses et violets avec dégradés
-- **Arrière-plan** : Image de fond avec overlay sombre
-- **Police personnalisée** : Great Vibes pour les titres
-- **Animations** : Transitions fluides avec Framer Motion
-
-### Responsive Design
-- **Mobile First** : Optimisé pour tous les appareils
-- **Navigation** : Menu de navigation fixe en bas
-- **Safe Areas** : Support des écrans avec encoches
-
-## 🔧 API Configuration
-
-L'application est configurée pour se connecter à l'API :
-```
-https://avecamour.wikiplug.com/api
-```
-
-### Endpoints utilisés
-- `POST /auth/signup` - Inscription
-- `POST /auth/login` - Connexion  
-- `POST /auth/logout` - Déconnexion
-- `GET /auth/profile` - Profil utilisateur
-- `POST /auth/refresh-token` - Renouvellement token
-- `GET /products` - Liste des produits
-- `GET /products/:id` - Détail produit
-- `GET /categories` - Liste des catégories
-
-## 🛒 Fonctionnalités du panier
-
-- **Stockage local** : Le panier est sauvegardé dans localStorage
-- **Gestion des quantités** : Ajout/suppression/modification
-- **Calcul automatique** : Total et nombre d'articles
-- **Notifications** : Feedback utilisateur pour chaque action
-
-## 👑 Interface d'administration
-
-Accessible uniquement aux utilisateurs avec le rôle `admin` :
-- **Dashboard** : Vue d'ensemble des statistiques
-- **Gestion produits** : CRUD des produits (à développer)
-- **Gestion utilisateurs** : Administration des comptes (à développer)
-- **Commandes** : Suivi des ventes (à développer)
-
-## 🔐 Authentification
-
-### Système de tokens
-- **Access tokens** : Gestion automatique
-- **Refresh tokens** : Renouvellement automatique
-- **Intercepteurs Axios** : Gestion transparente de l'expiration
-
-### Rôles utilisateurs
-- **Utilisateur standard** : Accès aux fonctionnalités de base
-- **Administrateur** : Accès complet + interface d'admin
-
-## 📦 Structure du projet
+## 📁 Structure du Projet
 
 ```
-src/
-├── components/          # Composants réutilisables
-│   ├── Loader.jsx      # Composant de chargement
-│   └── Navigation.jsx  # Navigation principale
-├── hooks/              # Hooks personnalisés
-│   └── useCart.js      # Gestion du panier
-├── lib/                # Utilitaires et configurations
-│   └── axios.js        # Configuration API
-├── pages/              # Pages de l'application
-├── store/              # Gestion d'état Zustand
-│   ├── useAuthStore.js # État d'authentification
-│   └── useProductStore.js # État des produits
-├── App.jsx             # Composant principal
-├── main.jsx            # Point d'entrée
-└── index.css           # Styles globaux
+├── 🛍️ Boutique Frontend (/)          # Interface client (React + Vite)
+├── 👨‍💼 Panel Admin (/admin-panel)     # Interface administration (React + Vite)
+└── 🔧 API Backend (/api)              # Serveur Node.js + MongoDB
 ```
 
-## 🎯 Prochaines fonctionnalités
+## 🚀 Démarrage Rapide
 
-- [ ] Système de paiement intégré
-- [ ] Gestion complète des commandes
-- [ ] Système de reviews et notes
-- [ ] Recherche avancée avec filtres
-- [ ] Wishlist/favoris
-- [ ] Système de promotions
-- [ ] Notifications push
-- [ ] Mode hors ligne (PWA)
+### 1. Prérequis
+- Node.js 18+
+- MongoDB (local ou Atlas)
+- Git
+
+### 2. Installation
+
+```bash
+# Cloner le projet
+git clone <votre-repo>
+cd cbd-shop
+
+# Installer les dépendances
+npm install                    # Boutique frontend
+cd admin-panel && npm install  # Panel admin
+cd ../api && npm install       # API backend
+```
+
+### 3. Configuration MongoDB
+
+Créez un fichier `api/.env` :
+```env
+PORT=5000
+MONGODB_URI=mongodb://localhost:27017/cbd_shop
+JWT_SECRET=votre_secret_jwt_super_securise
+NODE_ENV=development
+```
+
+### 4. Lancement
+
+```bash
+# Terminal 1 - API Backend (port 5000)
+cd api
+npm run dev
+
+# Terminal 2 - Boutique Frontend (port 3000)
+npm run dev
+
+# Terminal 3 - Panel Admin (port 3001)
+cd admin-panel
+npm run dev
+```
+
+## 🌐 URLs d'accès
+
+- **Boutique Client**: http://localhost:3000
+- **Panel Admin**: http://localhost:3001
+- **API Backend**: http://localhost:5000
+
+## 📋 Fonctionnalités
+
+### 🛍️ Boutique Frontend
+- Catalogue de produits CBD
+- Filtrage par catégories
+- Panier d'achat
+- Pages produit détaillées
+- Interface responsive
+
+### 👨‍💼 Panel Administration
+- Gestion des produits
+- Gestion des catégories
+- Gestion des commandes
+- Tableau de bord
+- Interface CRUD complète
+
+### 🔧 API Backend
+- Authentification JWT
+- CRUD produits/catégories
+- Gestion des commandes
+- Upload d'images
+- Validation des données
+
+## 🛠️ Technologies
+
+- **Frontend**: React 18, Vite, Tailwind CSS
+- **Backend**: Node.js, Express, MongoDB
+- **Authentification**: JWT
+- **Upload**: Multer
+- **Validation**: Express Validator
+
+## 📚 Documentation API
+
+### Endpoints principaux :
+
+#### Produits
+- `GET /api/products` - Liste des produits
+- `POST /api/products` - Créer un produit
+- `PUT /api/products/:id` - Modifier un produit
+- `DELETE /api/products/:id` - Supprimer un produit
+
+#### Catégories
+- `GET /api/categories` - Liste des catégories
+- `POST /api/categories` - Créer une catégorie
+- `PUT /api/categories/:id` - Modifier une catégorie
+- `DELETE /api/categories/:id` - Supprimer une catégorie
+
+#### Commandes
+- `GET /api/orders` - Liste des commandes
+- `POST /api/orders` - Créer une commande
+- `PUT /api/orders/:id` - Modifier une commande
+
+## 🔧 Résolution des Problèmes
+
+### Problèmes d'API
+- Vérifiez que MongoDB est démarré
+- Vérifiez le fichier `.env` dans `/api`
+- Consultez les logs : `cd api && npm run dev`
+
+### Problèmes de connexion
+- Port 5000 : API Backend
+- Port 3000 : Boutique Frontend  
+- Port 3001 : Panel Admin
+
+### Base de données vide
+```bash
+cd api
+npm run seed  # Ajoute des données de test
+```
+
+## 📄 License
+
+MIT
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
-- Ouvrir des issues pour signaler des bugs
-- Proposer de nouvelles fonctionnalités
-- Soumettre des pull requests
-
-## 📄 Licence
-
-Ce projet est sous licence MIT.
+1. Fork le projet
+2. Créez une branche feature
+3. Committez vos changements
+4. Poussez vers la branche
+5. Ouvrez une Pull Request
 
 ---
 
-Développé avec ❤️ pour une expérience d'achat unique et moderne.
+**🎉 Votre boutique CBD est maintenant prête !**
