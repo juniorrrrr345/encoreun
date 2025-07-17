@@ -15,6 +15,7 @@ const { errorHandler, notFound } = require('./middleware/validation');
 const authRoutes = require('./routes/auth');
 const productRoutes = require('./routes/products');
 const orderRoutes = require('./routes/orders');
+const categoryRoutes = require('./routes/categories');
 
 const app = express();
 
@@ -117,6 +118,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // Middleware pour les routes non trouvées
 app.use(notFound);
