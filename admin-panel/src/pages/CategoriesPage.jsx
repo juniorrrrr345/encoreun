@@ -188,36 +188,37 @@ const CategoriesPage = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="loader"></div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* En-tête */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestion des catégories</h1>
-          <p className="text-gray-600">Gérez les catégories de votre boutique</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Gestion des catégories</h1>
+          <p className="text-gray-400">Gérez les catégories de votre boutique</p>
         </div>
         <button
           onClick={handleAddClick}
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+          className="btn-primary flex items-center gap-2"
         >
-          + Ajouter une catégorie
+          <span className="text-lg">+</span>
+          Ajouter une catégorie
         </button>
       </div>
 
       {/* Message d'erreur */}
       {error && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+        <div className="bg-red-900 border border-red-700 text-red-200 px-4 py-3 rounded-lg shadow-lg">
           {error}
         </div>
       )}
 
       {/* Filtres et recherche */}
-      <div className="bg-white p-4 rounded-lg shadow">
+      <div className="card">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <input
@@ -225,13 +226,13 @@ const CategoriesPage = () => {
               placeholder="Rechercher une catégorie..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="input-field"
             />
           </div>
           <select 
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
-            className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="input-field"
           >
             <option value="">Tous les statuts</option>
             <option value="active">Actives</option>
@@ -241,90 +242,86 @@ const CategoriesPage = () => {
       </div>
 
       {/* Liste des catégories */}
-      <div className="bg-white shadow rounded-lg overflow-hidden">
+      <div className="table-container">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-gray-700">
+            <thead>
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="table-header px-6 py-3 text-left">
                   Catégorie
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="table-header px-6 py-3 text-left">
                   Description
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="table-header px-6 py-3 text-left">
                   Parent
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="table-header px-6 py-3 text-left">
                   Statut
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="table-header px-6 py-3 text-left">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-700">
               {filteredCategories.map((category) => (
-                <tr key={category._id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap">
+                <tr key={category._id} className="table-row">
+                  <td className="table-cell">
                     <div className="flex items-center">
                       {category.image && (
                         <div className="flex-shrink-0 h-10 w-10">
                           <img 
-                            className="h-10 w-10 rounded-md object-cover" 
+                            className="h-10 w-10 rounded-md object-cover border border-gray-600" 
                             src={category.image} 
                             alt={category.name} 
                           />
                         </div>
                       )}
                       <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{category.name}</div>
-                        <div className="text-sm text-gray-500">Ordre: {category.sortOrder}</div>
+                        <div className="text-sm font-medium text-white">{category.name}</div>
+                        <div className="text-sm text-gray-400">Ordre: {category.sortOrder}</div>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
+                  <td className="table-cell">
+                    <div className="text-sm text-gray-300">
                       {category.description ? (
                         category.description.length > 50 
                           ? `${category.description.substring(0, 50)}...` 
                           : category.description
                       ) : (
-                        <span className="text-gray-400">Aucune description</span>
+                        <span className="text-gray-500">Aucune description</span>
                       )}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
+                  <td className="table-cell">
+                    <div className="text-sm text-gray-300">
                       {category.parent ? category.parent.name : 'Catégorie principale'}
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      category.isActive 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
+                  <td className="table-cell">
+                    <span className={category.isActive ? 'status-active' : 'status-inactive'}>
                       {category.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
+                  <td className="table-cell">
+                    <div className="flex space-x-3">
                       <button 
                         onClick={() => handleEditClick(category)}
-                        className="text-blue-600 hover:text-blue-900"
+                        className="text-blue-400 hover:text-blue-300 transition-colors"
                       >
                         Modifier
                       </button>
                       <button 
                         onClick={() => handleToggleStatus(category._id)}
-                        className="text-yellow-600 hover:text-yellow-900"
+                        className="text-yellow-400 hover:text-yellow-300 transition-colors"
                       >
                         {category.isActive ? 'Désactiver' : 'Activer'}
                       </button>
                       <button 
                         onClick={() => handleDelete(category._id)}
-                        className="text-red-600 hover:text-red-900"
+                        className="text-red-400 hover:text-red-300 transition-colors"
                       >
                         Supprimer
                       </button>
@@ -339,44 +336,44 @@ const CategoriesPage = () => {
 
       {/* Modal d'ajout/édition */}
       {(showAddModal || showEditModal) && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="modal-overlay">
+          <div className="modal-content animate-bounce-in">
             <div className="mt-3">
-              <h3 className="text-lg font-medium text-gray-900 mb-4">
+              <h3 className="text-xl font-bold text-white mb-6">
                 {showAddModal ? 'Ajouter une catégorie' : 'Modifier la catégorie'}
               </h3>
               
               <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Nom */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Nom *</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Nom *</label>
                   <input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="input-field"
                   />
                 </div>
 
                 {/* Description */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Description</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Description</label>
                   <textarea
                     value={formData.description}
                     onChange={(e) => setFormData({...formData, description: e.target.value})}
                     rows="3"
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="input-field"
                   />
                 </div>
 
                 {/* Catégorie parent */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Catégorie parent</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Catégorie parent</label>
                   <select
                     value={formData.parent}
                     onChange={(e) => setFormData({...formData, parent: e.target.value})}
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="input-field"
                   >
                     <option value="">Aucune (catégorie principale)</option>
                     {categories
@@ -392,19 +389,19 @@ const CategoriesPage = () => {
 
                 {/* Image */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Image de fond</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Image de fond</label>
                   <input
                     type="file"
                     accept="image/*"
                     onChange={handleImageChange}
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="input-field"
                   />
                   {formData.imagePreview && (
                     <div className="mt-2">
                       <img 
                         src={formData.imagePreview} 
                         alt="Aperçu" 
-                        className="h-20 w-20 object-cover rounded-md"
+                        className="h-20 w-20 object-cover rounded-md border border-gray-600"
                       />
                     </div>
                   )}
@@ -412,39 +409,39 @@ const CategoriesPage = () => {
 
                 {/* Ordre de tri */}
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Ordre de tri</label>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">Ordre de tri</label>
                   <input
                     type="number"
                     value={formData.sortOrder}
                     onChange={(e) => setFormData({...formData, sortOrder: parseInt(e.target.value) || 0})}
-                    className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="input-field"
                   />
                 </div>
 
                 {/* Options */}
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <label className="flex items-center">
                     <input
                       type="checkbox"
                       checked={formData.isActive}
                       onChange={(e) => setFormData({...formData, isActive: e.target.checked})}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-600 bg-gray-800 text-blue-600 focus:ring-blue-500"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Active</span>
+                    <span className="ml-2 text-sm text-gray-300">Active</span>
                   </label>
                   <label className="flex items-center">
                     <input
                       type="checkbox"
                       checked={formData.isFeatured}
                       onChange={(e) => setFormData({...formData, isFeatured: e.target.checked})}
-                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      className="rounded border-gray-600 bg-gray-800 text-blue-600 focus:ring-blue-500"
                     />
-                    <span className="ml-2 text-sm text-gray-700">Mise en avant</span>
+                    <span className="ml-2 text-sm text-gray-300">Mise en avant</span>
                   </label>
                 </div>
 
                 {/* Boutons */}
-                <div className="flex justify-end space-x-3 pt-4">
+                <div className="flex justify-end space-x-3 pt-6">
                   <button
                     type="button"
                     onClick={() => {
@@ -452,13 +449,13 @@ const CategoriesPage = () => {
                       setShowEditModal(false);
                       resetForm();
                     }}
-                    className="px-4 py-2 text-gray-700 bg-gray-200 rounded-md hover:bg-gray-300"
+                    className="btn-secondary"
                   >
                     Annuler
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                    className="btn-primary"
                   >
                     {showAddModal ? 'Créer' : 'Modifier'}
                   </button>

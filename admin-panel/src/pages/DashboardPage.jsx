@@ -4,10 +4,10 @@ import { useQuery } from 'react-query';
 const DashboardPage = () => {
   // Simuler des données pour le dashboard
   const stats = [
-    { name: 'Total des ventes', value: '€12,345', change: '+12%', changeType: 'positive' },
-    { name: 'Commandes', value: '156', change: '+8%', changeType: 'positive' },
-    { name: 'Produits', value: '89', change: '+3%', changeType: 'positive' },
-    { name: 'Clients', value: '1,234', change: '+15%', changeType: 'positive' },
+    { name: 'Total des ventes', value: '€12,345', change: '+12%', changeType: 'positive', icon: '💰' },
+    { name: 'Commandes', value: '156', change: '+8%', changeType: 'positive', icon: '🛒' },
+    { name: 'Produits', value: '89', change: '+3%', changeType: 'positive', icon: '📦' },
+    { name: 'Clients', value: '1,234', change: '+15%', changeType: 'positive', icon: '👥' },
   ];
 
   const recentOrders = [
@@ -18,41 +18,41 @@ const DashboardPage = () => {
   ];
 
   const statusColors = {
-    'Livré': 'bg-green-100 text-green-800',
-    'En cours': 'bg-blue-100 text-blue-800',
-    'En attente': 'bg-yellow-100 text-yellow-800',
+    'Livré': 'status-active',
+    'En cours': 'bg-blue-900 text-blue-200',
+    'En attente': 'bg-yellow-900 text-yellow-200',
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* En-tête */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">Tableau de bord</h1>
-        <p className="text-gray-600">Vue d'ensemble de votre boutique</p>
+        <h1 className="text-3xl font-bold text-white mb-2">Tableau de bord</h1>
+        <p className="text-gray-400">Vue d'ensemble de votre boutique</p>
       </div>
 
       {/* Statistiques */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <div key={stat.name} className="bg-white overflow-hidden shadow rounded-lg">
+        {stats.map((stat, index) => (
+          <div key={stat.name} className="card-hover animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
             <div className="p-5">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">📊</span>
+                  <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+                    <span className="text-white text-lg">{stat.icon}</span>
                   </div>
                 </div>
-                <div className="ml-5 w-0 flex-1">
+                <div className="ml-4 w-0 flex-1">
                   <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
+                    <dt className="text-sm font-medium text-gray-400 truncate">
                       {stat.name}
                     </dt>
                     <dd className="flex items-baseline">
-                      <div className="text-2xl font-semibold text-gray-900">
+                      <div className="text-2xl font-bold text-white">
                         {stat.value}
                       </div>
                       <div className={`ml-2 flex items-baseline text-sm font-semibold ${
-                        stat.changeType === 'positive' ? 'text-green-600' : 'text-red-600'
+                        stat.changeType === 'positive' ? 'text-green-400' : 'text-red-400'
                       }`}>
                         {stat.change}
                       </div>
@@ -68,21 +68,21 @@ const DashboardPage = () => {
       {/* Graphique et commandes récentes */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Graphique des ventes */}
-        <div className="bg-white shadow rounded-lg">
+        <div className="card">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+            <h3 className="text-lg leading-6 font-medium text-white mb-4">
               Ventes des 7 derniers jours
             </h3>
             <div className="h-64 flex items-end justify-between space-x-2">
               {[65, 78, 90, 81, 95, 88, 92].map((value, index) => (
-                <div key={index} className="flex-1 bg-blue-500 rounded-t" style={{ height: `${value}%` }}>
-                  <div className="text-xs text-center text-white mt-1">
+                <div key={index} className="flex-1 bg-gradient-to-t from-blue-600 to-blue-500 rounded-t shadow-lg" style={{ height: `${value}%` }}>
+                  <div className="text-xs text-center text-white mt-1 font-medium">
                     {value}%
                   </div>
                 </div>
               ))}
             </div>
-            <div className="mt-4 flex justify-between text-xs text-gray-500">
+            <div className="mt-4 flex justify-between text-xs text-gray-400">
               <span>Lun</span>
               <span>Mar</span>
               <span>Mer</span>
@@ -95,27 +95,27 @@ const DashboardPage = () => {
         </div>
 
         {/* Commandes récentes */}
-        <div className="bg-white shadow rounded-lg">
+        <div className="card">
           <div className="px-4 py-5 sm:p-6">
-            <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+            <h3 className="text-lg leading-6 font-medium text-white mb-4">
               Commandes récentes
             </h3>
             <div className="space-y-4">
-              {recentOrders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              {recentOrders.map((order, index) => (
+                <div key={order.id} className="flex items-center justify-between p-3 bg-gray-750 rounded-lg border border-gray-700 animate-slide-up" style={{ animationDelay: `${index * 0.1}s` }}>
                   <div className="flex items-center space-x-3">
                     <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <span className="text-blue-600 text-sm font-medium">🛒</span>
+                      <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center shadow-lg">
+                        <span className="text-white text-sm font-medium">🛒</span>
                       </div>
                     </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-900">{order.id}</p>
-                      <p className="text-sm text-gray-500">{order.customer}</p>
+                      <p className="text-sm font-medium text-white">{order.id}</p>
+                      <p className="text-sm text-gray-400">{order.customer}</p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-sm font-medium text-gray-900">{order.amount}</p>
+                    <p className="text-sm font-medium text-white">{order.amount}</p>
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${statusColors[order.status]}`}>
                       {order.status}
                     </span>
@@ -124,7 +124,7 @@ const DashboardPage = () => {
               ))}
             </div>
             <div className="mt-4">
-              <button className="text-sm text-blue-600 hover:text-blue-500 font-medium">
+              <button className="text-sm text-blue-400 hover:text-blue-300 font-medium transition-colors">
                 Voir toutes les commandes →
               </button>
             </div>
@@ -133,27 +133,27 @@ const DashboardPage = () => {
       </div>
 
       {/* Actions rapides */}
-      <div className="bg-white shadow rounded-lg">
+      <div className="card">
         <div className="px-4 py-5 sm:p-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
+          <h3 className="text-lg leading-6 font-medium text-white mb-4">
             Actions rapides
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="text-2xl mr-3">➕</span>
-              <span className="text-sm font-medium text-gray-900">Ajouter un produit</span>
+            <button className="flex items-center p-4 border border-gray-700 rounded-lg hover:bg-gray-750 transition-all duration-200 hover:border-gray-600 group">
+              <span className="text-2xl mr-3 group-hover:scale-110 transition-transform">➕</span>
+              <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Ajouter un produit</span>
             </button>
-            <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="text-2xl mr-3">📋</span>
-              <span className="text-sm font-medium text-gray-900">Gérer les commandes</span>
+            <button className="flex items-center p-4 border border-gray-700 rounded-lg hover:bg-gray-750 transition-all duration-200 hover:border-gray-600 group">
+              <span className="text-2xl mr-3 group-hover:scale-110 transition-transform">📋</span>
+              <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Gérer les commandes</span>
             </button>
-            <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="text-2xl mr-3">👥</span>
-              <span className="text-sm font-medium text-gray-900">Voir les clients</span>
+            <button className="flex items-center p-4 border border-gray-700 rounded-lg hover:bg-gray-750 transition-all duration-200 hover:border-gray-600 group">
+              <span className="text-2xl mr-3 group-hover:scale-110 transition-transform">👥</span>
+              <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Voir les clients</span>
             </button>
-            <button className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
-              <span className="text-2xl mr-3">📊</span>
-              <span className="text-sm font-medium text-gray-900">Rapports</span>
+            <button className="flex items-center p-4 border border-gray-700 rounded-lg hover:bg-gray-750 transition-all duration-200 hover:border-gray-600 group">
+              <span className="text-2xl mr-3 group-hover:scale-110 transition-transform">📊</span>
+              <span className="text-sm font-medium text-gray-300 group-hover:text-white transition-colors">Rapports</span>
             </button>
           </div>
         </div>
