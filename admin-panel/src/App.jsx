@@ -1,12 +1,9 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
-import DashboardPage from './pages/DashboardPage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
 import CategoriesPage from './pages/CategoriesPage.jsx';
 import InfoPage from './pages/InfoPage.jsx';
-import OrdersPage from './pages/OrdersPage.jsx';
-import ProfilePage from './pages/ProfilePage.jsx';
 
 function App() {
   // Utilisateur par défaut pour le panel admin
@@ -21,7 +18,7 @@ function App() {
     <Routes>
       <Route path="/" element={
         <Layout user={defaultUser}>
-          <DashboardPage />
+          <ProductsPage />
         </Layout>
       } />
       
@@ -40,18 +37,6 @@ function App() {
       <Route path="/info" element={
         <Layout user={defaultUser}>
           <InfoPage />
-        </Layout>
-      } />
-      
-      <Route path="/orders" element={
-        <Layout user={defaultUser}>
-          <OrdersPage />
-        </Layout>
-      } />
-      
-      <Route path="/profile" element={
-        <Layout user={defaultUser}>
-          <ProfilePage />
         </Layout>
       } />
       
