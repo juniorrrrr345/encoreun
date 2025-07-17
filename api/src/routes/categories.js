@@ -3,6 +3,7 @@ const { body, param, query } = require('express-validator');
 const categoryController = require('../controllers/categoryController');
 const { authenticateToken, requireAdminOrManager } = require('../middleware/auth');
 const { handleValidationErrors } = require('../middleware/validation');
+const { uploadSingle, handleUploadError } = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -70,8 +71,8 @@ router.get('/:id', idValidation, handleValidationErrors, categoryController.getC
 
 // Routes protégées (admin/manager)
 router.get('/', queryValidation, handleValidationErrors, categoryController.getAllCategories);
-router.post('/', categoryValidation, handleValidationErrors, categoryController.createCategory);
-router.put('/:id', idValidation, categoryValidation, handleValidationErrors, categoryController.updateCategory);
+router.post('/', uploadSingle, handleUploadError, categoryValidation, handleValidationErrors, categoryController.createCategory);
+router.put('/:id', uploadSingle, handleUploadError, idValidation, categoryValidation, handleValidationErrors, categoryController.updateCategory);
 router.delete('/:id', idValidation, handleValidationErrors, categoryController.deleteCategory);
 
 // Routes pour la gestion du statut

@@ -8,6 +8,7 @@ const Layout = ({ children, user }) => {
   const navigation = [
     { name: 'Tableau de bord', href: '/', icon: '📊' },
     { name: 'Produits', href: '/products', icon: '📦' },
+    { name: 'Catégories', href: '/categories', icon: '🏷️' },
     { name: 'Commandes', href: '/orders', icon: '🛒' },
     { name: 'Profil', href: '/profile', icon: '👤' },
   ];

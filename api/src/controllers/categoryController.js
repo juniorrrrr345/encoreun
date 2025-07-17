@@ -1,4 +1,5 @@
 const Category = require('../models/Category');
+const { getFileUrl } = require('../middleware/upload');
 
 // Obtenir toutes les catégories
 const getAllCategories = async (req, res) => {
@@ -60,7 +61,14 @@ const getCategoryById = async (req, res) => {
 // Créer une nouvelle catégorie
 const createCategory = async (req, res) => {
   try {
-    const category = new Category(req.body);
+    const categoryData = { ...req.body };
+    
+    // Gérer l'image uploadée
+    if (req.file) {
+      categoryData.image = getFileUrl(req.file.filename);
+    }
+
+    const category = new Category(categoryData);
     await category.save();
 
     res.status(201).json({
@@ -88,9 +96,16 @@ const createCategory = async (req, res) => {
 // Mettre à jour une catégorie
 const updateCategory = async (req, res) => {
   try {
+    const updateData = { ...req.body };
+    
+    // Gérer l'image uploadée
+    if (req.file) {
+      updateData.image = getFileUrl(req.file.filename);
+    }
+
     const category = await Category.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      updateData,
       { new: true, runValidators: true }
     );
 
