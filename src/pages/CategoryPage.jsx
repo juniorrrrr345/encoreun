@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiShoppingCart, FiHeart, FiStar, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiShoppingCart, FiHeart, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import useProductStore from '../store/useProductStore';
 import Loader from '../components/Loader';
 
@@ -32,54 +32,42 @@ const CategoryPage = () => {
           name: 'Produit Premium',
           description: 'Un produit exceptionnel de haute qualité',
           price: 89.99,
-          image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop',
-          rating: 4.8,
-          reviews: 124
+          image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&h=400&fit=crop'
         },
         {
           _id: '2',
           name: 'Collection Exclusive',
           description: 'Édition limitée avec des matériaux nobles',
           price: 149.99,
-          image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop',
-          rating: 4.9,
-          reviews: 89
+          image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=400&fit=crop'
         },
         {
           _id: '3',
           name: 'Design Moderne',
           description: 'Style contemporain et élégant',
           price: 199.99,
-          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop',
-          rating: 4.7,
-          reviews: 156
+          image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop'
         },
         {
           _id: '4',
           name: 'Édition Spéciale',
           description: 'Produit unique avec finitions soignées',
           price: 299.99,
-          image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop',
-          rating: 5.0,
-          reviews: 67
+          image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=400&fit=crop'
         },
         {
           _id: '5',
           name: 'Collection Classic',
           description: 'Intemporel et raffiné',
           price: 179.99,
-          image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop',
-          rating: 4.6,
-          reviews: 203
+          image: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop'
         },
         {
           _id: '6',
           name: 'Designer Series',
           description: 'Création exclusive de nos designers',
           price: 399.99,
-          image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop',
-          rating: 4.9,
-          reviews: 45
+          image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=400&fit=crop'
         }
       ]);
     }
@@ -177,23 +165,7 @@ const CategoryPage = () => {
                       {product.description}
                     </p>
                     
-                    {/* Rating */}
-                    {product.rating && (
-                      <div className="flex items-center gap-1 mb-3">
-                        <div className="flex items-center">
-                          {[...Array(5)].map((_, i) => (
-                            <FiStar 
-                              key={i}
-                              size={14}
-                              className={i < Math.floor(product.rating) ? 'text-yellow-400 fill-current' : 'text-gray-400'}
-                            />
-                          ))}
-                        </div>
-                        <span className="text-xs text-gray-400">
-                          ({product.reviews})
-                        </span>
-                      </div>
-                    )}
+                    
                     
                     {/* Price and Action */}
                     <div className="flex justify-between items-center">
