@@ -28,15 +28,15 @@ const ProductsPage = () => {
   };
 
   const handleDelete = async (productId) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir désactiver ce produit ? Il ne sera plus visible dans la boutique.')) {
       try {
         await productService.delete(productId);
-        toast.success('Produit supprimé avec succès');
-        // Recharger les produits après suppression
+        toast.success('Produit désactivé avec succès');
+        // Recharger les produits après désactivation
         fetchProducts();
       } catch (error) {
-        console.error('Erreur lors de la suppression:', error);
-        toast.error('Erreur lors de la suppression du produit');
+        console.error('Erreur lors de la désactivation:', error);
+        toast.error('Erreur lors de la désactivation du produit');
       }
     }
   };
@@ -225,7 +225,7 @@ const ProductsPage = () => {
                         onClick={() => handleDelete(product._id)}
                         className="text-xs px-2 py-1 rounded bg-red-100 text-red-700 hover:bg-red-200"
                       >
-                        Supprimer
+                        Désactiver
                       </button>
                     </div>
                   </td>
@@ -236,59 +236,7 @@ const ProductsPage = () => {
         </div>
       </div>
 
-      {/* Statistiques */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="flex items-center">
-            <div className="p-2 bg-blue-100 rounded-lg">
-              <span className="text-blue-600 text-lg">📦</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Total produits</p>
-              <p className="text-2xl font-bold text-gray-900">{products.length}</p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="flex items-center">
-            <div className="p-2 bg-green-100 rounded-lg">
-              <span className="text-green-600 text-lg">✅</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">En stock</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {products.filter(p => p.stock > 10).length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="flex items-center">
-            <div className="p-2 bg-yellow-100 rounded-lg">
-              <span className="text-yellow-600 text-lg">⚠️</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Faible stock</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {products.filter(p => p.stock > 0 && p.stock <= 10).length}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="flex items-center">
-            <div className="p-2 bg-red-100 rounded-lg">
-              <span className="text-red-600 text-lg">❌</span>
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-500">Rupture</p>
-              <p className="text-2xl font-bold text-gray-900">
-                {products.filter(p => p.stock === 0).length}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+
     </div>
   );
 };

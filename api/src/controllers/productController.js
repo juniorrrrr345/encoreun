@@ -408,11 +408,20 @@ const updateProduct = async (req, res) => {
   }
 };
 
-// Supprimer un produit
+// Soft delete - Désactiver un produit au lieu de le supprimer
 const deleteProduct = async (req, res) => {
   try {
     if (mongoose.connection.readyState === 1) {
-      const product = await Product.findByIdAndDelete(req.params.id);
+      const product = await Product.findByIdAndUpdate(
+        req.params.id,
+        { 
+          isActive: false,
+          isFeatured: false,
+          isOnSale: false,
+          stock: 0
+        },
+        { new: true, runValidators: true }
+      );
 
       if (!product) {
         return res.status(404).json({
@@ -423,7 +432,7 @@ const deleteProduct = async (req, res) => {
 
       res.status(200).json({
         success: true,
-        message: 'Produit supprimé avec succès'
+        message: 'Produit désactivé avec succès'
       });
     } else {
       res.status(503).json({
@@ -432,7 +441,7 @@ const deleteProduct = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error('Erreur de suppression du produit:', error);
+    console.error('Erreur de désactivation du produit:', error);
     res.status(500).json({
       success: false,
       message: 'Erreur interne du serveur'

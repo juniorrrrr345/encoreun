@@ -24,15 +24,15 @@ const DashboardPage = () => {
   };
 
   const handleDeleteProduct = async (productId) => {
-    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+    if (window.confirm('Êtes-vous sûr de vouloir désactiver ce produit ? Il ne sera plus visible dans la boutique.')) {
       try {
         await productService.delete(productId);
-        toast.success('Produit supprimé avec succès');
-        // Recharger les produits après suppression
+        toast.success('Produit désactivé avec succès');
+        // Recharger les produits après désactivation
         fetchProducts();
       } catch (error) {
-        console.error('Erreur lors de la suppression:', error);
-        toast.error('Erreur lors de la suppression du produit');
+        console.error('Erreur lors de la désactivation:', error);
+        toast.error('Erreur lors de la désactivation du produit');
       }
     }
   };
@@ -48,18 +48,7 @@ const DashboardPage = () => {
     }
   };
 
-  // Calculer les statistiques réelles
-  const totalProducts = products.length;
-  const activeProducts = products.filter(p => p.isActive).length;
-  const featuredProducts = products.filter(p => p.isFeatured).length;
-  const onSaleProducts = products.filter(p => p.isOnSale).length;
-
-  const stats = [
-    { name: 'Total des produits', value: totalProducts, icon: '📦' },
-    { name: 'Produits actifs', value: activeProducts, icon: '✅' },
-    { name: 'Produits en vedette', value: featuredProducts, icon: '⭐' },
-    { name: 'Produits en promotion', value: onSaleProducts, icon: '🏷️' },
-  ];
+  // Pas de statistiques - interface simplifiée
 
   if (loading) {
     return (
@@ -80,32 +69,7 @@ const DashboardPage = () => {
         <p className="text-gray-600">Gestion de votre boutique</p>
       </div>
 
-      {/* Statistiques */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => (
-          <div key={stat.name} className="bg-white overflow-hidden shadow rounded-lg">
-            <div className="p-5">
-              <div className="flex items-center">
-                <div className="flex-shrink-0">
-                  <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                    <span className="text-white text-sm font-medium">{stat.icon}</span>
-                  </div>
-                </div>
-                <div className="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt className="text-sm font-medium text-gray-500 truncate">
-                      {stat.name}
-                    </dt>
-                    <dd className="text-2xl font-semibold text-gray-900">
-                      {stat.value}
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+
 
       {/* Produits de la boutique */}
       <div className="bg-white shadow rounded-lg">
@@ -221,7 +185,7 @@ const DashboardPage = () => {
                             onClick={() => handleDeleteProduct(product._id)}
                             className="text-xs px-2 py-1 rounded bg-red-100 text-red-700 hover:bg-red-200"
                           >
-                            Supprimer
+                            Désactiver
                           </button>
                         </div>
                       </td>
