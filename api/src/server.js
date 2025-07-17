@@ -8,8 +8,8 @@ const morgan = require('morgan');
 const path = require('path');
 
 // Import des configurations
-// const connectDB = require('./config/database');
-const MemoryDB = require('./config/database-memory');
+const connectDB = require('./config/database');
+// const MemoryDB = require('./config/database-memory');
 const { errorHandler, notFound } = require('./middleware/validation');
 
 // Import des routes
@@ -20,8 +20,8 @@ const categoryRoutes = require('./routes/categories');
 
 const app = express();
 
-// Connexion à la base de données (temporaire en mémoire)
-MemoryDB.connect();
+// Connexion à la base de données MongoDB Atlas
+connectDB();
 
 // Configuration du rate limiting
 const limiter = rateLimit({
