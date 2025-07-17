@@ -62,7 +62,7 @@ const InfoPage = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="font-custom text-6xl md:text-7xl lg:text-8xl font-bold mb-6 bg-gradient-to-r from-pink-400 via-pink-300 to-purple-400 bg-clip-text text-transparent"
+            className="font-custom text-6xl md:text-7xl lg:text-8xl font-bold mb-6 text-white"
           >
             Avec Amour
           </motion.h1>
@@ -86,14 +86,14 @@ const InfoPage = () => {
           >
             <Link
               to="/category"
-              className="px-8 py-4 bg-gradient-to-r from-pink-500 to-pink-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="px-8 py-4 bg-gray-600 text-white font-semibold rounded-full hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               Découvrir la Boutique
             </Link>
             
             <Link
               to="/category"
-              className="px-8 py-4 border-2 border-pink-500 text-pink-300 font-semibold rounded-full hover:bg-pink-500 hover:text-white transition-all duration-300 transform hover:scale-105"
+              className="px-8 py-4 border-2 border-gray-400 text-gray-300 font-semibold rounded-full hover:bg-gray-600 hover:text-white transition-all duration-300 transform hover:scale-105"
             >
               Voir les Catégories
             </Link>
@@ -101,8 +101,8 @@ const InfoPage = () => {
         </div>
 
         {/* Decorative elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-pink-500/10 rounded-full blur-xl"></div>
-        <div className="absolute bottom-20 right-10 w-32 h-32 bg-purple-500/10 rounded-full blur-xl"></div>
+        <div className="absolute top-20 left-10 w-20 h-20 bg-gray-500/10 rounded-full blur-xl"></div>
+        <div className="absolute bottom-20 right-10 w-32 h-32 bg-gray-500/10 rounded-full blur-xl"></div>
       </motion.section>
 
       {/* Featured Products Section */}

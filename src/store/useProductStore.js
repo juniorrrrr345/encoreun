@@ -92,7 +92,6 @@ const useProductStore = create((set, get) => ({
       return response.data;
     } catch (error) {
       set({ loading: false });
-      toast.error('Produit non trouvé');
       return null;
     }
   },
@@ -105,7 +104,6 @@ const useProductStore = create((set, get) => ({
       set({ products: response.data, loading: false });
     } catch (error) {
       set({ loading: false });
-      toast.error('Erreur lors du chargement de la catégorie');
     }
   },
 
@@ -130,11 +128,9 @@ const useProductStore = create((set, get) => ({
         products: [...state.products, response.data],
         loading: false
       }));
-      toast.success('Produit créé avec succès');
       return response.data;
     } catch (error) {
       set({ loading: false });
-      toast.error('Erreur lors de la création du produit');
       throw error;
     }
   },
@@ -148,11 +144,9 @@ const useProductStore = create((set, get) => ({
         products: state.products.map(p => p._id === id ? response.data : p),
         loading: false
       }));
-      toast.success('Produit mis à jour avec succès');
       return response.data;
     } catch (error) {
       set({ loading: false });
-      toast.error('Erreur lors de la mise à jour du produit');
       throw error;
     }
   },
@@ -164,9 +158,8 @@ const useProductStore = create((set, get) => ({
       set((state) => ({
         products: state.products.filter(p => p._id !== id)
       }));
-      toast.success('Produit supprimé avec succès');
     } catch (error) {
-      toast.error('Erreur lors de la suppression du produit');
+      // Ignorer les erreurs de suppression
     }
   },
 
@@ -178,7 +171,6 @@ const useProductStore = create((set, get) => ({
       set({ products: response.data, loading: false });
     } catch (error) {
       set({ loading: false });
-      toast.error('Erreur lors de la recherche');
     }
   }
 }));

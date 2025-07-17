@@ -36,8 +36,8 @@ export const productService = {
       const response = await api.get('/products', { params });
       return response.data;
     } catch (error) {
-      console.error('Erreur API:', error);
-      // Retourner des données de test si l'API n'est pas disponible
+      console.log('Utilisation des produits de test dans le panneau admin');
+      // Retourner des données de test synchronisées avec la boutique
       return {
         products: [
           {
