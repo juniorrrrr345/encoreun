@@ -28,15 +28,15 @@ const ProductsPage = () => {
   };
 
   const handleDelete = async (productId) => {
-    if (window.confirm('Êtes-vous sûr de vouloir désactiver ce produit ? Il ne sera plus visible dans la boutique.')) {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer définitivement ce produit ? Cette action est irréversible.')) {
       try {
         await productService.delete(productId);
-        toast.success('Produit désactivé avec succès');
-        // Recharger les produits après désactivation
+        toast.success('Produit supprimé définitivement avec succès');
+        // Recharger les produits après suppression
         fetchProducts();
       } catch (error) {
-        console.error('Erreur lors de la désactivation:', error);
-        toast.error('Erreur lors de la désactivation du produit');
+        console.error('Erreur lors de la suppression:', error);
+        toast.error('Erreur lors de la suppression du produit');
       }
     }
   };
@@ -225,7 +225,7 @@ const ProductsPage = () => {
                         onClick={() => handleDelete(product._id)}
                         className="text-xs px-2 py-1 rounded bg-red-100 text-red-700 hover:bg-red-200"
                       >
-                        Désactiver
+                        Supprimer
                       </button>
                     </div>
                   </td>
