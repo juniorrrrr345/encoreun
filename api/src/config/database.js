@@ -1,6 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
+// Tenter d'importer mongoose seulement si disponible
+let mongoose = null;
+try {
+  mongoose = require('mongoose');
+} catch (error) {
+  console.log('⚠️  Mongoose non disponible, utilisation du mode mémoire');
+}
+
 // Classe pour simuler mongoose mais avec stockage en fichiers JSON
 class MemoryDB {
   constructor() {
@@ -212,16 +220,36 @@ class MemoryDB {
 // Instance globale
 const memoryDB = new MemoryDB();
 
-// Fonction pour simuler la connexion MongoDB
+// Fonction pour tenter la connexion MongoDB puis fallback vers mémoire
 const connectDB = async () => {
-  try {
-    console.log('🚀 Base de données en mémoire démarrée');
+  // Si pas de MongoDB URI, utiliser directement le mode mémoire
+  if (!process.env.MONGODB_URI || !mongoose) {
+    console.log('🚀 Base de données en mémoire démarrée (pas de MongoDB configuré)');
     console.log('📊 Collections disponibles:', Object.keys(memoryDB.data));
     console.log('✅ Système de persistance JSON activé');
-    return true;
+    return { type: 'memory', db: memoryDB };
+  }
+
+  try {
+    // Tenter la connexion MongoDB
+    console.log('🔄 Tentative de connexion MongoDB Atlas...');
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+
+    console.log(`✅ MongoDB Atlas connecté: ${conn.connection.host}`);
+    console.log('📊 Base de données:', conn.connection.name);
+    return { type: 'mongodb', db: conn };
   } catch (error) {
-    console.error('❌ Erreur d\'initialisation:', error.message);
-    return false;
+    console.error('❌ Erreur de connexion MongoDB Atlas:', error.message);
+    console.log('🔄 Basculement vers le mode mémoire...');
+    
+    // Fallback vers base de données en mémoire
+    console.log('🚀 Base de données en mémoire démarrée (fallback)');
+    console.log('📊 Collections disponibles:', Object.keys(memoryDB.data));
+    console.log('✅ Système de persistance JSON activé');
+    return { type: 'memory', db: memoryDB };
   }
 };
 
