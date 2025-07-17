@@ -42,7 +42,7 @@ const Layout = ({ children, user }) => {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`nav-item ${
+                  className={`nav-item group ${
                     isActive ? 'nav-item-active' : 'nav-item-inactive'
                   }`}
                 >
