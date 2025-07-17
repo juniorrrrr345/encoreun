@@ -1,11 +1,12 @@
 
-> boutique-admin-panel@1.0.0 dev
+> cbd-shop-admin-panel@1.0.0 dev
 > vite
 
 Port 3001 is in use, trying another one...
 Port 3002 is in use, trying another one...
+Port 3003 is in use, trying another one...
 
-  VITE v4.5.14  ready in 512 ms
+  VITE v4.5.14  ready in 411 ms
 
-  ➜  Local:   http://localhost:3003/
-  ➜  Network: use --host to expose
+  ➜  Local:   http://localhost:3004/
+  ➜  Network: http://172.17.0.2:3004/

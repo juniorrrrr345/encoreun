@@ -10,7 +10,6 @@ const path = require('path');
 // Import des configurations
 const connectDB = require('./config/database');
 const { errorHandler, notFound } = require('./middleware/validation');
-const { initDefaultAdmin } = require('./controllers/authController');
 
 // Import des routes
 const authRoutes = require('./routes/auth');
@@ -20,17 +19,8 @@ const categoryRoutes = require('./routes/categories');
 
 const app = express();
 
-// Fonction d'initialisation asynchrone
-const initializeApp = async () => {
-  // Connexion à la base de données
-  await connectDB();
-  
-  // Initialiser l'admin par défaut
-  await initDefaultAdmin();
-};
-
-// Initialiser l'application
-initializeApp();
+// Connexion à la base de données
+connectDB();
 
 // Configuration du rate limiting
 const limiter = rateLimit({
@@ -113,7 +103,14 @@ app.get('/', (req, res) => {
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
     cors: {
-      allowedOrigins: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000']
+      allowedOrigins: process.env.CORS_ORIGIN 
+        ? process.env.CORS_ORIGIN.split(',') 
+        : [
+            'http://localhost:3000',   // Boutique Frontend
+            'http://localhost:3001',   // Panel Admin
+            'http://localhost:5173',   // Vite dev server
+            'http://localhost:4173'    // Vite preview
+          ]
     }
   });
 });
@@ -159,7 +156,7 @@ const server = app.listen(PORT, () => {
   console.log(`🚀 Serveur démarré sur le port ${PORT}`);
   console.log(`📊 Environnement: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🔗 URL: http://localhost:${PORT}`);
-  console.log(`🌐 CORS autorisé pour: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`);
+  console.log(`🌐 CORS autorisé pour: ${process.env.CORS_ORIGIN || 'http://localhost:3000,http://localhost:3001'}`);
   console.log(`📝 Documentation: http://localhost:${PORT}/api-docs`);
   console.log(`✅ Mode: Base de données MongoDB connectée`);
 });

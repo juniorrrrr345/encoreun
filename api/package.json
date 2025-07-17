@@ -1,7 +1,7 @@
 {
-  "name": "boutique-admin-api",
+  "name": "cbd-shop-api",
   "version": "1.0.0",
-  "description": "API d'administration pour la boutique e-commerce",
+  "description": "API Backend pour CBD Shop - http://localhost:5000",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

@@ -57,9 +57,13 @@ npm run dev
 
 ## 🌐 URLs d'accès
 
-- **Boutique Client**: http://localhost:3000
-- **Panel Admin**: http://localhost:3001
-- **API Backend**: http://localhost:5000
+| Service | URL | Port | Description |
+|---------|-----|------|-------------|
+| **🛍️ Boutique Frontend** | http://localhost:3000 | 3000 | Interface client React + Vite |
+| **👨‍💼 Panel Admin** | http://localhost:3001 | 3001 | Administration React + Vite |
+| **🔧 API Backend** | http://localhost:5000 | 5000 | Node.js + MongoDB Atlas |
+| **❤️ API Health** | http://localhost:5000/health | 5000 | Statut de l'API |
+| **📊 API Endpoints** | http://localhost:5000/api | 5000 | Endpoints REST |
 
 ## 📋 Fonctionnalités
 

@@ -1,7 +1,7 @@
 {
-  "name": "boutique-admin-panel",
+  "name": "cbd-shop-admin-panel",
   "version": "1.0.0",
-  "description": "Interface d'administration pour la boutique e-commerce",
+  "description": "Panel d'administration pour CBD Shop - http://localhost:3001",
   "type": "module",
   "scripts": {
     "dev": "vite",

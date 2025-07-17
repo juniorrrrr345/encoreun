@@ -1,0 +1,48 @@
+{
+  "name": "CBD Shop - Configuration URLs",
+  "description": "Configuration centralisée des URLs pour tous les services CBD Shop",
+  "version": "1.0.0",
+  "services": {
+    "api": {
+      "url": "http://localhost:5000",
+      "health": "http://localhost:5000/health",
+      "endpoints": "http://localhost:5000/api",
+      "port": 5000,
+      "description": "API Backend Node.js + MongoDB Atlas"
+    },
+    "admin": {
+      "url": "http://localhost:3001",
+      "port": 3001,
+      "description": "Panel d'Administration React + Vite"
+    },
+    "frontend": {
+      "url": "http://localhost:3000",
+      "port": 3000,
+      "description": "Boutique Frontend React + Vite"
+    }
+  },
+  "cors": {
+    "allowedOrigins": [
+      "http://localhost:3000",
+      "http://localhost:3001",
+      "http://localhost:5173",
+      "http://localhost:4173"
+    ]
+  },
+  "environment": {
+    "development": {
+      "api": "http://localhost:5000/api",
+      "admin": "http://localhost:3001",
+      "frontend": "http://localhost:3000"
+    },
+    "production": {
+      "api": "https://your-api-domain.com/api",
+      "admin": "https://admin.your-domain.com",
+      "frontend": "https://your-domain.com"
+    }
+  },
+  "commands": {
+    "start_all": "./start-all-services.sh",
+    "stop_all": "pkill -f 'node.*server.js|vite.*admin-panel|vite.*workspace'"
+  }
+}

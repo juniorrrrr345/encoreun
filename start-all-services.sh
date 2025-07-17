@@ -102,7 +102,12 @@ cd /workspace/admin-panel
 
 # Créer le fichier .env s'il n'existe pas
 if [ ! -f ".env" ]; then
-    echo "VITE_API_URL=http://localhost:5000/api" > .env
+    cat > .env << EOF
+# Configuration Panel Admin CBD Shop
+VITE_API_URL=http://localhost:5000/api
+VITE_FRONTEND_URL=http://localhost:3000
+VITE_ADMIN_URL=http://localhost:3001
+EOF
     print_info "Fichier .env créé pour le panel admin"
 fi
 
