@@ -25,6 +25,13 @@ const productSchema = new mongoose.Schema({
     type: Number,
     min: [0, 'Le prix original ne peut pas être négatif']
   },
+  // Support pour plusieurs prix (variantes, tailles, etc.)
+  priceVariants: [{
+    name: { type: String, required: true }, // ex: "Petite", "Moyenne", "Grande"
+    price: { type: Number, required: true, min: 0 },
+    originalPrice: { type: Number, min: 0 },
+    isActive: { type: Boolean, default: true }
+  }],
   category: {
     type: String,
     required: [true, 'La catégorie est requise'],

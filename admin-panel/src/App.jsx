@@ -3,6 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
+import CategoriesPage from './pages/CategoriesPage.jsx';
+import InfoPage from './pages/InfoPage.jsx';
 import OrdersPage from './pages/OrdersPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 
@@ -26,6 +28,18 @@ function App() {
       <Route path="/products" element={
         <Layout user={defaultUser}>
           <ProductsPage />
+        </Layout>
+      } />
+      
+      <Route path="/categories" element={
+        <Layout user={defaultUser}>
+          <CategoriesPage />
+        </Layout>
+      } />
+      
+      <Route path="/info" element={
+        <Layout user={defaultUser}>
+          <InfoPage />
         </Layout>
       } />
       
