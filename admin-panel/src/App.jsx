@@ -3,8 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
-import OrdersPage from './pages/OrdersPage.jsx';
-import ProfilePage from './pages/ProfilePage.jsx';
+import AddProductPage from './pages/AddProductPage.jsx';
 
 function App() {
   // Utilisateur par défaut pour le panel admin
@@ -29,17 +28,13 @@ function App() {
         </Layout>
       } />
       
-      <Route path="/orders" element={
+      <Route path="/add-product" element={
         <Layout user={defaultUser}>
-          <OrdersPage />
+          <AddProductPage />
         </Layout>
       } />
       
-      <Route path="/profile" element={
-        <Layout user={defaultUser}>
-          <ProfilePage />
-        </Layout>
-      } />
+
       
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

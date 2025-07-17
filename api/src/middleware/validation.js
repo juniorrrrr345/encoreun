@@ -19,6 +19,34 @@ const handleValidationErrors = (req, res, next) => {
   next();
 };
 
+// Validation pour les catégories
+const validateCategory = (req, res, next) => {
+  const { name, slug, description } = req.body;
+  
+  if (!name || name.trim().length < 2) {
+    return res.status(400).json({
+      success: false,
+      message: 'Le nom de la catégorie doit contenir au moins 2 caractères'
+    });
+  }
+  
+  if (!slug || slug.trim().length < 2) {
+    return res.status(400).json({
+      success: false,
+      message: 'Le slug de la catégorie doit contenir au moins 2 caractères'
+    });
+  }
+  
+  if (description && description.length > 500) {
+    return res.status(400).json({
+      success: false,
+      message: 'La description ne peut pas dépasser 500 caractères'
+    });
+  }
+  
+  next();
+};
+
 // Middleware pour gérer les erreurs globales
 const errorHandler = (err, req, res, next) => {
   console.error('Erreur:', err);
@@ -73,6 +101,7 @@ const notFound = (req, res) => {
 
 module.exports = {
   handleValidationErrors,
+  validateCategory,
   errorHandler,
   notFound
 };
