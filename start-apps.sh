@@ -16,7 +16,7 @@ trap cleanup SIGINT
 
 # Démarrer la boutique
 echo "📱 Démarrage de la boutique..."
-cd src && npm run dev &
+cd boutique && npm run dev &
 BOUTIQUE_PID=$!
 
 # Attendre un peu puis démarrer le panel admin

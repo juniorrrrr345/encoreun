@@ -1,12 +1,11 @@
 {
-  "buildCommand": "cd src && npm run build",
-  "outputDirectory": "src/dist",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "framework": "vite",
-  "installCommand": "cd src && npm install",
-  "devCommand": "cd src && npm run dev",
+  "installCommand": "npm install",
   "regions": ["iad1"],
   "functions": {
-    "src/dist/**/*.js": {
+    "dist/**/*.js": {
       "maxDuration": 30
     }
   },
