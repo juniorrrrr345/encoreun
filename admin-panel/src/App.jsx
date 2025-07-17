@@ -21,25 +21,21 @@ function App() {
           <ProductsPage />
         </Layout>
       } />
-      
       <Route path="/products" element={
         <Layout user={defaultUser}>
           <ProductsPage />
         </Layout>
       } />
-      
       <Route path="/categories" element={
         <Layout user={defaultUser}>
           <CategoriesPage />
         </Layout>
       } />
-      
       <Route path="/info" element={
         <Layout user={defaultUser}>
           <InfoPage />
         </Layout>
       } />
-      
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
