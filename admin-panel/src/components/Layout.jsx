@@ -9,7 +9,6 @@ const Layout = ({ children, user }) => {
     { name: 'Tableau de bord', href: '/', icon: '📊' },
     { name: 'Produits', href: '/products', icon: '📦' },
     { name: 'Ajouter un produit', href: '/add-product', icon: '➕' },
-    { name: 'Profil', href: '/profile', icon: '👤' },
   ];
 
   const handleLogout = () => {

@@ -4,7 +4,6 @@ import Layout from './components/Layout.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
 import AddProductPage from './pages/AddProductPage.jsx';
-import ProfilePage from './pages/ProfilePage.jsx';
 
 function App() {
   // Utilisateur par défaut pour le panel admin
@@ -35,11 +34,7 @@ function App() {
         </Layout>
       } />
       
-      <Route path="/profile" element={
-        <Layout user={defaultUser}>
-          <ProfilePage />
-        </Layout>
-      } />
+
       
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
