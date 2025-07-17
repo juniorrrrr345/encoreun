@@ -8,7 +8,7 @@ const morgan = require('morgan');
 const path = require('path');
 
 // Import des configurations
-const connectDB = require('./config/database');
+const { connectDB } = require('./config/database');
 const { errorHandler, notFound } = require('./middleware/validation');
 
 // Import des routes
@@ -98,19 +98,22 @@ app.get('/', (req, res) => {
     environment: process.env.NODE_ENV || 'development',
     timestamp: new Date().toISOString(),
     cors: {
-      allowedOrigins: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',') : ['http://localhost:3000']
+      allowedOrigins: process.env.CORS_ORIGIN 
+        ? process.env.CORS_ORIGIN.split(',') 
+        : ['http://localhost:3000', 'http://localhost:3001', 'http://localhost:5173']
     }
   });
 });
 
-// Route de santé
+// Route de santé pour vérifier le statut de l'API
 app.get('/health', (req, res) => {
   res.json({
     success: true,
-    message: 'API en ligne',
+    status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
-          database: 'connected'
+    memory: process.memoryUsage(),
+    database: 'Memory DB with JSON persistence'
   });
 });
 
@@ -120,48 +123,43 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/categories', categoryRoutes);
 
-// Middleware pour les routes non trouvées
+// Middleware de gestion d'erreurs
 app.use(notFound);
-
-// Middleware de gestion d'erreurs global
 app.use(errorHandler);
-
-// Gestion des erreurs non capturées
-process.on('unhandledRejection', (err, promise) => {
-  console.error('Erreur non gérée:', err);
-  process.exit(1);
-});
-
-process.on('uncaughtException', (err) => {
-  console.error('Exception non capturée:', err);
-  process.exit(1);
-});
 
 // Démarrage du serveur
 const PORT = process.env.PORT || 5000;
 
 const server = app.listen(PORT, () => {
-  console.log(`🚀 Serveur démarré sur le port ${PORT}`);
-  console.log(`📊 Environnement: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`🔗 URL: http://localhost:${PORT}`);
-  console.log(`🌐 CORS autorisé pour: ${process.env.CORS_ORIGIN || 'http://localhost:3000'}`);
-  console.log(`📝 Documentation: http://localhost:${PORT}/api-docs`);
-  console.log(`✅ Mode: Base de données MongoDB connectée`);
+  console.log(`
+╭─────────────────────────────────────────────────╮
+│           🌿 CBD Shop API Server                │
+├─────────────────────────────────────────────────┤
+│  🚀 Server running on port ${PORT}               │
+│  🌍 Environment: ${process.env.NODE_ENV || 'development'}              │
+│  📁 Database: Memory + JSON persistence         │
+│  🔗 URL: http://localhost:${PORT}               │
+│  ❤️  Health: http://localhost:${PORT}/health    │
+├─────────────────────────────────────────────────┤
+│  🛒 Admin Panel: http://localhost:3001         │
+│  🏪 Shop Front: http://localhost:3000          │
+╰─────────────────────────────────────────────────╯
+  `);
 });
 
-// Gestion gracieuse de l'arrêt
+// Gestion propre de l'arrêt du serveur
 process.on('SIGTERM', () => {
-  console.log('SIGTERM reçu, arrêt gracieux du serveur...');
+  console.log('🔄 Signal SIGTERM reçu, arrêt du serveur...');
   server.close(() => {
-    console.log('Serveur arrêté');
+    console.log('✅ Serveur arrêté proprement');
     process.exit(0);
   });
 });
 
 process.on('SIGINT', () => {
-  console.log('SIGINT reçu, arrêt gracieux du serveur...');
+  console.log('🔄 Signal SIGINT reçu, arrêt du serveur...');
   server.close(() => {
-    console.log('Serveur arrêté');
+    console.log('✅ Serveur arrêté proprement');
     process.exit(0);
   });
 });

@@ -1,32 +1,38 @@
 const Category = require('../models/Category');
-const { getFileUrl } = require('../middleware/upload');
 
 // Obtenir toutes les catégories
 const getAllCategories = async (req, res) => {
   try {
-    const { isActive, isFeatured } = req.query;
+    const { isActive, isFeatured, page = 1, limit = 20 } = req.query;
     
-    const filters = {};
-    if (isActive !== undefined) {
-      filters.isActive = isActive === 'true';
-    }
-    if (isFeatured !== undefined) {
-      filters.isFeatured = isFeatured === 'true';
-    }
-
-    const categories = await Category.find(filters)
-      .populate('parent', 'name')
-      .sort({ sortOrder: 1, name: 1 });
-
-    res.status(200).json({
+    let query = {};
+    if (isActive !== undefined) query.isActive = isActive === 'true';
+    if (isFeatured !== undefined) query.isFeatured = isFeatured === 'true';
+    
+    const categories = Category.find(query);
+    
+    // Pagination simple
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const paginatedCategories = categories.slice(startIndex, endIndex);
+    
+    res.json({
       success: true,
-      data: { categories }
+      data: paginatedCategories,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(categories.length / limit),
+        totalItems: categories.length,
+        hasNext: endIndex < categories.length,
+        hasPrev: page > 1
+      }
     });
   } catch (error) {
-    console.error('Erreur de récupération des catégories:', error);
+    console.error('Erreur getAllCategories:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors de la récupération des catégories',
+      error: error.message
     });
   }
 };
@@ -34,9 +40,7 @@ const getAllCategories = async (req, res) => {
 // Obtenir une catégorie par ID
 const getCategoryById = async (req, res) => {
   try {
-    const category = await Category.findById(req.params.id)
-      .populate('parent', 'name')
-      .populate('children', 'name');
+    const category = Category.findById(req.params.id);
     
     if (!category) {
       return res.status(404).json({
@@ -44,16 +48,17 @@ const getCategoryById = async (req, res) => {
         message: 'Catégorie non trouvée'
       });
     }
-
-    res.status(200).json({
+    
+    res.json({
       success: true,
-      data: { category }
+      data: category
     });
   } catch (error) {
-    console.error('Erreur de récupération de la catégorie:', error);
+    console.error('Erreur getCategoryById:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors de la récupération de la catégorie',
+      error: error.message
     });
   }
 };
@@ -61,34 +66,35 @@ const getCategoryById = async (req, res) => {
 // Créer une nouvelle catégorie
 const createCategory = async (req, res) => {
   try {
-    const categoryData = { ...req.body };
+    const categoryData = req.body;
     
-    // Gérer l'image uploadée
-    if (req.file) {
-      categoryData.image = getFileUrl(req.file.filename);
-    }
-
-    const category = new Category(categoryData);
-    await category.save();
-
-    res.status(201).json({
-      success: true,
-      message: 'Catégorie créée avec succès',
-      data: { category }
-    });
-  } catch (error) {
-    console.error('Erreur de création de la catégorie:', error);
-    
-    if (error.code === 11000) {
+    // Vérifier si une catégorie avec le même nom existe déjà
+    const existingCategory = Category.find({ name: categoryData.name });
+    if (existingCategory.length > 0) {
       return res.status(400).json({
         success: false,
-        message: 'Une catégorie avec ce nom ou ce slug existe déjà'
+        message: 'Une catégorie avec ce nom existe déjà'
       });
     }
     
+    // Ajouter l'image si uploadée
+    if (req.file) {
+      categoryData.image = `/uploads/${req.file.filename}`;
+    }
+    
+    const newCategory = Category.create(categoryData);
+    
+    res.status(201).json({
+      success: true,
+      message: 'Catégorie créée avec succès',
+      data: newCategory
+    });
+  } catch (error) {
+    console.error('Erreur createCategory:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors de la création de la catégorie',
+      error: error.message
     });
   }
 };
@@ -96,44 +102,47 @@ const createCategory = async (req, res) => {
 // Mettre à jour une catégorie
 const updateCategory = async (req, res) => {
   try {
-    const updateData = { ...req.body };
+    const categoryId = req.params.id;
+    const updates = req.body;
     
-    // Gérer l'image uploadée
-    if (req.file) {
-      updateData.image = getFileUrl(req.file.filename);
-    }
-
-    const category = await Category.findByIdAndUpdate(
-      req.params.id,
-      updateData,
-      { new: true, runValidators: true }
-    );
-
-    if (!category) {
+    // Vérifier si la catégorie existe
+    const existingCategory = Category.findById(categoryId);
+    if (!existingCategory) {
       return res.status(404).json({
         success: false,
         message: 'Catégorie non trouvée'
       });
     }
-
-    res.status(200).json({
-      success: true,
-      message: 'Catégorie mise à jour avec succès',
-      data: { category }
-    });
-  } catch (error) {
-    console.error('Erreur de mise à jour de la catégorie:', error);
     
-    if (error.code === 11000) {
-      return res.status(400).json({
-        success: false,
-        message: 'Une catégorie avec ce nom ou ce slug existe déjà'
-      });
+    // Vérifier si le nouveau nom existe déjà (si changé)
+    if (updates.name && updates.name !== existingCategory.name) {
+      const nameExists = Category.find({ name: updates.name });
+      if (nameExists.length > 0) {
+        return res.status(400).json({
+          success: false,
+          message: 'Une catégorie avec ce nom existe déjà'
+        });
+      }
     }
     
+    // Ajouter l'image si uploadée
+    if (req.file) {
+      updates.image = `/uploads/${req.file.filename}`;
+    }
+    
+    const updatedCategory = Category.updateById(categoryId, updates);
+    
+    res.json({
+      success: true,
+      message: 'Catégorie mise à jour avec succès',
+      data: updatedCategory
+    });
+  } catch (error) {
+    console.error('Erreur updateCategory:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors de la mise à jour de la catégorie',
+      error: error.message
     });
   }
 };
@@ -141,63 +150,40 @@ const updateCategory = async (req, res) => {
 // Supprimer une catégorie
 const deleteCategory = async (req, res) => {
   try {
-    const category = await Category.findById(req.params.id);
+    const categoryId = req.params.id;
     
+    // Vérifier si la catégorie existe
+    const category = Category.findById(categoryId);
     if (!category) {
       return res.status(404).json({
         success: false,
         message: 'Catégorie non trouvée'
       });
     }
-
-    // Vérifier s'il y a des sous-catégories
-    const hasChildren = await Category.exists({ parent: req.params.id });
-    if (hasChildren) {
-      return res.status(400).json({
-        success: false,
-        message: 'Impossible de supprimer une catégorie qui a des sous-catégories'
-      });
-    }
-
+    
     // Vérifier s'il y a des produits dans cette catégorie
     const Product = require('../models/Product');
-    const hasProducts = await Product.exists({ category: category.name });
-    if (hasProducts) {
+    const productsInCategory = Product.findByCategory(category.slug);
+    
+    if (productsInCategory.length > 0) {
       return res.status(400).json({
         success: false,
-        message: 'Impossible de supprimer une catégorie qui contient des produits'
+        message: 'Impossible de supprimer une catégorie contenant des produits'
       });
     }
-
-    await Category.findByIdAndDelete(req.params.id);
-
-    res.status(200).json({
+    
+    Category.deleteById(categoryId);
+    
+    res.json({
       success: true,
       message: 'Catégorie supprimée avec succès'
     });
   } catch (error) {
-    console.error('Erreur de suppression de la catégorie:', error);
+    console.error('Erreur deleteCategory:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
-    });
-  }
-};
-
-// Obtenir l'arbre des catégories
-const getCategoryTree = async (req, res) => {
-  try {
-    const tree = await Category.getCategoryTree();
-    
-    res.status(200).json({
-      success: true,
-      data: { categories: tree }
-    });
-  } catch (error) {
-    console.error('Erreur de récupération de l\'arbre des catégories:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors de la suppression de la catégorie',
+      error: error.message
     });
   }
 };
@@ -205,28 +191,47 @@ const getCategoryTree = async (req, res) => {
 // Activer/Désactiver une catégorie
 const toggleCategoryStatus = async (req, res) => {
   try {
-    const category = await Category.findById(req.params.id);
+    const categoryId = req.params.id;
     
-    if (!category) {
+    const updatedCategory = Category.toggleStatus(categoryId);
+    
+    if (!updatedCategory) {
       return res.status(404).json({
         success: false,
         message: 'Catégorie non trouvée'
       });
     }
-
-    category.isActive = !category.isActive;
-    await category.save();
-
-    res.status(200).json({
+    
+    res.json({
       success: true,
-      message: `Catégorie ${category.isActive ? 'activée' : 'désactivée'} avec succès`,
-      data: { category }
+      message: `Catégorie ${updatedCategory.isActive ? 'activée' : 'désactivée'} avec succès`,
+      data: updatedCategory
     });
   } catch (error) {
-    console.error('Erreur de changement de statut de la catégorie:', error);
+    console.error('Erreur toggleCategoryStatus:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors du changement de statut',
+      error: error.message
+    });
+  }
+};
+
+// Obtenir l'arbre des catégories
+const getCategoryTree = async (req, res) => {
+  try {
+    const tree = Category.getTree();
+    
+    res.json({
+      success: true,
+      data: tree
+    });
+  } catch (error) {
+    console.error('Erreur getCategoryTree:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la récupération de l\'arbre des catégories',
+      error: error.message
     });
   }
 };
@@ -234,32 +239,18 @@ const toggleCategoryStatus = async (req, res) => {
 // Obtenir les statistiques des catégories
 const getCategoryStats = async (req, res) => {
   try {
-    const [
-      totalCategories,
-      activeCategories,
-      featuredCategories,
-      categoriesWithProducts
-    ] = await Promise.all([
-      Category.countDocuments(),
-      Category.countDocuments({ isActive: true }),
-      Category.countDocuments({ isFeatured: true, isActive: true }),
-      Category.countDocuments({ productCount: { $gt: 0 } })
-    ]);
-
-    res.status(200).json({
+    const stats = Category.getStats();
+    
+    res.json({
       success: true,
-      data: {
-        totalCategories,
-        activeCategories,
-        featuredCategories,
-        categoriesWithProducts
-      }
+      data: stats
     });
   } catch (error) {
-    console.error('Erreur de récupération des statistiques des catégories:', error);
+    console.error('Erreur getCategoryStats:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors de la récupération des statistiques',
+      error: error.message
     });
   }
 };
@@ -270,7 +261,7 @@ module.exports = {
   createCategory,
   updateCategory,
   deleteCategory,
-  getCategoryTree,
   toggleCategoryStatus,
+  getCategoryTree,
   getCategoryStats
 };
