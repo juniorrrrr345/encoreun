@@ -70,12 +70,12 @@ const HomePage = () => {
 
   const getColorClasses = (color) => {
     const colorMap = {
-      pink: 'from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700',
-      purple: 'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
-      emerald: 'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
-      amber: 'from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700',
-      blue: 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
-      green: 'from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
+      pink: 'from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800',
+      purple: 'from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800',
+      emerald: 'from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800',
+      amber: 'from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800',
+      blue: 'from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800',
+      green: 'from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800',
     };
     return colorMap[color] || colorMap.pink;
   };
@@ -97,7 +97,7 @@ const HomePage = () => {
         transition={{ duration: 0.6 }}
         className="text-center mb-12"
       >
-        <h1 className="font-custom text-5xl md:text-6xl font-bold bg-gradient-to-r from-pink-400 via-pink-300 to-purple-400 bg-clip-text text-transparent mb-4">
+        <h1 className="font-custom text-5xl md:text-6xl font-bold text-white mb-4">
           Catégories
         </h1>
         <p className="text-xl text-gray-200 max-w-2xl mx-auto">
@@ -151,10 +151,10 @@ const HomePage = () => {
                   {/* Content */}
                   <div className="p-6">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-xl font-semibold text-white group-hover:text-pink-300 transition-colors">
-                        {category.name}
-                      </h3>
-                      <FiArrowRight className="text-gray-400 group-hover:text-pink-400 group-hover:translate-x-1 transition-all duration-200" />
+                                          <h3 className="text-xl font-semibold text-white group-hover:text-gray-300 transition-colors">
+                      {category.name}
+                    </h3>
+                    <FiArrowRight className="text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-all duration-200" />
                     </div>
                     <p className="text-gray-300 text-sm leading-relaxed">
                       {category.description}

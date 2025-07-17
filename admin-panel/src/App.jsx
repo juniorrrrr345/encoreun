@@ -3,7 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/Layout.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import ProductsPage from './pages/ProductsPage.jsx';
-import OrdersPage from './pages/OrdersPage.jsx';
+import AddProductPage from './pages/AddProductPage.jsx';
 import ProfilePage from './pages/ProfilePage.jsx';
 
 function App() {
@@ -29,9 +29,9 @@ function App() {
         </Layout>
       } />
       
-      <Route path="/orders" element={
+      <Route path="/add-product" element={
         <Layout user={defaultUser}>
-          <OrdersPage />
+          <AddProductPage />
         </Layout>
       } />
       

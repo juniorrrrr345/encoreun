@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { productService } from '../services/api';
 import toast from 'react-hot-toast';
 
 const ProductsPage = () => {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showAddModal, setShowAddModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
@@ -94,7 +95,7 @@ const ProductsPage = () => {
           <p className="text-gray-600">Gérez votre catalogue de produits</p>
         </div>
         <button
-          onClick={() => setShowAddModal(true)}
+          onClick={() => navigate('/add-product')}
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
         >
           + Ajouter un produit

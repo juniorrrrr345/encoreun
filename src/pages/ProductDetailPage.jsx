@@ -45,7 +45,7 @@ const ProductDetailPage = () => {
         <div className="mb-8">
           <Link 
             to="/category"
-            className="inline-flex items-center text-pink-400 hover:text-pink-300 transition-colors"
+            className="inline-flex items-center text-white hover:text-gray-300 transition-colors"
           >
             <FiArrowLeft className="mr-2" />
             Retour aux catégories
@@ -132,7 +132,7 @@ const ProductDetailPage = () => {
               
               {/* Prix */}
               <div className="flex items-center gap-3 mb-6">
-                <span className="text-3xl font-bold text-pink-400">
+                <span className="text-3xl font-bold text-white">
                   {product.price}€
                 </span>
               </div>
@@ -150,7 +150,7 @@ const ProductDetailPage = () => {
             <div className="pt-6">
               <button
                 onClick={handleCommander}
-                className="w-full py-4 bg-gradient-to-r from-pink-500 to-purple-600 text-white font-semibold rounded-full hover:from-pink-600 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                className="w-full py-4 bg-gray-600 text-white font-semibold rounded-full hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 shadow-lg"
               >
                 <FiShoppingCart className="inline mr-2" />
                 Commander maintenant

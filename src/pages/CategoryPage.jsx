@@ -97,7 +97,7 @@ const CategoryPage = () => {
       >
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="font-custom text-4xl md:text-5xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent mb-4 capitalize">
+          <h1 className="font-custom text-4xl md:text-5xl font-bold text-white mb-4 capitalize">
             {category}
           </h1>
           <p className="text-xl text-gray-200">
@@ -143,12 +143,12 @@ const CategoryPage = () => {
                     {/* Overlay with actions */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                       <div className="flex gap-2">
-                        <Link
-                          to={`/product/${product._id}`}
-                          className="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center text-white hover:bg-pink-600 transition-colors"
-                        >
-                          <FiShoppingCart size={18} />
-                        </Link>
+                                              <Link
+                        to={`/product/${product._id}`}
+                        className="w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center text-white hover:bg-gray-700 transition-colors"
+                      >
+                        <FiShoppingCart size={18} />
+                      </Link>
                         <button className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center text-white hover:bg-white/30 transition-colors">
                           <FiHeart size={18} />
                         </button>
@@ -167,18 +167,18 @@ const CategoryPage = () => {
                     
                     
                     
-                    {/* Price and Action */}
-                    <div className="flex justify-between items-center">
-                      <span className="text-pink-400 font-bold text-lg">
-                        {product.price}€
-                      </span>
-                      <Link
-                        to={`/product/${product._id}`}
-                        className="px-4 py-2 bg-pink-500 text-white text-sm rounded-full hover:bg-pink-600 transition-colors"
-                      >
-                        Voir détails
-                      </Link>
-                    </div>
+                                      {/* Price and Action */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-white font-bold text-lg">
+                      {product.price}€
+                    </span>
+                    <Link
+                      to={`/product/${product._id}`}
+                      className="px-4 py-2 bg-gray-600 text-white text-sm rounded-full hover:bg-gray-700 transition-colors"
+                    >
+                      Voir détails
+                    </Link>
+                  </div>
                   </div>
                 </motion.div>
               ))}
@@ -187,39 +187,39 @@ const CategoryPage = () => {
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex justify-center items-center gap-4 mt-8">
-                <button
-                  onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  <FiChevronLeft size={20} />
-                  Précédent
-                </button>
-                
-                <div className="flex gap-2">
-                  {[...Array(totalPages)].map((_, index) => (
-                    <button
-                      key={index}
-                      onClick={() => setCurrentPage(index + 1)}
-                      className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                        currentPage === index + 1
-                          ? 'bg-pink-500 text-white'
-                          : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
-                      }`}
-                    >
-                      {index + 1}
-                    </button>
-                  ))}
-                </div>
-                
-                <button
-                  onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                  disabled={currentPage === totalPages}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Suivant
-                  <FiChevronRight size={20} />
-                </button>
+                                  <button
+                    onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                    disabled={currentPage === 1}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <FiChevronLeft size={20} />
+                    Précédent
+                  </button>
+                  
+                  <div className="flex gap-2">
+                    {[...Array(totalPages)].map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setCurrentPage(index + 1)}
+                        className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                          currentPage === index + 1
+                            ? 'bg-gray-600 text-white'
+                            : 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
+                        }`}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  <button
+                    onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                    disabled={currentPage === totalPages}
+                    className="flex items-center gap-2 px-4 py-2 bg-gray-800/50 text-white rounded-lg hover:bg-gray-700/50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  >
+                    Suivant
+                    <FiChevronRight size={20} />
+                  </button>
               </div>
             )}
           </>
