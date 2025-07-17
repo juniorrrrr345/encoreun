@@ -17,7 +17,7 @@ const authenticateToken = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     
     // Vérifier si l'utilisateur existe toujours
-    const user = await User.findById(decoded.userId).select('-password');
+    const user = User.findById(decoded.userId);
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -33,7 +33,9 @@ const authenticateToken = async (req, res, next) => {
       });
     }
 
-    req.user = user;
+    // Exclure le mot de passe de l'objet utilisateur
+    const { password, ...userWithoutPassword } = user;
+    req.user = userWithoutPassword;
     next();
   } catch (error) {
     if (error.name === 'JsonWebTokenError') {
@@ -85,9 +87,33 @@ const requireAdmin = authorizeRoles('admin');
 // Middleware pour vérifier si l'utilisateur est admin ou manager
 const requireAdminOrManager = authorizeRoles('admin', 'manager');
 
+// Middleware optionnel d'authentification (n'échoue pas si pas de token)
+const optionalAuth = async (req, res, next) => {
+  try {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+
+    if (token) {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const user = User.findById(decoded.userId);
+      
+      if (user && user.isActive) {
+        const { password, ...userWithoutPassword } = user;
+        req.user = userWithoutPassword;
+      }
+    }
+    
+    next();
+  } catch (error) {
+    // En cas d'erreur, continuer sans utilisateur authentifié
+    next();
+  }
+};
+
 module.exports = {
   authenticateToken,
   authorizeRoles,
   requireAdmin,
-  requireAdminOrManager
+  requireAdminOrManager,
+  optionalAuth
 };

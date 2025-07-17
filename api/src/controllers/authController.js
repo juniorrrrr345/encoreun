@@ -6,25 +6,42 @@ const generateToken = (userId) => {
   return jwt.sign(
     { userId },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    { expiresIn: process.env.JWT_EXPIRES_IN || '24h' }
   );
 };
 
-// Connexion administrateur
+// Connexion utilisateur
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Vérifier si l'utilisateur existe
-    const user = await User.findOne({ email }).select('+password');
-    if (!user) {
-      return res.status(401).json({
+    // Validation des champs requis
+    if (!email || !password) {
+      return res.status(400).json({
         success: false,
-        message: 'Email ou mot de passe incorrect'
+        message: 'Email et mot de passe requis'
       });
     }
 
-    // Vérifier si l'utilisateur est actif
+    // Vérifier si l'utilisateur existe
+    const user = User.findByEmail(email.toLowerCase());
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'Identifiants invalides'
+      });
+    }
+
+    // Vérifier le mot de passe
+    const isValidPassword = await User.validatePassword(password, user.password);
+    if (!isValidPassword) {
+      return res.status(401).json({
+        success: false,
+        message: 'Identifiants invalides'
+      });
+    }
+
+    // Vérifier si le compte est actif
     if (!user.isActive) {
       return res.status(401).json({
         success: false,
@@ -32,142 +49,122 @@ const login = async (req, res) => {
       });
     }
 
-    // Vérifier le mot de passe
-    const isPasswordValid = await user.comparePassword(password);
-    if (!isPasswordValid) {
-      return res.status(401).json({
-        success: false,
-        message: 'Email ou mot de passe incorrect'
-      });
-    }
-
-    // Mettre à jour la dernière connexion
-    user.lastLogin = new Date();
-    await user.save();
-
     // Générer le token
     const token = generateToken(user._id);
 
-    res.status(200).json({
+    // Mettre à jour la dernière connexion
+    User.updateById(user._id, { lastLogin: new Date().toISOString() });
+
+    // Préparer la réponse (sans mot de passe)
+    const { password: _, ...userWithoutPassword } = user;
+
+    res.json({
       success: true,
       message: 'Connexion réussie',
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          avatar: user.avatar
-        },
+        user: userWithoutPassword,
         token
       }
     });
   } catch (error) {
-    console.error('Erreur de connexion:', error);
+    console.error('Erreur login:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors de la connexion',
+      error: error.message
     });
   }
 };
 
-// Inscription d'un nouvel administrateur (réservé aux admins)
+// Inscription d'un nouvel utilisateur (admin seulement)
 const register = async (req, res) => {
   try {
-    const { name, email, password, role = 'manager' } = req.body;
+    const { email, password, firstName, lastName, role = 'user' } = req.body;
 
-    // Vérifier si l'email existe déjà
-    const existingUser = await User.findOne({ email });
+    // Validation des champs requis
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email et mot de passe requis'
+      });
+    }
+
+    // Vérifier si l'utilisateur existe déjà
+    const existingUser = User.findByEmail(email.toLowerCase());
     if (existingUser) {
       return res.status(400).json({
         success: false,
-        message: 'Cet email est déjà utilisé'
+        message: 'Un utilisateur avec cet email existe déjà'
       });
     }
 
     // Créer le nouvel utilisateur
-    const user = new User({
-      name,
-      email,
+    const newUser = await User.create({
+      email: email.toLowerCase(),
       password,
-      role
+      firstName,
+      lastName,
+      role,
+      isActive: true
     });
 
-    await user.save();
+    // Préparer la réponse (sans mot de passe)
+    const { password: _, ...userWithoutPassword } = newUser;
 
     res.status(201).json({
       success: true,
       message: 'Utilisateur créé avec succès',
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          avatar: user.avatar
-        }
+        user: userWithoutPassword
       }
     });
   } catch (error) {
-    console.error('Erreur d\'inscription:', error);
+    console.error('Erreur register:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors de la création du compte',
+      error: error.message
     });
   }
 };
 
-// Obtenir le profil de l'utilisateur connecté
-const getProfile = async (req, res) => {
+// Vérifier le token
+const verifyToken = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    // L'utilisateur est déjà vérifié par le middleware authenticateToken
+    res.json({
+      success: true,
+      message: 'Token valide',
+      data: {
+        user: req.user
+      }
+    });
+  } catch (error) {
+    console.error('Erreur verifyToken:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors de la vérification du token',
+      error: error.message
+    });
+  }
+};
+
+// Déconnexion (côté client principalement)
+const logout = async (req, res) => {
+  try {
+    // Dans un système avec base de données, on pourrait blacklister le token
+    // Ici, la déconnexion se fait côté client en supprimant le token
     
-    res.status(200).json({
+    res.json({
       success: true,
-      data: { user }
+      message: 'Déconnexion réussie'
     });
   } catch (error) {
-    console.error('Erreur de récupération du profil:', error);
+    console.error('Erreur logout:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
-    });
-  }
-};
-
-// Mettre à jour le profil
-const updateProfile = async (req, res) => {
-  try {
-    const { name, email, avatar } = req.body;
-    const userId = req.user.id;
-
-    // Vérifier si l'email existe déjà (sauf pour l'utilisateur actuel)
-    if (email) {
-      const existingUser = await User.findOne({ email, _id: { $ne: userId } });
-      if (existingUser) {
-        return res.status(400).json({
-          success: false,
-          message: 'Cet email est déjà utilisé'
-        });
-      }
-    }
-
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { name, email, avatar },
-      { new: true, runValidators: true }
-    );
-
-    res.status(200).json({
-      success: true,
-      message: 'Profil mis à jour avec succès',
-      data: { user }
-    });
-  } catch (error) {
-    console.error('Erreur de mise à jour du profil:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors de la déconnexion',
+      error: error.message
     });
   }
 };
@@ -176,13 +173,35 @@ const updateProfile = async (req, res) => {
 const changePassword = async (req, res) => {
   try {
     const { currentPassword, newPassword } = req.body;
-    const userId = req.user.id;
+    const userId = req.user._id;
 
-    const user = await User.findById(userId).select('+password');
-    
-    // Vérifier l'ancien mot de passe
-    const isCurrentPasswordValid = await user.comparePassword(currentPassword);
-    if (!isCurrentPasswordValid) {
+    // Validation
+    if (!currentPassword || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Mot de passe actuel et nouveau mot de passe requis'
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Le nouveau mot de passe doit contenir au moins 6 caractères'
+      });
+    }
+
+    // Récupérer l'utilisateur
+    const user = User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'Utilisateur non trouvé'
+      });
+    }
+
+    // Vérifier le mot de passe actuel
+    const isValidPassword = await User.validatePassword(currentPassword, user.password);
+    if (!isValidPassword) {
       return res.status(400).json({
         success: false,
         message: 'Mot de passe actuel incorrect'
@@ -190,44 +209,37 @@ const changePassword = async (req, res) => {
     }
 
     // Mettre à jour le mot de passe
-    user.password = newPassword;
-    await user.save();
+    User.updateById(userId, { password: newPassword });
 
-    res.status(200).json({
+    res.json({
       success: true,
-      message: 'Mot de passe modifié avec succès'
+      message: 'Mot de passe mis à jour avec succès'
     });
   } catch (error) {
-    console.error('Erreur de changement de mot de passe:', error);
+    console.error('Erreur changePassword:', error);
     res.status(500).json({
       success: false,
-      message: 'Erreur interne du serveur'
+      message: 'Erreur lors du changement de mot de passe',
+      error: error.message
     });
   }
 };
 
-// Déconnexion (optionnel, car JWT est stateless)
-const logout = async (req, res) => {
+// Initialiser un admin par défaut
+const initDefaultAdmin = async () => {
   try {
-    // Dans une implémentation plus avancée, on pourrait blacklister le token
-    res.status(200).json({
-      success: true,
-      message: 'Déconnexion réussie'
-    });
+    await User.createDefaultAdmin();
+    console.log('✅ Utilisateur admin par défaut initialisé');
   } catch (error) {
-    console.error('Erreur de déconnexion:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Erreur interne du serveur'
-    });
+    console.error('❌ Erreur initialisation admin:', error);
   }
 };
 
 module.exports = {
   login,
   register,
-  getProfile,
-  updateProfile,
+  verifyToken,
+  logout,
   changePassword,
-  logout
+  initDefaultAdmin
 };

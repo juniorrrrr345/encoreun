@@ -1,141 +1,89 @@
-const mongoose = require('mongoose');
+const { memoryDB } = require('../config/database');
 
-const categorySchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Le nom de la catégorie est requis'],
-    trim: true,
-    unique: true,
-    maxlength: [50, 'Le nom ne peut pas dépasser 50 caractères']
-  },
-  slug: {
-    type: String,
-    required: [true, 'Le slug est requis'],
-    unique: true,
-    lowercase: true,
-    trim: true
-  },
-  description: {
-    type: String,
-    maxlength: [500, 'La description ne peut pas dépasser 500 caractères']
-  },
-  image: {
-    type: String,
-    default: null
-  },
-  parent: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-    default: null
-  },
-  children: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category'
-  }],
-  isActive: {
-    type: Boolean,
-    default: true
-  },
-  isFeatured: {
-    type: Boolean,
-    default: false
-  },
-  sortOrder: {
-    type: Number,
-    default: 0
-  },
-  metaTitle: {
-    type: String,
-    maxlength: [60, 'Le titre meta ne peut pas dépasser 60 caractères']
-  },
-  metaDescription: {
-    type: String,
-    maxlength: [160, 'La description meta ne peut pas dépasser 160 caractères']
-  },
-  productCount: {
-    type: Number,
-    default: 0,
-    min: 0
+class Category {
+  static find(query = {}) {
+    return memoryDB.find('categories', query);
   }
-}, {
-  timestamps: true
-});
 
-// Index pour améliorer les performances
-categorySchema.index({ slug: 1 });
-categorySchema.index({ parent: 1, isActive: 1 });
-categorySchema.index({ isFeatured: 1, isActive: 1 });
-categorySchema.index({ sortOrder: 1 });
-
-// Middleware pour générer automatiquement le slug
-categorySchema.pre('save', function(next) {
-  if (this.isModified('name') && !this.slug) {
-    this.slug = this.name
-      .toLowerCase()
-      .replace(/[^a-z0-9\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .replace(/-+/g, '-')
-      .trim('-');
+  static findById(id) {
+    return memoryDB.findById('categories', id);
   }
-  next();
-});
 
-// Méthode pour obtenir le chemin complet de la catégorie
-categorySchema.methods.getFullPath = async function() {
-  const path = [this.name];
-  let current = this;
-  
-  while (current.parent) {
-    current = await this.constructor.findById(current.parent);
-    if (current) {
-      path.unshift(current.name);
-    }
+  static findBySlug(slug) {
+    const categories = memoryDB.find('categories', { slug });
+    return categories.length > 0 ? categories[0] : null;
   }
-  
-  return path.join(' > ');
-};
 
-// Méthode pour obtenir toutes les sous-catégories
-categorySchema.methods.getAllChildren = async function() {
-  const children = [];
-  
-  const getChildren = async (categoryId) => {
-    const directChildren = await this.constructor.find({ parent: categoryId });
-    for (const child of directChildren) {
-      children.push(child);
-      await getChildren(child._id);
+  static create(data) {
+    // Générer le slug automatiquement si pas fourni
+    if (!data.slug && data.name) {
+      data.slug = data.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
     }
-  };
-  
-  await getChildren(this._id);
-  return children;
-};
+    
+    return memoryDB.create('categories', data);
+  }
 
-// Méthode statique pour obtenir l'arbre des catégories
-categorySchema.statics.getCategoryTree = async function() {
-  const categories = await this.find({ isActive: true }).sort({ sortOrder: 1 });
-  const categoryMap = new Map();
-  const roots = [];
-  
-  // Créer une map de toutes les catégories
-  categories.forEach(category => {
-    categoryMap.set(category._id.toString(), { ...category.toObject(), children: [] });
-  });
-  
-  // Construire l'arbre
-  categories.forEach(category => {
-    const categoryObj = categoryMap.get(category._id.toString());
-    if (category.parent) {
-      const parent = categoryMap.get(category.parent.toString());
-      if (parent) {
-        parent.children.push(categoryObj);
-      }
-    } else {
-      roots.push(categoryObj);
+  static updateById(id, updates) {
+    // Mettre à jour le slug si le nom change
+    if (updates.name && !updates.slug) {
+      updates.slug = updates.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)/g, '');
     }
-  });
-  
-  return roots;
-};
+    
+    return memoryDB.updateById('categories', id, updates);
+  }
 
-module.exports = mongoose.model('Category', categorySchema);
+  static deleteById(id) {
+    return memoryDB.deleteById('categories', id);
+  }
+
+  static getStats() {
+    const categories = memoryDB.find('categories');
+    const activeCategories = categories.filter(cat => cat.isActive);
+    
+    return {
+      total: categories.length,
+      active: activeCategories.length,
+      inactive: categories.length - activeCategories.length
+    };
+  }
+
+  static search(query, limit = 10) {
+    if (!query) return [];
+    
+    const regex = new RegExp(query, 'i');
+    const categories = memoryDB.find('categories');
+    
+    return categories
+      .filter(cat => 
+        regex.test(cat.name) || 
+        regex.test(cat.description) ||
+        regex.test(cat.slug)
+      )
+      .slice(0, limit);
+  }
+
+  static getTree() {
+    const categories = memoryDB.find('categories');
+    const parentCategories = categories.filter(cat => !cat.parentCategory);
+    
+    return parentCategories.map(parent => ({
+      ...parent,
+      children: categories.filter(cat => cat.parentCategory === parent._id)
+    }));
+  }
+
+  static toggleStatus(id) {
+    const category = this.findById(id);
+    if (!category) return null;
+    
+    return this.updateById(id, { isActive: !category.isActive });
+  }
+}
+
+module.exports = Category;

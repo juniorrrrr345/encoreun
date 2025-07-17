@@ -1,136 +1,153 @@
-const mongoose = require('mongoose');
+const { memoryDB } = require('../config/database');
 
-const productSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Le nom du produit est requis'],
-    trim: true,
-    maxlength: [100, 'Le nom ne peut pas dépasser 100 caractères']
-  },
-  description: {
-    type: String,
-    required: [true, 'La description est requise'],
-    maxlength: [1000, 'La description ne peut pas dépasser 1000 caractères']
-  },
-  shortDescription: {
-    type: String,
-    maxlength: [200, 'La description courte ne peut pas dépasser 200 caractères']
-  },
-  price: {
-    type: Number,
-    required: [true, 'Le prix est requis'],
-    min: [0, 'Le prix ne peut pas être négatif']
-  },
-  originalPrice: {
-    type: Number,
-    min: [0, 'Le prix original ne peut pas être négatif']
-  },
-  // Support pour plusieurs prix (variantes, tailles, etc.)
-  priceVariants: [{
-    name: { type: String, required: true }, // ex: "Petite", "Moyenne", "Grande"
-    price: { type: Number, required: true, min: 0 },
-    originalPrice: { type: Number, min: 0 },
-    isActive: { type: Boolean, default: true }
-  }],
-  category: {
-    type: String,
-    required: [true, 'La catégorie est requise'],
-    trim: true
-  },
-  subcategory: {
-    type: String,
-    trim: true
-  },
-  images: [{
-    type: String,
-    required: [true, 'Au moins une image est requise']
-  }],
-  mainImage: {
-    type: String,
-    required: [true, 'L\'image principale est requise']
-  },
-  stock: {
-    type: Number,
-    required: [true, 'Le stock est requis'],
-    min: [0, 'Le stock ne peut pas être négatif'],
-    default: 0
-  },
-  sku: {
-    type: String,
-    unique: true,
-    required: [true, 'Le SKU est requis'],
-    trim: true
-  },
-  tags: [{
-    type: String,
-    trim: true
-  }],
-  isActive: {
-    type: Boolean,
-    default: true
-  },
-  isFeatured: {
-    type: Boolean,
-    default: false
-  },
-  isOnSale: {
-    type: Boolean,
-    default: false
-  },
-  salePercentage: {
-    type: Number,
-    min: [0, 'Le pourcentage de réduction ne peut pas être négatif'],
-    max: [100, 'Le pourcentage de réduction ne peut pas dépasser 100%'],
-    default: 0
-  },
-  weight: {
-    type: Number,
-    min: [0, 'Le poids ne peut pas être négatif']
-  },
-  dimensions: {
-    length: { type: Number, min: 0 },
-    width: { type: Number, min: 0 },
-    height: { type: Number, min: 0 }
-  },
-  specifications: [{
-    name: { type: String, required: true },
-    value: { type: String, required: true }
-  }],
-  ratings: {
-    average: { type: Number, default: 0, min: 0, max: 5 },
-    count: { type: Number, default: 0, min: 0 }
-  },
-  views: {
-    type: Number,
-    default: 0,
-    min: 0
-  },
-  sales: {
-    type: Number,
-    default: 0,
-    min: 0
+class Product {
+  static find(query = {}) {
+    return memoryDB.find('products', query);
   }
-}, {
-  timestamps: true
-});
 
-// Index pour améliorer les performances
-productSchema.index({ name: 'text', description: 'text', category: 'text' });
-productSchema.index({ category: 1, isActive: 1 });
-productSchema.index({ isFeatured: 1, isActive: 1 });
-productSchema.index({ isOnSale: 1, isActive: 1 });
-
-// Méthode pour calculer le prix de vente
-productSchema.methods.getSalePrice = function() {
-  if (this.isOnSale && this.salePercentage > 0) {
-    return this.price - (this.price * this.salePercentage / 100);
+  static findById(id) {
+    return memoryDB.findById('products', id);
   }
-  return this.price;
-};
 
-// Méthode pour vérifier si le produit est en stock
-productSchema.methods.isInStock = function() {
-  return this.stock > 0;
-};
+  static findBySku(sku) {
+    const products = memoryDB.find('products', { sku });
+    return products.length > 0 ? products[0] : null;
+  }
 
-module.exports = mongoose.model('Product', productSchema);
+  static findByCategory(category) {
+    return memoryDB.find('products', { category });
+  }
+
+  static create(data) {
+    // Générer un SKU automatique si pas fourni
+    if (!data.sku && data.name) {
+      data.sku = data.name
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, '-')
+        .substring(0, 10) + '-' + Date.now().toString(36).toUpperCase();
+    }
+    
+    return memoryDB.create('products', data);
+  }
+
+  static updateById(id, updates) {
+    return memoryDB.updateById('products', id, updates);
+  }
+
+  static deleteById(id) {
+    return memoryDB.deleteById('products', id);
+  }
+
+  static updateStock(id, stock) {
+    return this.updateById(id, { stock });
+  }
+
+  static toggleStatus(id) {
+    const product = this.findById(id);
+    if (!product) return null;
+    
+    return this.updateById(id, { isActive: !product.isActive });
+  }
+
+  static toggleFeatured(id) {
+    const product = this.findById(id);
+    if (!product) return null;
+    
+    return this.updateById(id, { isFeatured: !product.isFeatured });
+  }
+
+  static getStats() {
+    const products = memoryDB.find('products');
+    const activeProducts = products.filter(prod => prod.isActive);
+    const featuredProducts = products.filter(prod => prod.isFeatured);
+    const lowStockProducts = products.filter(prod => prod.stock <= 5);
+    const outOfStockProducts = products.filter(prod => prod.stock === 0);
+    
+    const totalValue = products.reduce((sum, prod) => sum + (prod.price * prod.stock), 0);
+    
+    return {
+      total: products.length,
+      active: activeProducts.length,
+      inactive: products.length - activeProducts.length,
+      featured: featuredProducts.length,
+      lowStock: lowStockProducts.length,
+      outOfStock: outOfStockProducts.length,
+      totalValue: totalValue.toFixed(2)
+    };
+  }
+
+  static search(query, limit = 10) {
+    if (!query) return [];
+    
+    const regex = new RegExp(query, 'i');
+    const products = memoryDB.find('products');
+    
+    return products
+      .filter(prod => 
+        regex.test(prod.name) || 
+        regex.test(prod.description) ||
+        regex.test(prod.sku) ||
+        (prod.tags && prod.tags.some(tag => regex.test(tag)))
+      )
+      .slice(0, limit);
+  }
+
+  static findByPriceRange(minPrice, maxPrice) {
+    const products = memoryDB.find('products');
+    return products.filter(prod => {
+      const price = prod.salePrice || prod.price;
+      return price >= minPrice && price <= maxPrice;
+    });
+  }
+
+  static findFeatured(limit = 10) {
+    const products = memoryDB.find('products', { isFeatured: true, isActive: true });
+    return products.slice(0, limit);
+  }
+
+  static findLowStock(threshold = 5) {
+    const products = memoryDB.find('products');
+    return products.filter(prod => prod.stock <= threshold && prod.stock > 0);
+  }
+
+  static findOutOfStock() {
+    return memoryDB.find('products', { stock: 0 });
+  }
+
+  static getTopSelling(limit = 10) {
+    // Pour le moment, retourner les produits les plus récents
+    const products = memoryDB.find('products', { isActive: true });
+    return products
+      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+      .slice(0, limit);
+  }
+
+  static bulkUpdateStock(updates) {
+    const results = [];
+    updates.forEach(({ id, stock }) => {
+      const updated = this.updateStock(id, stock);
+      if (updated) results.push(updated);
+    });
+    return results;
+  }
+
+  static getByCategory(categorySlug) {
+    return memoryDB.find('products', { category: categorySlug, isActive: true });
+  }
+
+  static findRelated(productId, limit = 4) {
+    const product = this.findById(productId);
+    if (!product) return [];
+    
+    const products = memoryDB.find('products', { 
+      category: product.category, 
+      isActive: true 
+    });
+    
+    return products
+      .filter(prod => prod._id !== productId)
+      .slice(0, limit);
+  }
+}
+
+module.exports = Product;

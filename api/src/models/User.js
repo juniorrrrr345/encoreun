@@ -1,69 +1,122 @@
-const mongoose = require('mongoose');
+const { memoryDB } = require('../config/database');
 const bcrypt = require('bcryptjs');
 
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, 'Le nom est requis'],
-    trim: true,
-    maxlength: [50, 'Le nom ne peut pas dépasser 50 caractères']
-  },
-  email: {
-    type: String,
-    required: [true, 'L\'email est requis'],
-    unique: true,
-    lowercase: true,
-    match: [/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/, 'Veuillez entrer un email valide']
-  },
-  password: {
-    type: String,
-    required: [true, 'Le mot de passe est requis'],
-    minlength: [6, 'Le mot de passe doit contenir au moins 6 caractères']
-  },
-  role: {
-    type: String,
-    enum: ['admin', 'manager'],
-    default: 'manager'
-  },
-  isActive: {
-    type: Boolean,
-    default: true
-  },
-  lastLogin: {
-    type: Date,
-    default: null
-  },
-  avatar: {
-    type: String,
-    default: null
+class User {
+  static find(query = {}) {
+    return memoryDB.find('users', query);
   }
-}, {
-  timestamps: true
-});
 
-// Hash du mot de passe avant sauvegarde
-userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
-  
-  try {
-    const salt = await bcrypt.genSalt(parseInt(process.env.BCRYPT_ROUNDS) || 12);
-    this.password = await bcrypt.hash(this.password, salt);
-    next();
-  } catch (error) {
-    next(error);
+  static findById(id) {
+    return memoryDB.findById('users', id);
   }
-});
 
-// Méthode pour comparer les mots de passe
-userSchema.methods.comparePassword = async function(candidatePassword) {
-  return await bcrypt.compare(candidatePassword, this.password);
-};
+  static findByEmail(email) {
+    const users = memoryDB.find('users', { email });
+    return users.length > 0 ? users[0] : null;
+  }
 
-// Méthode pour masquer le mot de passe dans les réponses JSON
-userSchema.methods.toJSON = function() {
-  const user = this.toObject();
-  delete user.password;
-  return user;
-};
+  static async create(data) {
+    // Hasher le mot de passe si fourni
+    if (data.password) {
+      data.password = await bcrypt.hash(data.password, 10);
+    }
+    
+    // Définir un rôle par défaut
+    if (!data.role) {
+      data.role = 'user';
+    }
+    
+    // Définir comme actif par défaut
+    if (data.isActive === undefined) {
+      data.isActive = true;
+    }
+    
+    return memoryDB.create('users', data);
+  }
 
-module.exports = mongoose.model('User', userSchema);
+  static updateById(id, updates) {
+    // Hasher le nouveau mot de passe si fourni
+    if (updates.password) {
+      updates.password = bcrypt.hashSync(updates.password, 10);
+    }
+    
+    return memoryDB.updateById('users', id, updates);
+  }
+
+  static deleteById(id) {
+    return memoryDB.deleteById('users', id);
+  }
+
+  static async validatePassword(plainPassword, hashedPassword) {
+    return await bcrypt.compare(plainPassword, hashedPassword);
+  }
+
+  static toggleStatus(id) {
+    const user = this.findById(id);
+    if (!user) return null;
+    
+    return this.updateById(id, { isActive: !user.isActive });
+  }
+
+  static getStats() {
+    const users = memoryDB.find('users');
+    const activeUsers = users.filter(user => user.isActive);
+    const adminUsers = users.filter(user => user.role === 'admin');
+    const managerUsers = users.filter(user => user.role === 'manager');
+    
+    return {
+      total: users.length,
+      active: activeUsers.length,
+      inactive: users.length - activeUsers.length,
+      admins: adminUsers.length,
+      managers: managerUsers.length,
+      regularUsers: users.filter(user => user.role === 'user').length
+    };
+  }
+
+  static search(query, limit = 10) {
+    if (!query) return [];
+    
+    const regex = new RegExp(query, 'i');
+    const users = memoryDB.find('users');
+    
+    return users
+      .filter(user => 
+        regex.test(user.email) || 
+        regex.test(user.firstName) ||
+        regex.test(user.lastName)
+      )
+      .slice(0, limit)
+      .map(user => {
+        // Exclure le mot de passe des résultats de recherche
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+      });
+  }
+
+  static findByRole(role) {
+    return memoryDB.find('users', { role });
+  }
+
+  static findActive() {
+    return memoryDB.find('users', { isActive: true });
+  }
+
+  // Méthode pour créer un utilisateur admin par défaut
+  static async createDefaultAdmin() {
+    const existingAdmin = this.findByEmail('admin@cbd-shop.com');
+    if (!existingAdmin) {
+      return await this.create({
+        email: 'admin@cbd-shop.com',
+        password: 'admin123', // Sera hashé automatiquement
+        firstName: 'Admin',
+        lastName: 'CBD Shop',
+        role: 'admin',
+        isActive: true
+      });
+    }
+    return existingAdmin;
+  }
+}
+
+module.exports = User;
