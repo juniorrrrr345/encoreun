@@ -6,61 +6,23 @@ import useProductStore from '../store/useProductStore';
 import Loader from '../components/Loader';
 
 const HomePage = () => {
-  const { categories, loading, fetchCategories } = useProductStore();
+  const { categories, loading, fetchCategories, refreshCategories } = useProductStore();
   const [currentPage, setCurrentPage] = useState(1);
   const categoriesPerPage = 2;
 
   useEffect(() => {
     fetchCategories();
-  }, [fetchCategories]);
+    
+    // Rafraîchir les catégories toutes les 30 secondes pour la synchronisation
+    const interval = setInterval(() => {
+      refreshCategories();
+    }, 30000);
 
-  // Catégories par défaut si l'API ne répond pas
-  const defaultCategories = [
-    { 
-      name: 'Vêtements',
-      slug: 'vetements',
-      description: 'Mode et accessoires tendance',
-      image: '/images/categories/clothing.jpg',
-      color: 'pink'
-    },
-    { 
-      name: 'Beauté',
-      slug: 'beaute',
-      description: 'Produits de beauté et cosmétiques',
-      image: '/images/categories/beauty.jpg',
-      color: 'purple'
-    },
-    { 
-      name: 'Maison',
-      slug: 'maison',
-      description: 'Décoration et accessoires maison',
-      image: '/images/categories/home.jpg',
-      color: 'emerald'
-    },
-    { 
-      name: 'Bijoux',
-      slug: 'bijoux',
-      description: 'Bijoux et accessoires précieux',
-      image: '/images/categories/jewelry.jpg',
-      color: 'amber'
-    },
-    { 
-      name: 'Tech',
-      slug: 'tech',
-      description: 'Gadgets et accessoires tech',
-      image: '/images/categories/tech.jpg',
-      color: 'blue'
-    },
-    { 
-      name: 'Sport',
-      slug: 'sport',
-      description: 'Équipements et vêtements de sport',
-      image: '/images/categories/sport.jpg',
-      color: 'green'
-    }
-  ];
+    return () => clearInterval(interval);
+  }, [fetchCategories, refreshCategories]);
 
-  const categoriesToShow = categories.length > 0 ? categories : defaultCategories;
+  // Utiliser uniquement les vraies catégories de l'API
+  const categoriesToShow = categories.filter(category => category.isActive);
   
   // Calcul de la pagination
   const totalPages = Math.ceil(categoriesToShow.length / categoriesPerPage);
@@ -68,16 +30,18 @@ const HomePage = () => {
   const endIndex = startIndex + categoriesPerPage;
   const currentCategories = categoriesToShow.slice(startIndex, endIndex);
 
-  const getColorClasses = (color) => {
-    const colorMap = {
-      pink: 'from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700',
-      purple: 'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
-      emerald: 'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
-      amber: 'from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700',
-      blue: 'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
-      green: 'from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
-    };
-    return colorMap[color] || colorMap.pink;
+  const getColorClasses = (index) => {
+    const colors = [
+      'from-pink-500 to-pink-600 hover:from-pink-600 hover:to-pink-700',
+      'from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700',
+      'from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700',
+      'from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700',
+      'from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
+      'from-green-500 to-green-600 hover:from-green-600 hover:to-green-700',
+      'from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700',
+      'from-red-500 to-red-600 hover:from-red-600 hover:to-red-700',
+    ];
+    return colors[index % colors.length];
   };
 
   if (loading) {
@@ -116,7 +80,7 @@ const HomePage = () => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
               <Link
-                to={`/category/${category.slug || category.name.toLowerCase()}`}
+                to={`/category/${category.slug || category.name.toLowerCase().replace(/\s+/g, '-')}`}
                 className="group block"
               >
                 <div className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-2xl overflow-hidden hover:bg-gray-800/70 transition-all duration-300 hover:transform hover:scale-105 hover:shadow-xl">
@@ -125,10 +89,10 @@ const HomePage = () => {
                     <div 
                       className={`
                         absolute inset-0 bg-gradient-to-br opacity-90
-                        ${getColorClasses(category.color)}
+                        ${getColorClasses(index)}
                       `}
                     />
-                    {category.image && (
+                    {category.image ? (
                       <img
                         src={category.image}
                         alt={category.name}
@@ -137,6 +101,10 @@ const HomePage = () => {
                           e.target.style.display = 'none';
                         }}
                       />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
+                        <FiGrid className="text-white text-4xl opacity-50" />
+                      </div>
                     )}
                     <div className="absolute inset-0 bg-black/20" />
                     

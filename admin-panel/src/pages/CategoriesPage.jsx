@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { categoryService } from '../services/api';
+import toast from 'react-hot-toast';
 
 const CategoriesPage = () => {
   const [categories, setCategories] = useState([]);
@@ -128,8 +129,10 @@ const CategoriesPage = () => {
 
       if (showEditModal && selectedCategory) {
         await categoryService.updateCategory(selectedCategory._id, formDataToSend);
+        toast.success('Catégorie mise à jour avec succès');
       } else {
         await categoryService.createCategory(formDataToSend);
+        toast.success('Catégorie créée avec succès');
       }
 
       setShowAddModal(false);
@@ -137,7 +140,9 @@ const CategoriesPage = () => {
       resetForm();
       loadCategories();
     } catch (err) {
-      setError('Erreur lors de la sauvegarde de la catégorie');
+      const errorMessage = err.response?.data?.message || 'Erreur lors de la sauvegarde de la catégorie';
+      setError(errorMessage);
+      toast.error(errorMessage);
       console.error('Erreur:', err);
     }
   };
@@ -147,9 +152,12 @@ const CategoriesPage = () => {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer cette catégorie ?')) {
       try {
         await categoryService.deleteCategory(id);
+        toast.success('Catégorie supprimée avec succès');
         loadCategories();
       } catch (err) {
-        setError('Erreur lors de la suppression de la catégorie');
+        const errorMessage = err.response?.data?.message || 'Erreur lors de la suppression de la catégorie';
+        setError(errorMessage);
+        toast.error(errorMessage);
         console.error('Erreur:', err);
       }
     }

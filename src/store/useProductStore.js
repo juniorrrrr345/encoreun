@@ -50,9 +50,25 @@ const useProductStore = create((set, get) => ({
   fetchCategories: async () => {
     try {
       const response = await api.get('/categories');
-      set({ categories: response.data });
+      // Extraire les catégories de la réponse API
+      const categories = response.data.data?.categories || response.data || [];
+      set({ categories });
     } catch (error) {
+      console.error('Erreur lors du chargement des catégories:', error);
       toast.error('Erreur lors du chargement des catégories');
+    }
+  },
+
+  // Rafraîchir les catégories (pour la synchronisation)
+  refreshCategories: async () => {
+    try {
+      const response = await api.get('/categories');
+      const categories = response.data.data?.categories || response.data || [];
+      set({ categories });
+      return categories;
+    } catch (error) {
+      console.error('Erreur lors du rafraîchissement des catégories:', error);
+      return [];
     }
   },
 
