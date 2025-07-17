@@ -1,15 +1,10 @@
 const fs = require('fs');
 const path = require('path');
 
-// Tenter d'importer mongoose seulement si disponible
-let mongoose = null;
-try {
-  mongoose = require('mongoose');
-} catch (error) {
-  console.log('⚠️  Mongoose non disponible, utilisation du mode mémoire');
-}
+// Importer mongoose
+const mongoose = require('mongoose');
 
-// Classe pour simuler mongoose mais avec stockage en fichiers JSON
+// Classe pour simuler mongoose mais avec stockage en fichiers JSON (fallback seulement)
 class MemoryDB {
   constructor() {
     this.data = {
@@ -118,7 +113,9 @@ class MemoryDB {
           {
             _id: this.generateId(),
             email: 'admin@cbd-shop.com',
-            password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // "password"
+            password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // "admin123"
+            firstName: 'Admin',
+            lastName: 'CBD Shop',
             role: 'admin',
             isActive: true,
             createdAt: new Date().toISOString(),
@@ -217,40 +214,77 @@ class MemoryDB {
   }
 }
 
-// Instance globale
+// Instance globale (fallback)
 const memoryDB = new MemoryDB();
+let currentDB = { type: 'memory', db: memoryDB };
 
-// Fonction pour tenter la connexion MongoDB puis fallback vers mémoire
+// Fonction de connexion MongoDB Atlas avec fallback intelligent
 const connectDB = async () => {
-  // Si pas de MongoDB URI, utiliser directement le mode mémoire
-  if (!process.env.MONGODB_URI || !mongoose) {
-    console.log('🚀 Base de données en mémoire démarrée (pas de MongoDB configuré)');
-    console.log('📊 Collections disponibles:', Object.keys(memoryDB.data));
-    console.log('✅ Système de persistance JSON activé');
-    return { type: 'memory', db: memoryDB };
+  // Vérifier si MongoDB URI est configuré
+  if (!process.env.MONGODB_URI) {
+    console.log('⚠️  Aucune URL MongoDB configurée');
+    console.log('🚀 Utilisation de la base de données en mémoire');
+    currentDB = { type: 'memory', db: memoryDB };
+    return currentDB;
   }
 
   try {
-    // Tenter la connexion MongoDB
-    console.log('🔄 Tentative de connexion MongoDB Atlas...');
+    console.log('🌐 Connexion à MongoDB Atlas...');
+    console.log('📡 Serveur:', process.env.MONGODB_URI.split('@')[1]?.split('/')[0] || 'Atlas');
+    
+    // Configuration de connexion optimisée pour Atlas
     const conn = await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      serverSelectionTimeoutMS: 10000, // 10 secondes
+      socketTimeoutMS: 45000, // 45 secondes
+      bufferMaxEntries: 0,
+      maxPoolSize: 10,
+      minPoolSize: 1,
     });
 
-    console.log(`✅ MongoDB Atlas connecté: ${conn.connection.host}`);
-    console.log('📊 Base de données:', conn.connection.name);
-    return { type: 'mongodb', db: conn };
-  } catch (error) {
-    console.error('❌ Erreur de connexion MongoDB Atlas:', error.message);
-    console.log('🔄 Basculement vers le mode mémoire...');
+    console.log(`✅ MongoDB Atlas connecté avec succès !`);
+    console.log(`📊 Base de données: ${conn.connection.name}`);
+    console.log(`🌍 Serveur: ${conn.connection.host}`);
+    console.log(`📈 État: ${conn.connection.readyState === 1 ? 'Connecté' : 'Déconnecté'}`);
     
-    // Fallback vers base de données en mémoire
-    console.log('🚀 Base de données en mémoire démarrée (fallback)');
-    console.log('📊 Collections disponibles:', Object.keys(memoryDB.data));
-    console.log('✅ Système de persistance JSON activé');
-    return { type: 'memory', db: memoryDB };
+    currentDB = { type: 'mongodb', db: conn };
+    
+    // Écouter les événements de connexion
+    mongoose.connection.on('error', (error) => {
+      console.error('❌ Erreur MongoDB:', error.message);
+    });
+    
+    mongoose.connection.on('disconnected', () => {
+      console.log('🔌 MongoDB déconnecté');
+    });
+    
+    mongoose.connection.on('reconnected', () => {
+      console.log('🔄 MongoDB reconnecté');
+    });
+
+    return currentDB;
+  } catch (error) {
+    console.error('❌ Erreur de connexion MongoDB Atlas:');
+    console.error('📝 Message:', error.message);
+    
+    if (error.message.includes('Authentication failed')) {
+      console.error('🔐 Vérifiez vos identifiants MongoDB Atlas');
+    } else if (error.message.includes('timeout')) {
+      console.error('⏱️  Timeout de connexion - vérifiez votre réseau');
+    } else if (error.message.includes('ENOTFOUND')) {
+      console.error('🌐 Impossible de résoudre l\'hostname MongoDB');
+    }
+    
+    console.log('🔄 Basculement vers la base de données en mémoire...');
+    console.log('💡 L\'application fonctionnera avec persistance JSON');
+    
+    currentDB = { type: 'memory', db: memoryDB };
+    return currentDB;
   }
 };
 
-module.exports = { connectDB, memoryDB };
+// Fonction pour obtenir le type de DB actuel
+const getCurrentDB = () => currentDB;
+
+module.exports = { connectDB, memoryDB, getCurrentDB };
