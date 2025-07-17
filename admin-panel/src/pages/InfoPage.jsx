@@ -10,11 +10,11 @@ const InfoPage = () => {
     socialTitle: 'Suivez-nous sur les réseaux sociaux',
     socialSubtitle: 'Restez informé de nos dernières nouveautés, promotions et actualités !',
     socialLinks: {
-      instagram: { url: '#', username: '@avecamour', active: true },
-      facebook: { url: '#', username: '@avecamour', active: true },
-      twitter: { url: '#', username: '@avecamour', active: true },
-      youtube: { url: '#', username: 'Avec Amour', active: true },
-      linkedin: { url: '#', username: 'Avec Amour', active: true }
+      instagram: { name: 'Instagram', url: '#', username: '@avecamour', active: true },
+      facebook: { name: 'Facebook', url: '#', username: '@avecamour', active: true },
+      twitter: { name: 'Twitter', url: '#', username: '@avecamour', active: true },
+      youtube: { name: 'YouTube', url: '#', username: 'Avec Amour', active: true },
+      linkedin: { name: 'LinkedIn', url: '#', username: 'Avec Amour', active: true }
     }
   });
 
@@ -73,6 +73,35 @@ const InfoPage = () => {
         }
       }
     }));
+  };
+
+  // Ajouter un nouveau réseau social
+  const addNewSocial = () => {
+    const newKey = `custom_${Date.now()}`;
+    setInfoData(prev => ({
+      ...prev,
+      socialLinks: {
+        ...prev.socialLinks,
+        [newKey]: {
+          name: 'Nouveau réseau',
+          url: '',
+          username: '',
+          active: true
+        }
+      }
+    }));
+  };
+
+  // Supprimer un réseau social
+  const removeSocial = (platform) => {
+    setInfoData(prev => {
+      const newSocialLinks = { ...prev.socialLinks };
+      delete newSocialLinks[platform];
+      return {
+        ...prev,
+        socialLinks: newSocialLinks
+      };
+    });
   };
 
   return (
@@ -187,7 +216,17 @@ const InfoPage = () => {
 
           {/* Section Réseaux sociaux */}
           <div>
-            <h3 className="text-lg font-medium text-gray-900 mb-4">Réseaux sociaux</h3>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-medium text-gray-900">Réseaux sociaux</h3>
+              {isEditing && (
+                <button
+                  onClick={addNewSocial}
+                  className="text-sm bg-blue-100 text-blue-700 px-3 py-1 rounded-md hover:bg-blue-200 transition-colors"
+                >
+                  + Ajouter un réseau
+                </button>
+              )}
+            </div>
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -221,19 +260,41 @@ const InfoPage = () => {
                 {Object.entries(infoData.socialLinks).map(([platform, data]) => (
                   <div key={platform} className="border border-gray-200 rounded-lg p-4">
                     <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-medium text-gray-900 capitalize">{platform}</h4>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          checked={data.active}
-                          onChange={(e) => handleSocialChange(platform, 'active', e.target.checked)}
-                          disabled={!isEditing}
-                          className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                        />
-                        <span className="ml-2 text-sm text-gray-700">Actif</span>
-                      </label>
+                      <h4 className="font-medium text-gray-900">{data.name}</h4>
+                      <div className="flex items-center space-x-2">
+                        <label className="flex items-center">
+                          <input
+                            type="checkbox"
+                            checked={data.active}
+                            onChange={(e) => handleSocialChange(platform, 'active', e.target.checked)}
+                            disabled={!isEditing}
+                            className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Actif</span>
+                        </label>
+                        {isEditing && platform.startsWith('custom_') && (
+                          <button
+                            onClick={() => removeSocial(platform)}
+                            className="text-red-600 hover:text-red-800 text-sm"
+                            title="Supprimer ce réseau"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
                     </div>
                     <div className="space-y-2">
+                      <div>
+                        <label className="block text-xs text-gray-600 mb-1">Nom du réseau</label>
+                        <input
+                          type="text"
+                          value={data.name}
+                          onChange={(e) => handleSocialChange(platform, 'name', e.target.value)}
+                          disabled={!isEditing}
+                          placeholder="Ex: Instagram, TikTok, WhatsApp..."
+                          className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-100"
+                        />
+                      </div>
                       <div>
                         <label className="block text-xs text-gray-600 mb-1">URL</label>
                         <input
@@ -241,6 +302,7 @@ const InfoPage = () => {
                           value={data.url}
                           onChange={(e) => handleSocialChange(platform, 'url', e.target.value)}
                           disabled={!isEditing}
+                          placeholder="https://..."
                           className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-100"
                         />
                       </div>
@@ -251,6 +313,7 @@ const InfoPage = () => {
                           value={data.username}
                           onChange={(e) => handleSocialChange(platform, 'username', e.target.value)}
                           disabled={!isEditing}
+                          placeholder="@username ou nom de la page"
                           className="w-full px-2 py-1 text-sm border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 disabled:bg-gray-100"
                         />
                       </div>
@@ -284,7 +347,7 @@ const InfoPage = () => {
                   .filter(([_, data]) => data.active)
                   .map(([platform, data]) => (
                     <div key={platform} className="text-center p-3 bg-white rounded border">
-                      <div className="font-medium text-gray-900 capitalize">{platform}</div>
+                      <div className="font-medium text-gray-900">{data.name}</div>
                       <div className="text-sm text-gray-600">{data.username}</div>
                     </div>
                   ))}
