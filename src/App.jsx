@@ -24,10 +24,11 @@ const BackgroundComponent = () => (
       style={{
         backgroundImage: 'url("/background.PNG")',
         backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover'
+        backgroundSize: 'cover',
+        filter: 'grayscale(100%) contrast(120%) brightness(0.8)'
       }}
     />
-    <div className="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/70 to-transparent" />
+    <div className="absolute inset-0 bg-gradient-to-r from-black via-black/90 to-black/70" />
   </div>
 );
 
